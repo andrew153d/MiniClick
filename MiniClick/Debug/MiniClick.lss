@@ -3,35 +3,35 @@ MiniClick.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000dc0  00000000  00000000  00010000  2**2
+  0 .text         00000f1c  00000000  00000000  00010000  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .relocate     0000043c  20000000  00000dc0  00020000  2**3
+  1 .relocate     00000434  20000000  00000f1c  00020000  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000130  2000043c  000011fc  0002043c  2**2
+  2 .bss          0000013c  20000434  00001350  00020434  2**2
                   ALLOC
-  3 .stack        00000404  2000056c  0000132c  0002043c  2**0
+  3 .stack        00000400  20000570  0000148c  00020434  2**0
                   ALLOC
-  4 .ARM.attributes 00000028  00000000  00000000  0002043c  2**0
+  4 .ARM.attributes 00000028  00000000  00000000  00020434  2**0
                   CONTENTS, READONLY
-  5 .comment      00000059  00000000  00000000  00020464  2**0
+  5 .comment      00000059  00000000  00000000  0002045c  2**0
                   CONTENTS, READONLY
-  6 .debug_info   0001d106  00000000  00000000  000204bd  2**0
+  6 .debug_info   0001ee72  00000000  00000000  000204b5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00002e0d  00000000  00000000  0003d5c3  2**0
+  7 .debug_abbrev 00003163  00000000  00000000  0003f327  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    000029fc  00000000  00000000  000403d0  2**0
+  8 .debug_loc    00002c00  00000000  00000000  0004248a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_aranges 000003c8  00000000  00000000  00042dcc  2**0
+  9 .debug_aranges 000003f0  00000000  00000000  0004508a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 000003a8  00000000  00000000  00043194  2**0
+ 10 .debug_ranges 000003c0  00000000  00000000  0004547a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_macro  00013a02  00000000  00000000  0004353c  2**0
+ 11 .debug_macro  00014331  00000000  00000000  0004583a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   00008e3c  00000000  00000000  00056f3e  2**0
+ 12 .debug_line   00009bd8  00000000  00000000  00059b6b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    0005d940  00000000  00000000  0005fd7a  2**0
+ 13 .debug_str    0005f1e9  00000000  00000000  00063743  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_frame  000009c8  00000000  00000000  000bd6bc  2**2
+ 14 .debug_frame  00000a10  00000000  00000000  000c292c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -43,7 +43,7 @@ void extint_chan_set_config(
 		const uint8_t channel,
 		const struct extint_chan_conf *const config)
 {
-   0:	70 09 00 20 19 0b 00 00 15 0b 00 00 15 0b 00 00     p.. ............
+   0:	70 09 00 20 75 0c 00 00 71 0c 00 00 71 0c 00 00     p.. u...q...q...
 	...
 
 	uint32_t config_pos = (4 * (channel % 8));
@@ -51,29 +51,29 @@ void extint_chan_set_config(
 
 	/* Determine the channel's new edge detection configuration */
 	new_config = (config->detection_criteria << EIC_CONFIG_SENSE0_Pos);
-  2c:	15 0b 00 00 00 00 00 00 00 00 00 00 15 0b 00 00     ................
+  2c:	71 0c 00 00 00 00 00 00 00 00 00 00 71 0c 00 00     q...........q...
 
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
-  3c:	15 0b 00 00 15 0b 00 00 15 0b 00 00 c9 06 00 00     ................
+  3c:	71 0c 00 00 71 0c 00 00 71 0c 00 00 01 08 00 00     q...q...q.......
 		new_config |= EIC_CONFIG_FILTEN0;
 	}
 
 	/* Clear the existing and set the new channel configuration */
 	EIC_module->CONFIG[channel / 8].reg
 		= (EIC_module->CONFIG[channel / 8].reg &
-  4c:	15 0b 00 00 d1 08 00 00 15 0b 00 00 15 0b 00 00     ................
+  4c:	71 0c 00 00 09 0a 00 00 71 0c 00 00 71 0c 00 00     q.......q...q...
 
 	/* Set the channel's new wake up mode setting */
 	if (config->wake_if_sleeping) {
 		EIC_module->WAKEUP.reg |=  (1UL << channel);
 	} else {
 		EIC_module->WAKEUP.reg &= ~(1UL << channel);
-  5c:	00 00 00 00 15 0b 00 00 b1 08 00 00 c1 08 00 00     ................
+  5c:	00 00 00 00 71 0c 00 00 e9 09 00 00 f9 09 00 00     ....q...........
 	...
 		EIC_module->WAKEUP.reg |=  (1UL << channel);
-  74:	49 07 00 00 59 07 00 00 15 0b 00 00 00 00 00 00     I...Y...........
-  84:	00 00 00 00 15 0b 00 00                             ........
+  74:	81 08 00 00 91 08 00 00 71 0c 00 00 00 00 00 00     ........q.......
+  84:	00 00 00 00 71 0c 00 00                             ....q...
 
 0000008c <__do_global_dtors_aux>:
   8c:	b510      	push	{r4, lr}
@@ -90,9 +90,9 @@ void extint_chan_set_config(
   a2:	2301      	movs	r3, #1
   a4:	7023      	strb	r3, [r4, #0]
   a6:	bd10      	pop	{r4, pc}
-  a8:	2000043c 	.word	0x2000043c
+  a8:	20000434 	.word	0x20000434
   ac:	00000000 	.word	0x00000000
-  b0:	00000dc0 	.word	0x00000dc0
+  b0:	00000f1c 	.word	0x00000f1c
 
 000000b4 <frame_dummy>:
   b4:	4b08      	ldr	r3, [pc, #32]	; (d8 <frame_dummy+0x24>)
@@ -114,9 +114,9 @@ void extint_chan_set_config(
   d4:	4798      	blx	r3
   d6:	e7f9      	b.n	cc <frame_dummy+0x18>
   d8:	00000000 	.word	0x00000000
-  dc:	20000440 	.word	0x20000440
-  e0:	00000dc0 	.word	0x00000dc0
-  e4:	00000dc0 	.word	0x00000dc0
+  dc:	20000438 	.word	0x20000438
+  e0:	00000f1c 	.word	0x00000f1c
+  e4:	00000f1c 	.word	0x00000f1c
   e8:	00000000 	.word	0x00000000
 
 000000ec <_i2c_slave_wait_for_sync>:
@@ -155,2523 +155,2775 @@ void extint_chan_set_config(
 void i2c_read_request_callback(
 struct i2c_slave_module *const module)
 {
-  f8:	b510      	push	{r4, lr}
+  f8:	b500      	push	{lr}
+  fa:	b083      	sub	sp, #12
+	volatile uint8_t read_address = packet.data[0];
+  fc:	490a      	ldr	r1, [pc, #40]	; (128 <_Z25i2c_read_request_callbackP16i2c_slave_module+0x30>)
+  fe:	684b      	ldr	r3, [r1, #4]
+ 100:	781a      	ldrb	r2, [r3, #0]
+ 102:	466b      	mov	r3, sp
+ 104:	71da      	strb	r2, [r3, #7]
+ 106:	3307      	adds	r3, #7
+	
 	/* Init i2c packet */
-	packet.data_length = DATA_LENGTH;
-  fa:	4904      	ldr	r1, [pc, #16]	; (10c <_Z25i2c_read_request_callbackP16i2c_slave_module+0x14>)
-  fc:	230a      	movs	r3, #10
-  fe:	800b      	strh	r3, [r1, #0]
-	packet.data        = write_buffer;
- 100:	4b03      	ldr	r3, [pc, #12]	; (110 <_Z25i2c_read_request_callbackP16i2c_slave_module+0x18>)
- 102:	604b      	str	r3, [r1, #4]
+	packet.data_length = 1;
+ 108:	2201      	movs	r2, #1
+ 10a:	800a      	strh	r2, [r1, #0]
+	uint8_t dat = device_registers[read_address & 0x0F];
+ 10c:	781b      	ldrb	r3, [r3, #0]
+ 10e:	320e      	adds	r2, #14
+ 110:	4013      	ands	r3, r2
+ 112:	466a      	mov	r2, sp
+ 114:	18cb      	adds	r3, r1, r3
+ 116:	7a1b      	ldrb	r3, [r3, #8]
+ 118:	7193      	strb	r3, [r2, #6]
+ 11a:	3206      	adds	r2, #6
+	packet.data        = &dat;
+ 11c:	604a      	str	r2, [r1, #4]
+	
 	/* Write buffer to master */
 	i2c_slave_write_packet_job(module, &packet);
- 104:	4b03      	ldr	r3, [pc, #12]	; (114 <_Z25i2c_read_request_callbackP16i2c_slave_module+0x1c>)
- 106:	4798      	blx	r3
+ 11e:	4b03      	ldr	r3, [pc, #12]	; (12c <_Z25i2c_read_request_callbackP16i2c_slave_module+0x34>)
+ 120:	4798      	blx	r3
 }
- 108:	bd10      	pop	{r4, pc}
- 10a:	46c0      	nop			; (mov r8, r8)
- 10c:	20000458 	.word	0x20000458
- 110:	20000000 	.word	0x20000000
- 114:	0000041f 	.word	0x0000041f
+ 122:	b003      	add	sp, #12
+ 124:	bd00      	pop	{pc}
+ 126:	46c0      	nop			; (mov r8, r8)
+ 128:	20000450 	.word	0x20000450
+ 12c:	00000557 	.word	0x00000557
 
-00000118 <_Z26i2c_write_request_callbackP16i2c_slave_module>:
+00000130 <_Z26i2c_write_request_callbackP16i2c_slave_module>:
 
 void i2c_write_request_callback(struct i2c_slave_module *const module)
 {
- 118:	b510      	push	{r4, lr}
+ 130:	b510      	push	{r4, lr}
 	/* Init i2c packet */
-	packet.data_length = DATA_LENGTH;
- 11a:	4904      	ldr	r1, [pc, #16]	; (12c <_Z26i2c_write_request_callbackP16i2c_slave_module+0x14>)
- 11c:	230a      	movs	r3, #10
- 11e:	800b      	strh	r3, [r1, #0]
+	packet.data_length = 1;
+ 132:	4904      	ldr	r1, [pc, #16]	; (144 <_Z26i2c_write_request_callbackP16i2c_slave_module+0x14>)
+ 134:	2301      	movs	r3, #1
+ 136:	800b      	strh	r3, [r1, #0]
 	packet.data        = read_buffer;
- 120:	000b      	movs	r3, r1
- 122:	3308      	adds	r3, #8
- 124:	604b      	str	r3, [r1, #4]
+ 138:	000b      	movs	r3, r1
+ 13a:	3314      	adds	r3, #20
+ 13c:	604b      	str	r3, [r1, #4]
 	/* Read buffer from master */
 	if (i2c_slave_read_packet_job(module, &packet) != STATUS_OK) {
- 126:	4b02      	ldr	r3, [pc, #8]	; (130 <_Z26i2c_write_request_callbackP16i2c_slave_module+0x18>)
- 128:	4798      	blx	r3
+ 13e:	4b02      	ldr	r3, [pc, #8]	; (148 <_Z26i2c_write_request_callbackP16i2c_slave_module+0x18>)
+ 140:	4798      	blx	r3
+		//packet.data        = read_buffer;
 	}
 }
- 12a:	bd10      	pop	{r4, pc}
- 12c:	20000458 	.word	0x20000458
- 130:	000003f7 	.word	0x000003f7
+ 142:	bd10      	pop	{r4, pc}
+ 144:	20000450 	.word	0x20000450
+ 148:	0000052f 	.word	0x0000052f
 
-00000134 <_Z19configure_i2c_slavev>:
+0000014c <_Z19configure_i2c_slavev>:
 {
- 134:	b530      	push	{r4, r5, lr}
- 136:	b08d      	sub	sp, #52	; 0x34
+ 14c:	b530      	push	{r4, r5, lr}
+ 14e:	b08d      	sub	sp, #52	; 0x34
 static inline void i2c_slave_get_config_defaults(
 		struct i2c_slave_config *const config)
 {
 	/*Sanity check argument */
 	Assert(config);
 	config->enable_scl_low_timeout = false;
- 138:	aa02      	add	r2, sp, #8
- 13a:	2100      	movs	r1, #0
- 13c:	7011      	strb	r1, [r2, #0]
+ 150:	aa02      	add	r2, sp, #8
+ 152:	2100      	movs	r1, #0
+ 154:	7011      	strb	r1, [r2, #0]
 	config->sda_hold_time = I2C_SLAVE_SDA_HOLD_TIME_300NS_600NS;
- 13e:	2380      	movs	r3, #128	; 0x80
- 140:	039b      	lsls	r3, r3, #14
- 142:	6053      	str	r3, [r2, #4]
+ 156:	2380      	movs	r3, #128	; 0x80
+ 158:	039b      	lsls	r3, r3, #14
+ 15a:	6053      	str	r3, [r2, #4]
 	config->buffer_timeout = 65535;
- 144:	2301      	movs	r3, #1
- 146:	425b      	negs	r3, r3
- 148:	8113      	strh	r3, [r2, #8]
+ 15c:	2301      	movs	r3, #1
+ 15e:	425b      	negs	r3, r3
+ 160:	8113      	strh	r3, [r2, #8]
 	config->address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
- 14a:	2300      	movs	r3, #0
- 14c:	8151      	strh	r1, [r2, #10]
+ 162:	2300      	movs	r3, #0
+ 164:	8151      	strh	r1, [r2, #10]
 	config->address = 0;
 	config->address_mask = 0;
- 14e:	81d1      	strh	r1, [r2, #14]
+ 166:	81d1      	strh	r1, [r2, #14]
 #ifdef FEATURE_I2C_10_BIT_ADDRESS
 	config->ten_bit_address = false;
- 150:	7413      	strb	r3, [r2, #16]
+ 168:	7413      	strb	r3, [r2, #16]
 #endif
 	config->enable_general_call_address = false;
- 152:	7453      	strb	r3, [r2, #17]
+ 16a:	7453      	strb	r3, [r2, #17]
 #ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 	config->transfer_speed = I2C_SLAVE_SPEED_STANDARD_AND_FAST;
- 154:	6151      	str	r1, [r2, #20]
+ 16c:	6151      	str	r1, [r2, #20]
 #endif
 #if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
- 156:	7613      	strb	r3, [r2, #24]
+ 16e:	7613      	strb	r3, [r2, #24]
 #endif
 	config->generator_source = GCLK_GENERATOR_0;
- 158:	7653      	strb	r3, [r2, #25]
+ 170:	7653      	strb	r3, [r2, #25]
 	config->run_in_standby = false;
- 15a:	7693      	strb	r3, [r2, #26]
+ 172:	7693      	strb	r3, [r2, #26]
 	config->pinmux_pad0 = PINMUX_DEFAULT;
- 15c:	61d1      	str	r1, [r2, #28]
+ 174:	61d1      	str	r1, [r2, #28]
 	config->pinmux_pad1 = PINMUX_DEFAULT;
- 15e:	6211      	str	r1, [r2, #32]
+ 176:	6211      	str	r1, [r2, #32]
 	config->scl_low_timeout  = false;
- 160:	3124      	adds	r1, #36	; 0x24
- 162:	5453      	strb	r3, [r2, r1]
+ 178:	3124      	adds	r1, #36	; 0x24
+ 17a:	5453      	strb	r3, [r2, r1]
 #ifdef FEATURE_I2C_SCL_STRETCH_MODE
 	config->scl_stretch_only_after_ack_bit = false;
- 164:	3101      	adds	r1, #1
- 166:	5453      	strb	r3, [r2, r1]
+ 17c:	3101      	adds	r1, #1
+ 17e:	5453      	strb	r3, [r2, r1]
 #endif
 #ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
 	config->slave_scl_low_extend_timeout   = false;
- 168:	3101      	adds	r1, #1
- 16a:	5453      	strb	r3, [r2, r1]
+ 180:	3101      	adds	r1, #1
+ 182:	5453      	strb	r3, [r2, r1]
 	config_i2c_slave.address      = SLAVE_ADDRESS;
- 16c:	231f      	movs	r3, #31
- 16e:	8193      	strh	r3, [r2, #12]
+ 184:	2312      	movs	r3, #18
+ 186:	8193      	strh	r3, [r2, #12]
 	volatile status_code code = i2c_slave_init(&i2c_slave_instance, SERCOM0, &config_i2c_slave);
- 170:	4c0d      	ldr	r4, [pc, #52]	; (1a8 <_Z19configure_i2c_slavev+0x74>)
- 172:	0025      	movs	r5, r4
- 174:	3514      	adds	r5, #20
- 176:	490d      	ldr	r1, [pc, #52]	; (1ac <_Z19configure_i2c_slavev+0x78>)
- 178:	0028      	movs	r0, r5
- 17a:	4b0d      	ldr	r3, [pc, #52]	; (1b0 <_Z19configure_i2c_slavev+0x7c>)
- 17c:	4798      	blx	r3
- 17e:	466b      	mov	r3, sp
- 180:	71d8      	strb	r0, [r3, #7]
+ 188:	4c0d      	ldr	r4, [pc, #52]	; (1c0 <_Z19configure_i2c_slavev+0x74>)
+ 18a:	0025      	movs	r5, r4
+ 18c:	3518      	adds	r5, #24
+ 18e:	490d      	ldr	r1, [pc, #52]	; (1c4 <_Z19configure_i2c_slavev+0x78>)
+ 190:	0028      	movs	r0, r5
+ 192:	4b0d      	ldr	r3, [pc, #52]	; (1c8 <_Z19configure_i2c_slavev+0x7c>)
+ 194:	4798      	blx	r3
+ 196:	466b      	mov	r3, sp
+ 198:	71d8      	strb	r0, [r3, #7]
 {
 	/* Sanity check of arguments */
 	Assert(module);
 	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 182:	6964      	ldr	r4, [r4, #20]
+ 19a:	69a4      	ldr	r4, [r4, #24]
 
 #if I2C_SLAVE_CALLBACK_MODE == true
 	/* Enable global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
- 184:	0020      	movs	r0, r4
- 186:	4b0b      	ldr	r3, [pc, #44]	; (1b4 <_Z19configure_i2c_slavev+0x80>)
- 188:	4798      	blx	r3
+ 19c:	0020      	movs	r0, r4
+ 19e:	4b0b      	ldr	r3, [pc, #44]	; (1cc <_Z19configure_i2c_slavev+0x80>)
+ 1a0:	4798      	blx	r3
  * \param[in] vector Interrupt vector to enable
  */
 static inline void system_interrupt_enable(
 		const enum system_interrupt_vector vector)
 {
 	NVIC->ISER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
- 18a:	231f      	movs	r3, #31
- 18c:	4018      	ands	r0, r3
- 18e:	3b1e      	subs	r3, #30
- 190:	4083      	lsls	r3, r0
- 192:	4a09      	ldr	r2, [pc, #36]	; (1b8 <_Z19configure_i2c_slavev+0x84>)
- 194:	6013      	str	r3, [r2, #0]
+ 1a2:	231f      	movs	r3, #31
+ 1a4:	4018      	ands	r0, r3
+ 1a6:	3b1e      	subs	r3, #30
+ 1a8:	4083      	lsls	r3, r0
+ 1aa:	4a09      	ldr	r2, [pc, #36]	; (1d0 <_Z19configure_i2c_slavev+0x84>)
+ 1ac:	6013      	str	r3, [r2, #0]
 #endif
 
 	/* Wait for module to sync */
 	_i2c_slave_wait_for_sync(module);
- 196:	0028      	movs	r0, r5
- 198:	4b08      	ldr	r3, [pc, #32]	; (1bc <_Z19configure_i2c_slavev+0x88>)
- 19a:	4798      	blx	r3
+ 1ae:	0028      	movs	r0, r5
+ 1b0:	4b08      	ldr	r3, [pc, #32]	; (1d4 <_Z19configure_i2c_slavev+0x88>)
+ 1b2:	4798      	blx	r3
 
 	/* Enable module */
 	i2c_hw->CTRLA.reg |= SERCOM_I2CS_CTRLA_ENABLE;
- 19c:	6823      	ldr	r3, [r4, #0]
- 19e:	2202      	movs	r2, #2
- 1a0:	4313      	orrs	r3, r2
- 1a2:	6023      	str	r3, [r4, #0]
+ 1b4:	6823      	ldr	r3, [r4, #0]
+ 1b6:	2202      	movs	r2, #2
+ 1b8:	4313      	orrs	r3, r2
+ 1ba:	6023      	str	r3, [r4, #0]
 }
- 1a4:	b00d      	add	sp, #52	; 0x34
- 1a6:	bd30      	pop	{r4, r5, pc}
- 1a8:	20000458 	.word	0x20000458
- 1ac:	42000800 	.word	0x42000800
- 1b0:	0000024d 	.word	0x0000024d
- 1b4:	00000895 	.word	0x00000895
- 1b8:	e000e100 	.word	0xe000e100
- 1bc:	000000ed 	.word	0x000000ed
+ 1bc:	b00d      	add	sp, #52	; 0x34
+ 1be:	bd30      	pop	{r4, r5, pc}
+ 1c0:	20000450 	.word	0x20000450
+ 1c4:	42000800 	.word	0x42000800
+ 1c8:	00000385 	.word	0x00000385
+ 1cc:	000009cd 	.word	0x000009cd
+ 1d0:	e000e100 	.word	0xe000e100
+ 1d4:	000000ed 	.word	0x000000ed
 
-000001c0 <_Z29configure_i2c_slave_callbacksv>:
+000001d8 <_Z29configure_i2c_slave_callbacksv>:
 
 void configure_i2c_slave_callbacks(void)
 {
- 1c0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 1d8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
 	/* Register and enable callback functions */
 	i2c_slave_register_callback(&i2c_slave_instance, i2c_read_request_callback,
 	I2C_SLAVE_CALLBACK_READ_REQUEST);
- 1c2:	4c0d      	ldr	r4, [pc, #52]	; (1f8 <_Z29configure_i2c_slave_callbacksv+0x38>)
- 1c4:	2202      	movs	r2, #2
- 1c6:	490d      	ldr	r1, [pc, #52]	; (1fc <_Z29configure_i2c_slave_callbacksv+0x3c>)
- 1c8:	480d      	ldr	r0, [pc, #52]	; (200 <_Z29configure_i2c_slave_callbacksv+0x40>)
- 1ca:	4d0e      	ldr	r5, [pc, #56]	; (204 <_Z29configure_i2c_slave_callbacksv+0x44>)
- 1cc:	47a8      	blx	r5
+ 1da:	4c0d      	ldr	r4, [pc, #52]	; (210 <_Z29configure_i2c_slave_callbacksv+0x38>)
+ 1dc:	2202      	movs	r2, #2
+ 1de:	490d      	ldr	r1, [pc, #52]	; (214 <_Z29configure_i2c_slave_callbacksv+0x3c>)
+ 1e0:	480d      	ldr	r0, [pc, #52]	; (218 <_Z29configure_i2c_slave_callbacksv+0x40>)
+ 1e2:	4d0e      	ldr	r5, [pc, #56]	; (21c <_Z29configure_i2c_slave_callbacksv+0x44>)
+ 1e4:	47a8      	blx	r5
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
 
 	/* Mark callback as enabled */
 	module->enabled_callback |= (1 << callback_type);
- 1ce:	2639      	movs	r6, #57	; 0x39
- 1d0:	5da3      	ldrb	r3, [r4, r6]
- 1d2:	2204      	movs	r2, #4
- 1d4:	4313      	orrs	r3, r2
- 1d6:	b2db      	uxtb	r3, r3
- 1d8:	55a3      	strb	r3, [r4, r6]
+ 1e6:	263d      	movs	r6, #61	; 0x3d
+ 1e8:	5da3      	ldrb	r3, [r4, r6]
+ 1ea:	2204      	movs	r2, #4
+ 1ec:	4313      	orrs	r3, r2
+ 1ee:	b2db      	uxtb	r3, r3
+ 1f0:	55a3      	strb	r3, [r4, r6]
 
 	/* Enable address callback */
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	if (callback_type == I2C_SLAVE_CALLBACK_READ_REQUEST ||
 			callback_type == I2C_SLAVE_CALLBACK_WRITE_REQUEST) {
 		i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
- 1da:	2702      	movs	r7, #2
- 1dc:	6963      	ldr	r3, [r4, #20]
- 1de:	759f      	strb	r7, [r3, #22]
+ 1f2:	2702      	movs	r7, #2
+ 1f4:	69a3      	ldr	r3, [r4, #24]
+ 1f6:	759f      	strb	r7, [r3, #22]
 	i2c_slave_enable_callback(&i2c_slave_instance,
 	I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_register_callback(&i2c_slave_instance, i2c_write_request_callback,
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST);
- 1e0:	2203      	movs	r2, #3
- 1e2:	4909      	ldr	r1, [pc, #36]	; (208 <_Z29configure_i2c_slave_callbacksv+0x48>)
- 1e4:	4806      	ldr	r0, [pc, #24]	; (200 <_Z29configure_i2c_slave_callbacksv+0x40>)
- 1e6:	47a8      	blx	r5
+ 1f8:	2203      	movs	r2, #3
+ 1fa:	4909      	ldr	r1, [pc, #36]	; (220 <_Z29configure_i2c_slave_callbacksv+0x48>)
+ 1fc:	4806      	ldr	r0, [pc, #24]	; (218 <_Z29configure_i2c_slave_callbacksv+0x40>)
+ 1fe:	47a8      	blx	r5
 	module->enabled_callback |= (1 << callback_type);
- 1e8:	5da3      	ldrb	r3, [r4, r6]
- 1ea:	2208      	movs	r2, #8
- 1ec:	4313      	orrs	r3, r2
- 1ee:	b2db      	uxtb	r3, r3
- 1f0:	55a3      	strb	r3, [r4, r6]
+ 200:	5da3      	ldrb	r3, [r4, r6]
+ 202:	2208      	movs	r2, #8
+ 204:	4313      	orrs	r3, r2
+ 206:	b2db      	uxtb	r3, r3
+ 208:	55a3      	strb	r3, [r4, r6]
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 1f2:	6963      	ldr	r3, [r4, #20]
+ 20a:	69a3      	ldr	r3, [r4, #24]
 		i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH;
- 1f4:	759f      	strb	r7, [r3, #22]
+ 20c:	759f      	strb	r7, [r3, #22]
 	i2c_slave_enable_callback(&i2c_slave_instance,
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 }
- 1f6:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
- 1f8:	20000458 	.word	0x20000458
- 1fc:	000000f9 	.word	0x000000f9
- 200:	2000046c 	.word	0x2000046c
- 204:	000003dd 	.word	0x000003dd
- 208:	00000119 	.word	0x00000119
+ 20e:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+ 210:	20000450 	.word	0x20000450
+ 214:	000000f9 	.word	0x000000f9
+ 218:	20000468 	.word	0x20000468
+ 21c:	00000515 	.word	0x00000515
+ 220:	00000131 	.word	0x00000131
 
-0000020c <main>:
+00000224 <main>:
 
 
 
 int main(void)
 {
- 20c:	b530      	push	{r4, r5, lr}
- 20e:	b083      	sub	sp, #12
+ 224:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 226:	b083      	sub	sp, #12
 	/* Initialize the SAM system */
 	SystemInit();
- 210:	4b0a      	ldr	r3, [pc, #40]	; (23c <main+0x30>)
- 212:	4798      	blx	r3
+ 228:	4b4f      	ldr	r3, [pc, #316]	; (368 <main+0x144>)
+ 22a:	4798      	blx	r3
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->direction  = PORT_PIN_DIR_INPUT;
+ 22c:	ac01      	add	r4, sp, #4
+ 22e:	2500      	movs	r5, #0
+ 230:	7025      	strb	r5, [r4, #0]
+	config->input_pull = PORT_PIN_PULL_UP;
+ 232:	2701      	movs	r7, #1
+ 234:	7067      	strb	r7, [r4, #1]
+	config->powersave  = false;
+ 236:	70a5      	strb	r5, [r4, #2]
+	//set pins for GPIO input
+	struct port_config config_port_pin;
+	port_get_config_defaults(&config_port_pin);
+	config_port_pin.direction = PORT_PIN_DIR_INPUT;
+	config_port_pin.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_PIN_1, &config_port_pin);
+ 238:	0021      	movs	r1, r4
+ 23a:	2010      	movs	r0, #16
+ 23c:	4e4b      	ldr	r6, [pc, #300]	; (36c <main+0x148>)
+ 23e:	47b0      	blx	r6
+	port_pin_set_config(BUTTON_PIN_2, &config_port_pin);
+ 240:	0021      	movs	r1, r4
+ 242:	2011      	movs	r0, #17
+ 244:	47b0      	blx	r6
+	port_pin_set_config(BUTTON_PIN_3, &config_port_pin);
+ 246:	0021      	movs	r1, r4
+ 248:	2016      	movs	r0, #22
+ 24a:	47b0      	blx	r6
+	port_pin_set_config(BUTTON_PIN_4, &config_port_pin);
+ 24c:	0021      	movs	r1, r4
+ 24e:	2017      	movs	r0, #23
+ 250:	47b0      	blx	r6
 	/* Sanity check arguments */
 	Assert(config);
 
 	/* Default configuration values */
 	config->mux_position = SYSTEM_PINMUX_GPIO;
 	config->direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
- 214:	ac01      	add	r4, sp, #4
- 216:	2300      	movs	r3, #0
- 218:	7063      	strb	r3, [r4, #1]
+ 252:	466b      	mov	r3, sp
+ 254:	705d      	strb	r5, [r3, #1]
 	config->input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
- 21a:	2201      	movs	r2, #1
- 21c:	70a2      	strb	r2, [r4, #2]
+ 256:	709f      	strb	r7, [r3, #2]
 	config->powersave    = false;
- 21e:	70e3      	strb	r3, [r4, #3]
+ 258:	70dd      	strb	r5, [r3, #3]
 	
+	//set pinmux for I2C lines
 	 struct system_pinmux_config config_pinmux;
 	 system_pinmux_get_config_defaults(&config_pinmux);
 	 config_pinmux.mux_position = 1 << 1;
- 220:	3302      	adds	r3, #2
- 222:	7023      	strb	r3, [r4, #0]
+ 25a:	2302      	movs	r3, #2
+ 25c:	466a      	mov	r2, sp
+ 25e:	7013      	strb	r3, [r2, #0]
 	 system_pinmux_pin_set_config(14, &config_pinmux);
- 224:	0021      	movs	r1, r4
- 226:	200e      	movs	r0, #14
- 228:	4d05      	ldr	r5, [pc, #20]	; (240 <main+0x34>)
- 22a:	47a8      	blx	r5
+ 260:	4669      	mov	r1, sp
+ 262:	200e      	movs	r0, #14
+ 264:	4c42      	ldr	r4, [pc, #264]	; (370 <main+0x14c>)
+ 266:	47a0      	blx	r4
 	 system_pinmux_pin_set_config(15, &config_pinmux);
- 22c:	0021      	movs	r1, r4
- 22e:	200f      	movs	r0, #15
- 230:	47a8      	blx	r5
+ 268:	4669      	mov	r1, sp
+ 26a:	200f      	movs	r0, #15
+ 26c:	47a0      	blx	r4
 	
 	//I2C setup
 	configure_i2c_slave();
- 232:	4b04      	ldr	r3, [pc, #16]	; (244 <main+0x38>)
- 234:	4798      	blx	r3
+ 26e:	4b41      	ldr	r3, [pc, #260]	; (374 <main+0x150>)
+ 270:	4798      	blx	r3
 	configure_i2c_slave_callbacks();
- 236:	4b04      	ldr	r3, [pc, #16]	; (248 <main+0x3c>)
- 238:	4798      	blx	r3
- 23a:	e7fe      	b.n	23a <main+0x2e>
- 23c:	00000be9 	.word	0x00000be9
- 240:	00000ae5 	.word	0x00000ae5
- 244:	00000135 	.word	0x00000135
- 248:	000001c1 	.word	0x000001c1
+ 272:	4b41      	ldr	r3, [pc, #260]	; (378 <main+0x154>)
+ 274:	4798      	blx	r3
+	
+	while (1)
+	{
+		last_button_level = current_button_level;
+ 276:	4a41      	ldr	r2, [pc, #260]	; (37c <main+0x158>)
+ 278:	6d13      	ldr	r3, [r2, #80]	; 0x50
+ 27a:	64d3      	str	r3, [r2, #76]	; 0x4c
+		const uint8_t gpio_pin)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	uint32_t pin_mask  = (1UL << (gpio_pin % 32));
 
-0000024c <i2c_slave_init>:
+	return (port_base->IN.reg & pin_mask);
+ 27c:	4b40      	ldr	r3, [pc, #256]	; (380 <main+0x15c>)
+ 27e:	6a18      	ldr	r0, [r3, #32]
+ 280:	2180      	movs	r1, #128	; 0x80
+ 282:	0249      	lsls	r1, r1, #9
+ 284:	4008      	ands	r0, r1
+ 286:	1e41      	subs	r1, r0, #1
+ 288:	4188      	sbcs	r0, r1
+ 28a:	b2c0      	uxtb	r0, r0
+		current_button_level.button_1 = port_pin_get_input_level(BUTTON_PIN_1);
+ 28c:	2150      	movs	r1, #80	; 0x50
+ 28e:	5450      	strb	r0, [r2, r1]
+ 290:	6a19      	ldr	r1, [r3, #32]
+ 292:	2480      	movs	r4, #128	; 0x80
+ 294:	02a4      	lsls	r4, r4, #10
+ 296:	4021      	ands	r1, r4
+ 298:	1e4c      	subs	r4, r1, #1
+ 29a:	41a1      	sbcs	r1, r4
+ 29c:	b2c9      	uxtb	r1, r1
+		current_button_level.button_2 = port_pin_get_input_level(BUTTON_PIN_2);
+ 29e:	3250      	adds	r2, #80	; 0x50
+ 2a0:	0014      	movs	r4, r2
+ 2a2:	7051      	strb	r1, [r2, #1]
+ 2a4:	6a1a      	ldr	r2, [r3, #32]
+ 2a6:	2580      	movs	r5, #128	; 0x80
+ 2a8:	03ed      	lsls	r5, r5, #15
+ 2aa:	402a      	ands	r2, r5
+ 2ac:	1e55      	subs	r5, r2, #1
+ 2ae:	41aa      	sbcs	r2, r5
+ 2b0:	b2d2      	uxtb	r2, r2
+		current_button_level.button_3 = port_pin_get_input_level(BUTTON_PIN_3);
+ 2b2:	70a2      	strb	r2, [r4, #2]
+ 2b4:	6a1b      	ldr	r3, [r3, #32]
+ 2b6:	2580      	movs	r5, #128	; 0x80
+ 2b8:	042d      	lsls	r5, r5, #16
+ 2ba:	402b      	ands	r3, r5
+ 2bc:	1e5d      	subs	r5, r3, #1
+ 2be:	41ab      	sbcs	r3, r5
+ 2c0:	b2db      	uxtb	r3, r3
+		current_button_level.button_4 = port_pin_get_input_level(BUTTON_PIN_4);
+ 2c2:	70e3      	strb	r3, [r4, #3]
+		
+		if(!current_button_level.button_1 && last_button_level.button_1){
+ 2c4:	2800      	cmp	r0, #0
+ 2c6:	d107      	bne.n	2d8 <main+0xb4>
+ 2c8:	244c      	movs	r4, #76	; 0x4c
+ 2ca:	4d2c      	ldr	r5, [pc, #176]	; (37c <main+0x158>)
+ 2cc:	5d2c      	ldrb	r4, [r5, r4]
+ 2ce:	2c00      	cmp	r4, #0
+ 2d0:	d002      	beq.n	2d8 <main+0xb4>
+			device_registers[1] = 0x01 | BUTTON_PRESSED;
+ 2d2:	2581      	movs	r5, #129	; 0x81
+ 2d4:	4c29      	ldr	r4, [pc, #164]	; (37c <main+0x158>)
+ 2d6:	7265      	strb	r5, [r4, #9]
+		}
+		if(!current_button_level.button_2 && last_button_level.button_2){
+ 2d8:	2900      	cmp	r1, #0
+ 2da:	d107      	bne.n	2ec <main+0xc8>
+ 2dc:	4c27      	ldr	r4, [pc, #156]	; (37c <main+0x158>)
+ 2de:	344c      	adds	r4, #76	; 0x4c
+ 2e0:	7864      	ldrb	r4, [r4, #1]
+ 2e2:	2c00      	cmp	r4, #0
+ 2e4:	d002      	beq.n	2ec <main+0xc8>
+			device_registers[1] = 0x02 | BUTTON_PRESSED;
+ 2e6:	2582      	movs	r5, #130	; 0x82
+ 2e8:	4c24      	ldr	r4, [pc, #144]	; (37c <main+0x158>)
+ 2ea:	7265      	strb	r5, [r4, #9]
+		}
+		if(!current_button_level.button_3 && last_button_level.button_3){
+ 2ec:	2a00      	cmp	r2, #0
+ 2ee:	d107      	bne.n	300 <main+0xdc>
+ 2f0:	4c22      	ldr	r4, [pc, #136]	; (37c <main+0x158>)
+ 2f2:	344c      	adds	r4, #76	; 0x4c
+ 2f4:	78a4      	ldrb	r4, [r4, #2]
+ 2f6:	2c00      	cmp	r4, #0
+ 2f8:	d002      	beq.n	300 <main+0xdc>
+			device_registers[1] = 0x03 | BUTTON_PRESSED;
+ 2fa:	2583      	movs	r5, #131	; 0x83
+ 2fc:	4c1f      	ldr	r4, [pc, #124]	; (37c <main+0x158>)
+ 2fe:	7265      	strb	r5, [r4, #9]
+		}
+		if(!current_button_level.button_4 && last_button_level.button_4){
+ 300:	2b00      	cmp	r3, #0
+ 302:	d107      	bne.n	314 <main+0xf0>
+ 304:	4c1d      	ldr	r4, [pc, #116]	; (37c <main+0x158>)
+ 306:	344c      	adds	r4, #76	; 0x4c
+ 308:	78e4      	ldrb	r4, [r4, #3]
+ 30a:	2c00      	cmp	r4, #0
+ 30c:	d002      	beq.n	314 <main+0xf0>
+			device_registers[1] = 0x04 | BUTTON_PRESSED;
+ 30e:	2584      	movs	r5, #132	; 0x84
+ 310:	4c1a      	ldr	r4, [pc, #104]	; (37c <main+0x158>)
+ 312:	7265      	strb	r5, [r4, #9]
+		}
+		if(current_button_level.button_1 && !last_button_level.button_1){
+ 314:	2800      	cmp	r0, #0
+ 316:	d007      	beq.n	328 <main+0x104>
+ 318:	204c      	movs	r0, #76	; 0x4c
+ 31a:	4c18      	ldr	r4, [pc, #96]	; (37c <main+0x158>)
+ 31c:	5c20      	ldrb	r0, [r4, r0]
+ 31e:	2800      	cmp	r0, #0
+ 320:	d102      	bne.n	328 <main+0x104>
+			device_registers[1] = 0x01 | BUTTON_RELEASED;
+ 322:	2441      	movs	r4, #65	; 0x41
+ 324:	4815      	ldr	r0, [pc, #84]	; (37c <main+0x158>)
+ 326:	7244      	strb	r4, [r0, #9]
+		}
+		if(current_button_level.button_2 && !last_button_level.button_2){
+ 328:	2900      	cmp	r1, #0
+ 32a:	d007      	beq.n	33c <main+0x118>
+ 32c:	4913      	ldr	r1, [pc, #76]	; (37c <main+0x158>)
+ 32e:	314c      	adds	r1, #76	; 0x4c
+ 330:	7849      	ldrb	r1, [r1, #1]
+ 332:	2900      	cmp	r1, #0
+ 334:	d102      	bne.n	33c <main+0x118>
+			device_registers[1] = 0x02 | BUTTON_RELEASED;
+ 336:	2042      	movs	r0, #66	; 0x42
+ 338:	4910      	ldr	r1, [pc, #64]	; (37c <main+0x158>)
+ 33a:	7248      	strb	r0, [r1, #9]
+		}
+		if(current_button_level.button_3 && !last_button_level.button_3){
+ 33c:	2a00      	cmp	r2, #0
+ 33e:	d007      	beq.n	350 <main+0x12c>
+ 340:	4a0e      	ldr	r2, [pc, #56]	; (37c <main+0x158>)
+ 342:	324c      	adds	r2, #76	; 0x4c
+ 344:	7892      	ldrb	r2, [r2, #2]
+ 346:	2a00      	cmp	r2, #0
+ 348:	d102      	bne.n	350 <main+0x12c>
+			device_registers[1] = 0x03 | BUTTON_RELEASED;
+ 34a:	2143      	movs	r1, #67	; 0x43
+ 34c:	4a0b      	ldr	r2, [pc, #44]	; (37c <main+0x158>)
+ 34e:	7251      	strb	r1, [r2, #9]
+		}
+		if(current_button_level.button_4 && !last_button_level.button_4){
+ 350:	2b00      	cmp	r3, #0
+ 352:	d090      	beq.n	276 <main+0x52>
+ 354:	4b09      	ldr	r3, [pc, #36]	; (37c <main+0x158>)
+ 356:	334c      	adds	r3, #76	; 0x4c
+ 358:	78db      	ldrb	r3, [r3, #3]
+ 35a:	2b00      	cmp	r3, #0
+ 35c:	d18b      	bne.n	276 <main+0x52>
+			device_registers[1] = 0x04 | BUTTON_RELEASED;
+ 35e:	2244      	movs	r2, #68	; 0x44
+ 360:	4b06      	ldr	r3, [pc, #24]	; (37c <main+0x158>)
+ 362:	725a      	strb	r2, [r3, #9]
+ 364:	e787      	b.n	276 <main+0x52>
+ 366:	46c0      	nop			; (mov r8, r8)
+ 368:	00000d45 	.word	0x00000d45
+ 36c:	00000a5d 	.word	0x00000a5d
+ 370:	00000c41 	.word	0x00000c41
+ 374:	0000014d 	.word	0x0000014d
+ 378:	000001d9 	.word	0x000001d9
+ 37c:	20000450 	.word	0x20000450
+ 380:	41004400 	.word	0x41004400
+
+00000384 <i2c_slave_init>:
  */
 enum status_code i2c_slave_init(
 		struct i2c_slave_module *const module,
 		Sercom *const hw,
 		const struct i2c_slave_config *const config)
 {
- 24c:	b5f0      	push	{r4, r5, r6, r7, lr}
- 24e:	46ce      	mov	lr, r9
- 250:	4647      	mov	r7, r8
- 252:	b580      	push	{r7, lr}
- 254:	b083      	sub	sp, #12
- 256:	0005      	movs	r5, r0
- 258:	000c      	movs	r4, r1
- 25a:	0016      	movs	r6, r2
+ 384:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 386:	46ce      	mov	lr, r9
+ 388:	4647      	mov	r7, r8
+ 38a:	b580      	push	{r7, lr}
+ 38c:	b083      	sub	sp, #12
+ 38e:	0005      	movs	r5, r0
+ 390:	000c      	movs	r4, r1
+ 392:	0016      	movs	r6, r2
 	Assert(module);
 	Assert(hw);
 	Assert(config);
 
 	/* Initialize software module */
 	module->hw = hw;
- 25c:	6029      	str	r1, [r5, #0]
+ 394:	6029      	str	r1, [r5, #0]
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
 	/* Check if module is enabled */
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_ENABLE) {
- 25e:	680b      	ldr	r3, [r1, #0]
+ 396:	680b      	ldr	r3, [r1, #0]
 		return STATUS_ERR_DENIED;
- 260:	201c      	movs	r0, #28
+ 398:	201c      	movs	r0, #28
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_ENABLE) {
- 262:	079b      	lsls	r3, r3, #30
- 264:	d504      	bpl.n	270 <i2c_slave_init+0x24>
+ 39a:	079b      	lsls	r3, r3, #30
+ 39c:	d504      	bpl.n	3a8 <i2c_slave_init+0x24>
 	/* Set SERCOM module to operate in I2C slave mode */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(0x4);
 
 	/* Set config and return status */
 	return _i2c_slave_set_config(module, config);
 }
- 266:	b003      	add	sp, #12
- 268:	bc0c      	pop	{r2, r3}
- 26a:	4690      	mov	r8, r2
- 26c:	4699      	mov	r9, r3
- 26e:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 39e:	b003      	add	sp, #12
+ 3a0:	bc0c      	pop	{r2, r3}
+ 3a2:	4690      	mov	r8, r2
+ 3a4:	4699      	mov	r9, r3
+ 3a6:	bdf0      	pop	{r4, r5, r6, r7, pc}
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST) {
- 270:	680b      	ldr	r3, [r1, #0]
+ 3a8:	680b      	ldr	r3, [r1, #0]
 		return STATUS_BUSY;
- 272:	3817      	subs	r0, #23
+ 3aa:	3817      	subs	r0, #23
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_SWRST) {
- 274:	07db      	lsls	r3, r3, #31
- 276:	d4f6      	bmi.n	266 <i2c_slave_init+0x1a>
+ 3ac:	07db      	lsls	r3, r3, #31
+ 3ae:	d4f6      	bmi.n	39e <i2c_slave_init+0x1a>
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
- 278:	0008      	movs	r0, r1
- 27a:	4b4d      	ldr	r3, [pc, #308]	; (3b0 <i2c_slave_init+0x164>)
- 27c:	4699      	mov	r9, r3
- 27e:	4798      	blx	r3
+ 3b0:	0008      	movs	r0, r1
+ 3b2:	4b4d      	ldr	r3, [pc, #308]	; (4e8 <STACK_SIZE+0xe8>)
+ 3b4:	4699      	mov	r9, r3
+ 3b6:	4798      	blx	r3
 		case SYSTEM_CLOCK_APB_APBB:
 			PM->APBBMASK.reg |= mask;
 			break;
 
 		case SYSTEM_CLOCK_APB_APBC:
 			PM->APBCMASK.reg |= mask;
- 280:	4a4c      	ldr	r2, [pc, #304]	; (3b4 <i2c_slave_init+0x168>)
- 282:	6a11      	ldr	r1, [r2, #32]
+ 3b8:	4a4c      	ldr	r2, [pc, #304]	; (4ec <STACK_SIZE+0xec>)
+ 3ba:	6a11      	ldr	r1, [r2, #32]
 	pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
- 284:	1c83      	adds	r3, r0, #2
+ 3bc:	1c83      	adds	r3, r0, #2
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
- 286:	2701      	movs	r7, #1
- 288:	46b8      	mov	r8, r7
- 28a:	409f      	lsls	r7, r3
- 28c:	003b      	movs	r3, r7
- 28e:	430b      	orrs	r3, r1
- 290:	6213      	str	r3, [r2, #32]
+ 3be:	2701      	movs	r7, #1
+ 3c0:	46b8      	mov	r8, r7
+ 3c2:	409f      	lsls	r7, r3
+ 3c4:	003b      	movs	r3, r7
+ 3c6:	430b      	orrs	r3, r1
+ 3c8:	6213      	str	r3, [r2, #32]
 	gclk_chan_conf.source_generator = config->generator_source;
- 292:	a901      	add	r1, sp, #4
- 294:	7e73      	ldrb	r3, [r6, #25]
- 296:	700b      	strb	r3, [r1, #0]
+ 3ca:	a901      	add	r1, sp, #4
+ 3cc:	7e73      	ldrb	r3, [r6, #25]
+ 3ce:	700b      	strb	r3, [r1, #0]
 	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
- 298:	300e      	adds	r0, #14
+ 3d0:	300e      	adds	r0, #14
 	system_gclk_chan_set_config(gclk_index, &gclk_chan_conf);
- 29a:	b2c3      	uxtb	r3, r0
- 29c:	001f      	movs	r7, r3
- 29e:	0018      	movs	r0, r3
- 2a0:	4b45      	ldr	r3, [pc, #276]	; (3b8 <i2c_slave_init+0x16c>)
- 2a2:	4798      	blx	r3
+ 3d2:	b2c3      	uxtb	r3, r0
+ 3d4:	001f      	movs	r7, r3
+ 3d6:	0018      	movs	r0, r3
+ 3d8:	4b45      	ldr	r3, [pc, #276]	; (4f0 <STACK_SIZE+0xf0>)
+ 3da:	4798      	blx	r3
 	system_gclk_chan_enable(gclk_index);
- 2a4:	0038      	movs	r0, r7
- 2a6:	4b45      	ldr	r3, [pc, #276]	; (3bc <i2c_slave_init+0x170>)
- 2a8:	4798      	blx	r3
+ 3dc:	0038      	movs	r0, r7
+ 3de:	4b45      	ldr	r3, [pc, #276]	; (4f4 <STACK_SIZE+0xf4>)
+ 3e0:	4798      	blx	r3
 	sercom_set_gclk_generator(config->generator_source, false);
- 2aa:	7e70      	ldrb	r0, [r6, #25]
- 2ac:	2100      	movs	r1, #0
- 2ae:	4b44      	ldr	r3, [pc, #272]	; (3c0 <i2c_slave_init+0x174>)
- 2b0:	4798      	blx	r3
+ 3e2:	7e70      	ldrb	r0, [r6, #25]
+ 3e4:	2100      	movs	r1, #0
+ 3e6:	4b44      	ldr	r3, [pc, #272]	; (4f8 <STACK_SIZE+0xf8>)
+ 3e8:	4798      	blx	r3
 	uint8_t instance_index = _sercom_get_sercom_inst_index(module->hw);
- 2b2:	6828      	ldr	r0, [r5, #0]
- 2b4:	47c8      	blx	r9
- 2b6:	0007      	movs	r7, r0
+ 3ea:	6828      	ldr	r0, [r5, #0]
+ 3ec:	47c8      	blx	r9
+ 3ee:	0007      	movs	r7, r0
 	_sercom_set_handler(instance_index, _i2c_slave_interrupt_handler);
- 2b8:	4942      	ldr	r1, [pc, #264]	; (3c4 <i2c_slave_init+0x178>)
- 2ba:	4b43      	ldr	r3, [pc, #268]	; (3c8 <i2c_slave_init+0x17c>)
- 2bc:	4798      	blx	r3
+ 3f0:	4942      	ldr	r1, [pc, #264]	; (4fc <STACK_SIZE+0xfc>)
+ 3f2:	4b43      	ldr	r3, [pc, #268]	; (500 <STACK_SIZE+0x100>)
+ 3f4:	4798      	blx	r3
 	_sercom_instances[instance_index] = module;
- 2be:	00bf      	lsls	r7, r7, #2
- 2c0:	4b42      	ldr	r3, [pc, #264]	; (3cc <i2c_slave_init+0x180>)
- 2c2:	50fd      	str	r5, [r7, r3]
+ 3f6:	00bf      	lsls	r7, r7, #2
+ 3f8:	4b42      	ldr	r3, [pc, #264]	; (504 <STACK_SIZE+0x104>)
+ 3fa:	50fd      	str	r5, [r7, r3]
 	module->registered_callback = 0;
- 2c4:	2300      	movs	r3, #0
- 2c6:	2224      	movs	r2, #36	; 0x24
- 2c8:	54ab      	strb	r3, [r5, r2]
+ 3fc:	2300      	movs	r3, #0
+ 3fe:	2224      	movs	r2, #36	; 0x24
+ 400:	54ab      	strb	r3, [r5, r2]
 	module->enabled_callback = 0;
- 2ca:	3201      	adds	r2, #1
- 2cc:	54ab      	strb	r3, [r5, r2]
+ 402:	3201      	adds	r2, #1
+ 404:	54ab      	strb	r3, [r5, r2]
 	module->buffer_length = 0;
- 2ce:	84eb      	strh	r3, [r5, #38]	; 0x26
+ 406:	84eb      	strh	r3, [r5, #38]	; 0x26
 	module->nack_on_address = config->enable_nack_on_address;
- 2d0:	7e33      	ldrb	r3, [r6, #24]
- 2d2:	726b      	strb	r3, [r5, #9]
+ 408:	7e33      	ldrb	r3, [r6, #24]
+ 40a:	726b      	strb	r3, [r5, #9]
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(0x4);
- 2d4:	2310      	movs	r3, #16
- 2d6:	6023      	str	r3, [r4, #0]
+ 40c:	2310      	movs	r3, #16
+ 40e:	6023      	str	r3, [r4, #0]
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 2d8:	682c      	ldr	r4, [r5, #0]
+ 410:	682c      	ldr	r4, [r5, #0]
 	module->buffer_timeout = config->buffer_timeout;
- 2da:	8933      	ldrh	r3, [r6, #8]
- 2dc:	80eb      	strh	r3, [r5, #6]
+ 412:	8933      	ldrh	r3, [r6, #8]
+ 414:	80eb      	strh	r3, [r5, #6]
 	module->ten_bit_address = config->ten_bit_address;
- 2de:	7c33      	ldrb	r3, [r6, #16]
- 2e0:	722b      	strb	r3, [r5, #8]
+ 416:	7c33      	ldrb	r3, [r6, #16]
+ 418:	722b      	strb	r3, [r5, #8]
 	config->mux_position = SYSTEM_PINMUX_GPIO;
- 2e2:	2380      	movs	r3, #128	; 0x80
- 2e4:	466a      	mov	r2, sp
- 2e6:	7013      	strb	r3, [r2, #0]
+ 41a:	2380      	movs	r3, #128	; 0x80
+ 41c:	466a      	mov	r2, sp
+ 41e:	7013      	strb	r3, [r2, #0]
 	config->direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
- 2e8:	2300      	movs	r3, #0
- 2ea:	7053      	strb	r3, [r2, #1]
+ 420:	2300      	movs	r3, #0
+ 422:	7053      	strb	r3, [r2, #1]
 	config->input_pull   = SYSTEM_PINMUX_PIN_PULL_UP;
- 2ec:	466b      	mov	r3, sp
- 2ee:	4642      	mov	r2, r8
- 2f0:	709a      	strb	r2, [r3, #2]
+ 424:	466b      	mov	r3, sp
+ 426:	4642      	mov	r2, r8
+ 428:	709a      	strb	r2, [r3, #2]
 	config->powersave    = false;
- 2f2:	2300      	movs	r3, #0
- 2f4:	466a      	mov	r2, sp
- 2f6:	70d3      	strb	r3, [r2, #3]
+ 42a:	2300      	movs	r3, #0
+ 42c:	466a      	mov	r2, sp
+ 42e:	70d3      	strb	r3, [r2, #3]
 	uint32_t pad0 = config->pinmux_pad0;
- 2f8:	69f0      	ldr	r0, [r6, #28]
+ 430:	69f0      	ldr	r0, [r6, #28]
 	uint32_t pad1 = config->pinmux_pad1;
- 2fa:	6a35      	ldr	r5, [r6, #32]
+ 432:	6a35      	ldr	r5, [r6, #32]
 	if (pad0 == PINMUX_DEFAULT) {
- 2fc:	2800      	cmp	r0, #0
- 2fe:	d04b      	beq.n	398 <i2c_slave_init+0x14c>
+ 434:	2800      	cmp	r0, #0
+ 436:	d04b      	beq.n	4d0 <STACK_SIZE+0xd0>
 	pin_conf.mux_position = pad0 & 0xFFFF;
- 300:	466b      	mov	r3, sp
- 302:	7018      	strb	r0, [r3, #0]
+ 438:	466b      	mov	r3, sp
+ 43a:	7018      	strb	r0, [r3, #0]
 	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
- 304:	2302      	movs	r3, #2
- 306:	466a      	mov	r2, sp
- 308:	7053      	strb	r3, [r2, #1]
+ 43c:	2302      	movs	r3, #2
+ 43e:	466a      	mov	r2, sp
+ 440:	7053      	strb	r3, [r2, #1]
 	system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
- 30a:	0c00      	lsrs	r0, r0, #16
- 30c:	b2c0      	uxtb	r0, r0
- 30e:	4669      	mov	r1, sp
- 310:	4b2f      	ldr	r3, [pc, #188]	; (3d0 <i2c_slave_init+0x184>)
- 312:	4798      	blx	r3
+ 442:	0c00      	lsrs	r0, r0, #16
+ 444:	b2c0      	uxtb	r0, r0
+ 446:	4669      	mov	r1, sp
+ 448:	4b2f      	ldr	r3, [pc, #188]	; (508 <STACK_SIZE+0x108>)
+ 44a:	4798      	blx	r3
 	if (pad1 == PINMUX_DEFAULT) {
- 314:	2d00      	cmp	r5, #0
- 316:	d044      	beq.n	3a2 <i2c_slave_init+0x156>
+ 44c:	2d00      	cmp	r5, #0
+ 44e:	d044      	beq.n	4da <STACK_SIZE+0xda>
 	pin_conf.mux_position = pad1 & 0xFFFF;
- 318:	466b      	mov	r3, sp
- 31a:	701d      	strb	r5, [r3, #0]
+ 450:	466b      	mov	r3, sp
+ 452:	701d      	strb	r5, [r3, #0]
 	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
- 31c:	2302      	movs	r3, #2
- 31e:	466a      	mov	r2, sp
- 320:	7053      	strb	r3, [r2, #1]
+ 454:	2302      	movs	r3, #2
+ 456:	466a      	mov	r2, sp
+ 458:	7053      	strb	r3, [r2, #1]
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
- 322:	0c2d      	lsrs	r5, r5, #16
- 324:	b2e8      	uxtb	r0, r5
- 326:	4669      	mov	r1, sp
- 328:	4b29      	ldr	r3, [pc, #164]	; (3d0 <i2c_slave_init+0x184>)
- 32a:	4798      	blx	r3
+ 45a:	0c2d      	lsrs	r5, r5, #16
+ 45c:	b2e8      	uxtb	r0, r5
+ 45e:	4669      	mov	r1, sp
+ 460:	4b29      	ldr	r3, [pc, #164]	; (508 <STACK_SIZE+0x108>)
+ 462:	4798      	blx	r3
 	if (config->run_in_standby || system_is_debugger_present()) {
- 32c:	7eb3      	ldrb	r3, [r6, #26]
+ 464:	7eb3      	ldrb	r3, [r6, #26]
 		tmp_ctrla = SERCOM_I2CS_CTRLA_RUNSTDBY;
- 32e:	2280      	movs	r2, #128	; 0x80
+ 466:	2280      	movs	r2, #128	; 0x80
 	if (config->run_in_standby || system_is_debugger_present()) {
- 330:	2b00      	cmp	r3, #0
- 332:	d104      	bne.n	33e <i2c_slave_init+0xf2>
+ 468:	2b00      	cmp	r3, #0
+ 46a:	d104      	bne.n	476 <STACK_SIZE+0x76>
  * \retval false Debugger is not connected to the system
  *
  */
 static inline bool system_is_debugger_present(void)
 {
 	return DSU->STATUSB.reg & DSU_STATUSB_DBGPRES;
- 334:	4b27      	ldr	r3, [pc, #156]	; (3d4 <i2c_slave_init+0x188>)
- 336:	789b      	ldrb	r3, [r3, #2]
- 338:	079b      	lsls	r3, r3, #30
+ 46c:	4b27      	ldr	r3, [pc, #156]	; (50c <STACK_SIZE+0x10c>)
+ 46e:	789b      	ldrb	r3, [r3, #2]
+ 470:	079b      	lsls	r3, r3, #30
 		tmp_ctrla = SERCOM_I2CS_CTRLA_RUNSTDBY;
- 33a:	0fdb      	lsrs	r3, r3, #31
- 33c:	01da      	lsls	r2, r3, #7
+ 472:	0fdb      	lsrs	r3, r3, #31
+ 474:	01da      	lsls	r2, r3, #7
 	if (config->scl_stretch_only_after_ack_bit || (config->transfer_speed == I2C_SLAVE_SPEED_HIGH_SPEED)) {
- 33e:	2325      	movs	r3, #37	; 0x25
- 340:	5cf3      	ldrb	r3, [r6, r3]
- 342:	2b00      	cmp	r3, #0
- 344:	d104      	bne.n	350 <i2c_slave_init+0x104>
- 346:	2380      	movs	r3, #128	; 0x80
- 348:	049b      	lsls	r3, r3, #18
- 34a:	6971      	ldr	r1, [r6, #20]
- 34c:	4299      	cmp	r1, r3
- 34e:	d102      	bne.n	356 <i2c_slave_init+0x10a>
+ 476:	2325      	movs	r3, #37	; 0x25
+ 478:	5cf3      	ldrb	r3, [r6, r3]
+ 47a:	2b00      	cmp	r3, #0
+ 47c:	d104      	bne.n	488 <STACK_SIZE+0x88>
+ 47e:	2380      	movs	r3, #128	; 0x80
+ 480:	049b      	lsls	r3, r3, #18
+ 482:	6971      	ldr	r1, [r6, #20]
+ 484:	4299      	cmp	r1, r3
+ 486:	d102      	bne.n	48e <STACK_SIZE+0x8e>
 		tmp_ctrla |= SERCOM_I2CM_CTRLA_SCLSM;
- 350:	2380      	movs	r3, #128	; 0x80
- 352:	051b      	lsls	r3, r3, #20
- 354:	431a      	orrs	r2, r3
+ 488:	2380      	movs	r3, #128	; 0x80
+ 48a:	051b      	lsls	r3, r3, #20
+ 48c:	431a      	orrs	r2, r3
 	i2c_hw->CTRLA.reg |= tmp_ctrla;
- 356:	6820      	ldr	r0, [r4, #0]
- 358:	6873      	ldr	r3, [r6, #4]
- 35a:	6971      	ldr	r1, [r6, #20]
- 35c:	430b      	orrs	r3, r1
+ 48e:	6820      	ldr	r0, [r4, #0]
+ 490:	6873      	ldr	r3, [r6, #4]
+ 492:	6971      	ldr	r1, [r6, #20]
+ 494:	430b      	orrs	r3, r1
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
- 35e:	2124      	movs	r1, #36	; 0x24
- 360:	5c71      	ldrb	r1, [r6, r1]
- 362:	0789      	lsls	r1, r1, #30
+ 496:	2124      	movs	r1, #36	; 0x24
+ 498:	5c71      	ldrb	r1, [r6, r1]
+ 49a:	0789      	lsls	r1, r1, #30
 	i2c_hw->CTRLA.reg |= tmp_ctrla;
- 364:	430b      	orrs	r3, r1
+ 49c:	430b      	orrs	r3, r1
 			(config->slave_scl_low_extend_timeout << SERCOM_I2CS_CTRLA_SEXTTOEN_Pos));
- 366:	2126      	movs	r1, #38	; 0x26
- 368:	5c71      	ldrb	r1, [r6, r1]
- 36a:	05c9      	lsls	r1, r1, #23
+ 49e:	2126      	movs	r1, #38	; 0x26
+ 4a0:	5c71      	ldrb	r1, [r6, r1]
+ 4a2:	05c9      	lsls	r1, r1, #23
 	i2c_hw->CTRLA.reg |= tmp_ctrla;
- 36c:	430b      	orrs	r3, r1
- 36e:	4303      	orrs	r3, r0
- 370:	4313      	orrs	r3, r2
- 372:	6023      	str	r3, [r4, #0]
+ 4a4:	430b      	orrs	r3, r1
+ 4a6:	4303      	orrs	r3, r0
+ 4a8:	4313      	orrs	r3, r2
+ 4aa:	6023      	str	r3, [r4, #0]
 	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;
- 374:	8972      	ldrh	r2, [r6, #10]
- 376:	2380      	movs	r3, #128	; 0x80
- 378:	005b      	lsls	r3, r3, #1
- 37a:	4313      	orrs	r3, r2
- 37c:	6063      	str	r3, [r4, #4]
+ 4ac:	8972      	ldrh	r2, [r6, #10]
+ 4ae:	2380      	movs	r3, #128	; 0x80
+ 4b0:	005b      	lsls	r3, r3, #1
+ 4b2:	4313      	orrs	r3, r2
+ 4b4:	6063      	str	r3, [r4, #4]
 	i2c_hw->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
- 37e:	89b3      	ldrh	r3, [r6, #12]
- 380:	005b      	lsls	r3, r3, #1
+ 4b6:	89b3      	ldrh	r3, [r6, #12]
+ 4b8:	005b      	lsls	r3, r3, #1
 			config->address_mask << SERCOM_I2CS_ADDR_ADDRMASK_Pos |
- 382:	89f2      	ldrh	r2, [r6, #14]
- 384:	0452      	lsls	r2, r2, #17
+ 4ba:	89f2      	ldrh	r2, [r6, #14]
+ 4bc:	0452      	lsls	r2, r2, #17
 	i2c_hw->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
- 386:	4313      	orrs	r3, r2
+ 4be:	4313      	orrs	r3, r2
 			config->enable_general_call_address << SERCOM_I2CS_ADDR_GENCEN_Pos;
- 388:	7c72      	ldrb	r2, [r6, #17]
+ 4c0:	7c72      	ldrb	r2, [r6, #17]
 			config->ten_bit_address << SERCOM_I2CS_ADDR_TENBITEN_Pos |
- 38a:	4313      	orrs	r3, r2
- 38c:	7c32      	ldrb	r2, [r6, #16]
- 38e:	03d2      	lsls	r2, r2, #15
- 390:	4313      	orrs	r3, r2
+ 4c2:	4313      	orrs	r3, r2
+ 4c4:	7c32      	ldrb	r2, [r6, #16]
+ 4c6:	03d2      	lsls	r2, r2, #15
+ 4c8:	4313      	orrs	r3, r2
 	i2c_hw->ADDR.reg = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
- 392:	6263      	str	r3, [r4, #36]	; 0x24
+ 4ca:	6263      	str	r3, [r4, #36]	; 0x24
 	return _i2c_slave_set_config(module, config);
- 394:	2000      	movs	r0, #0
- 396:	e766      	b.n	266 <i2c_slave_init+0x1a>
+ 4cc:	2000      	movs	r0, #0
+ 4ce:	e766      	b.n	39e <i2c_slave_init+0x1a>
 		pad0 = _sercom_get_default_pad(sercom_hw, 0);
- 398:	2100      	movs	r1, #0
- 39a:	0020      	movs	r0, r4
- 39c:	4b0e      	ldr	r3, [pc, #56]	; (3d8 <i2c_slave_init+0x18c>)
- 39e:	4798      	blx	r3
- 3a0:	e7ae      	b.n	300 <i2c_slave_init+0xb4>
+ 4d0:	2100      	movs	r1, #0
+ 4d2:	0020      	movs	r0, r4
+ 4d4:	4b0e      	ldr	r3, [pc, #56]	; (510 <STACK_SIZE+0x110>)
+ 4d6:	4798      	blx	r3
+ 4d8:	e7ae      	b.n	438 <STACK_SIZE+0x38>
 		pad1 = _sercom_get_default_pad(sercom_hw, 1);
- 3a2:	2101      	movs	r1, #1
- 3a4:	0020      	movs	r0, r4
- 3a6:	4b0c      	ldr	r3, [pc, #48]	; (3d8 <i2c_slave_init+0x18c>)
- 3a8:	4798      	blx	r3
- 3aa:	0005      	movs	r5, r0
- 3ac:	e7b4      	b.n	318 <i2c_slave_init+0xcc>
- 3ae:	46c0      	nop			; (mov r8, r8)
- 3b0:	00000835 	.word	0x00000835
- 3b4:	40000400 	.word	0x40000400
- 3b8:	00000a21 	.word	0x00000a21
- 3bc:	00000995 	.word	0x00000995
- 3c0:	00000769 	.word	0x00000769
- 3c4:	00000449 	.word	0x00000449
- 3c8:	0000085d 	.word	0x0000085d
- 3cc:	2000053c 	.word	0x2000053c
- 3d0:	00000ae5 	.word	0x00000ae5
- 3d4:	41002000 	.word	0x41002000
- 3d8:	000007b5 	.word	0x000007b5
+ 4da:	2101      	movs	r1, #1
+ 4dc:	0020      	movs	r0, r4
+ 4de:	4b0c      	ldr	r3, [pc, #48]	; (510 <STACK_SIZE+0x110>)
+ 4e0:	4798      	blx	r3
+ 4e2:	0005      	movs	r5, r0
+ 4e4:	e7b4      	b.n	450 <STACK_SIZE+0x50>
+ 4e6:	46c0      	nop			; (mov r8, r8)
+ 4e8:	0000096d 	.word	0x0000096d
+ 4ec:	40000400 	.word	0x40000400
+ 4f0:	00000b7d 	.word	0x00000b7d
+ 4f4:	00000af1 	.word	0x00000af1
+ 4f8:	000008a1 	.word	0x000008a1
+ 4fc:	00000581 	.word	0x00000581
+ 500:	00000995 	.word	0x00000995
+ 504:	20000540 	.word	0x20000540
+ 508:	00000c41 	.word	0x00000c41
+ 50c:	41002000 	.word	0x41002000
+ 510:	000008ed 	.word	0x000008ed
 
-000003dc <i2c_slave_register_callback>:
+00000514 <i2c_slave_register_callback>:
  */
 void i2c_slave_register_callback(
 		struct i2c_slave_module *const module,
 		i2c_slave_callback_t callback,
 		enum i2c_slave_callback callback_type)
 {
- 3dc:	b510      	push	{r4, lr}
+ 514:	b510      	push	{r4, lr}
 	Assert(module);
 	Assert(module->hw);
 	Assert(callback);
 
 	/* Register callback. */
 	module->callbacks[callback_type] = callback;
- 3de:	1c93      	adds	r3, r2, #2
- 3e0:	009b      	lsls	r3, r3, #2
- 3e2:	18c3      	adds	r3, r0, r3
- 3e4:	6059      	str	r1, [r3, #4]
+ 516:	1c93      	adds	r3, r2, #2
+ 518:	009b      	lsls	r3, r3, #2
+ 51a:	18c3      	adds	r3, r0, r3
+ 51c:	6059      	str	r1, [r3, #4]
 
 	/* Set corresponding bit to set callback as initiated. */
 	module->registered_callback |= (1 << callback_type);
- 3e6:	2424      	movs	r4, #36	; 0x24
- 3e8:	5d03      	ldrb	r3, [r0, r4]
- 3ea:	2101      	movs	r1, #1
- 3ec:	4091      	lsls	r1, r2
- 3ee:	430b      	orrs	r3, r1
- 3f0:	b2db      	uxtb	r3, r3
- 3f2:	5503      	strb	r3, [r0, r4]
+ 51e:	2424      	movs	r4, #36	; 0x24
+ 520:	5d03      	ldrb	r3, [r0, r4]
+ 522:	2101      	movs	r1, #1
+ 524:	4091      	lsls	r1, r2
+ 526:	430b      	orrs	r3, r1
+ 528:	b2db      	uxtb	r3, r3
+ 52a:	5503      	strb	r3, [r0, r4]
 }
- 3f4:	bd10      	pop	{r4, pc}
+ 52c:	bd10      	pop	{r4, pc}
 
-000003f6 <i2c_slave_read_packet_job>:
+0000052e <i2c_slave_read_packet_job>:
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
- 3f6:	8d02      	ldrh	r2, [r0, #40]	; 0x28
+ 52e:	8d02      	ldrh	r2, [r0, #40]	; 0x28
 		return STATUS_BUSY;
- 3f8:	2305      	movs	r3, #5
+ 530:	2305      	movs	r3, #5
 	if (module->buffer_remaining > 0) {
- 3fa:	2a00      	cmp	r2, #0
- 3fc:	d001      	beq.n	402 <STACK_SIZE+0x2>
+ 532:	2a00      	cmp	r2, #0
+ 534:	d001      	beq.n	53a <i2c_slave_read_packet_job+0xc>
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
 			SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	/* Read will begin when master initiates the transfer */
 	return STATUS_OK;
 }
- 3fe:	0018      	movs	r0, r3
- 400:	4770      	bx	lr
+ 536:	0018      	movs	r0, r3
+ 538:	4770      	bx	lr
 	module->buffer           = packet->data;
- 402:	684b      	ldr	r3, [r1, #4]
- 404:	62c3      	str	r3, [r0, #44]	; 0x2c
+ 53a:	684b      	ldr	r3, [r1, #4]
+ 53c:	62c3      	str	r3, [r0, #44]	; 0x2c
 	module->buffer_remaining = packet->data_length;
- 406:	880b      	ldrh	r3, [r1, #0]
- 408:	8503      	strh	r3, [r0, #40]	; 0x28
+ 53e:	880b      	ldrh	r3, [r1, #0]
+ 540:	8503      	strh	r3, [r0, #40]	; 0x28
 	module->buffer_length    = packet->data_length;
- 40a:	880b      	ldrh	r3, [r1, #0]
- 40c:	84c3      	strh	r3, [r0, #38]	; 0x26
+ 542:	880b      	ldrh	r3, [r1, #0]
+ 544:	84c3      	strh	r3, [r0, #38]	; 0x26
 	module->status           = STATUS_BUSY;
- 40e:	3205      	adds	r2, #5
- 410:	2331      	movs	r3, #49	; 0x31
- 412:	54c2      	strb	r2, [r0, r3]
+ 546:	3205      	adds	r2, #5
+ 548:	2331      	movs	r3, #49	; 0x31
+ 54a:	54c2      	strb	r2, [r0, r3]
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 414:	6803      	ldr	r3, [r0, #0]
+ 54c:	6803      	ldr	r3, [r0, #0]
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
- 416:	3202      	adds	r2, #2
- 418:	759a      	strb	r2, [r3, #22]
+ 54e:	3202      	adds	r2, #2
+ 550:	759a      	strb	r2, [r3, #22]
 	return STATUS_OK;
- 41a:	2300      	movs	r3, #0
- 41c:	e7ef      	b.n	3fe <i2c_slave_read_packet_job+0x8>
+ 552:	2300      	movs	r3, #0
+ 554:	e7ef      	b.n	536 <i2c_slave_read_packet_job+0x8>
 
-0000041e <i2c_slave_write_packet_job>:
+00000556 <i2c_slave_write_packet_job>:
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
 
 	/* Check if the I2C module is busy doing async operation. */
 	if (module->buffer_remaining > 0) {
- 41e:	8d02      	ldrh	r2, [r0, #40]	; 0x28
+ 556:	8d02      	ldrh	r2, [r0, #40]	; 0x28
 		return STATUS_BUSY;
- 420:	2305      	movs	r3, #5
+ 558:	2305      	movs	r3, #5
 	if (module->buffer_remaining > 0) {
- 422:	2a00      	cmp	r2, #0
- 424:	d001      	beq.n	42a <i2c_slave_write_packet_job+0xc>
+ 55a:	2a00      	cmp	r2, #0
+ 55c:	d001      	beq.n	562 <i2c_slave_write_packet_job+0xc>
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
 			SERCOM_I2CS_INTFLAG_DRDY | SERCOM_I2CS_INTFLAG_PREC;
 
 	return STATUS_OK;
 }
- 426:	0018      	movs	r0, r3
- 428:	4770      	bx	lr
+ 55e:	0018      	movs	r0, r3
+ 560:	4770      	bx	lr
 	module->buffer           = packet->data;
- 42a:	684b      	ldr	r3, [r1, #4]
- 42c:	62c3      	str	r3, [r0, #44]	; 0x2c
+ 562:	684b      	ldr	r3, [r1, #4]
+ 564:	62c3      	str	r3, [r0, #44]	; 0x2c
 	module->buffer_remaining = packet->data_length;
- 42e:	880b      	ldrh	r3, [r1, #0]
- 430:	8503      	strh	r3, [r0, #40]	; 0x28
+ 566:	880b      	ldrh	r3, [r1, #0]
+ 568:	8503      	strh	r3, [r0, #40]	; 0x28
 	module->buffer_length    = packet->data_length;
- 432:	880b      	ldrh	r3, [r1, #0]
- 434:	84c3      	strh	r3, [r0, #38]	; 0x26
+ 56a:	880b      	ldrh	r3, [r1, #0]
+ 56c:	84c3      	strh	r3, [r0, #38]	; 0x26
 	module->status           = STATUS_BUSY;
- 436:	3205      	adds	r2, #5
- 438:	2331      	movs	r3, #49	; 0x31
- 43a:	54c2      	strb	r2, [r0, r3]
+ 56e:	3205      	adds	r2, #5
+ 570:	2331      	movs	r3, #49	; 0x31
+ 572:	54c2      	strb	r2, [r0, r3]
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 43c:	6803      	ldr	r3, [r0, #0]
+ 574:	6803      	ldr	r3, [r0, #0]
 	i2c_hw->INTENSET.reg = SERCOM_I2CS_INTFLAG_AMATCH |
- 43e:	3202      	adds	r2, #2
- 440:	759a      	strb	r2, [r3, #22]
+ 576:	3202      	adds	r2, #2
+ 578:	759a      	strb	r2, [r3, #22]
 	return STATUS_OK;
- 442:	2300      	movs	r3, #0
- 444:	e7ef      	b.n	426 <i2c_slave_write_packet_job+0x8>
+ 57a:	2300      	movs	r3, #0
+ 57c:	e7ef      	b.n	55e <i2c_slave_write_packet_job+0x8>
 	...
 
-00000448 <_i2c_slave_interrupt_handler>:
+00000580 <_i2c_slave_interrupt_handler>:
  *
  * \param[in] instance Sercom instance that triggered the interrupt
  */
 void _i2c_slave_interrupt_handler(
 		uint8_t instance)
 {
- 448:	b570      	push	{r4, r5, r6, lr}
+ 580:	b570      	push	{r4, r5, r6, lr}
 	/* Get software module for callback handling. */
 	struct i2c_slave_module *module =
- 44a:	0080      	lsls	r0, r0, #2
- 44c:	4b9b      	ldr	r3, [pc, #620]	; (6bc <_i2c_slave_interrupt_handler+0x274>)
- 44e:	58c4      	ldr	r4, [r0, r3]
+ 582:	0080      	lsls	r0, r0, #2
+ 584:	4b9b      	ldr	r3, [pc, #620]	; (7f4 <_i2c_slave_interrupt_handler+0x274>)
+ 586:	58c4      	ldr	r4, [r0, r3]
 			(struct i2c_slave_module*)_sercom_instances[instance];
 
 	Assert(module);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 450:	6825      	ldr	r5, [r4, #0]
+ 588:	6825      	ldr	r5, [r4, #0]
 
 	/* Combine callback registered and enabled masks. */
 	uint8_t callback_mask = module->enabled_callback;
- 452:	2325      	movs	r3, #37	; 0x25
- 454:	5ce3      	ldrb	r3, [r4, r3]
+ 58a:	2325      	movs	r3, #37	; 0x25
+ 58c:	5ce3      	ldrb	r3, [r4, r3]
 	callback_mask &= module->registered_callback;
- 456:	2224      	movs	r2, #36	; 0x24
- 458:	5ca6      	ldrb	r6, [r4, r2]
- 45a:	401e      	ands	r6, r3
+ 58e:	2224      	movs	r2, #36	; 0x24
+ 590:	5ca6      	ldrb	r6, [r4, r2]
+ 592:	401e      	ands	r6, r3
 
 
 	if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
- 45c:	7e2b      	ldrb	r3, [r5, #24]
- 45e:	079b      	lsls	r3, r3, #30
- 460:	d400      	bmi.n	464 <_i2c_slave_interrupt_handler+0x1c>
- 462:	e095      	b.n	590 <_i2c_slave_interrupt_handler+0x148>
+ 594:	7e2b      	ldrb	r3, [r5, #24]
+ 596:	079b      	lsls	r3, r3, #30
+ 598:	d400      	bmi.n	59c <_i2c_slave_interrupt_handler+0x1c>
+ 59a:	e095      	b.n	6c8 <_i2c_slave_interrupt_handler+0x148>
 	/* Address match */
 		/* Check if last transfer is done - repeated start */
 		if (module->buffer_length != module->buffer_remaining &&
- 464:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
- 466:	b29b      	uxth	r3, r3
- 468:	8d22      	ldrh	r2, [r4, #40]	; 0x28
- 46a:	4293      	cmp	r3, r2
- 46c:	d00d      	beq.n	48a <_i2c_slave_interrupt_handler+0x42>
+ 59c:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
+ 59e:	b29b      	uxth	r3, r3
+ 5a0:	8d22      	ldrh	r2, [r4, #40]	; 0x28
+ 5a2:	4293      	cmp	r3, r2
+ 5a4:	d00d      	beq.n	5c2 <_i2c_slave_interrupt_handler+0x42>
 				module->transfer_direction == I2C_TRANSFER_WRITE) {
- 46e:	2330      	movs	r3, #48	; 0x30
- 470:	5ce3      	ldrb	r3, [r4, r3]
+ 5a6:	2330      	movs	r3, #48	; 0x30
+ 5a8:	5ce3      	ldrb	r3, [r4, r3]
 		if (module->buffer_length != module->buffer_remaining &&
- 472:	2b00      	cmp	r3, #0
- 474:	d109      	bne.n	48a <_i2c_slave_interrupt_handler+0x42>
+ 5aa:	2b00      	cmp	r3, #0
+ 5ac:	d109      	bne.n	5c2 <_i2c_slave_interrupt_handler+0x42>
 
 			module->status = STATUS_OK;
- 476:	2231      	movs	r2, #49	; 0x31
- 478:	54a3      	strb	r3, [r4, r2]
+ 5ae:	2231      	movs	r2, #49	; 0x31
+ 5b0:	54a3      	strb	r3, [r4, r2]
 			module->buffer_length = 0;
- 47a:	84e3      	strh	r3, [r4, #38]	; 0x26
+ 5b2:	84e3      	strh	r3, [r4, #38]	; 0x26
 			module->buffer_remaining = 0;
- 47c:	8523      	strh	r3, [r4, #40]	; 0x28
+ 5b4:	8523      	strh	r3, [r4, #40]	; 0x28
 
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))) {
- 47e:	07b3      	lsls	r3, r6, #30
- 480:	d50b      	bpl.n	49a <_i2c_slave_interrupt_handler+0x52>
+ 5b6:	07b3      	lsls	r3, r6, #30
+ 5b8:	d50b      	bpl.n	5d2 <_i2c_slave_interrupt_handler+0x52>
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
- 482:	6923      	ldr	r3, [r4, #16]
- 484:	0020      	movs	r0, r4
- 486:	4798      	blx	r3
- 488:	e007      	b.n	49a <_i2c_slave_interrupt_handler+0x52>
+ 5ba:	6923      	ldr	r3, [r4, #16]
+ 5bc:	0020      	movs	r0, r4
+ 5be:	4798      	blx	r3
+ 5c0:	e007      	b.n	5d2 <_i2c_slave_interrupt_handler+0x52>
 			}
 		} else if (module->buffer_length != module->buffer_remaining &&
- 48a:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
- 48c:	b29b      	uxth	r3, r3
- 48e:	429a      	cmp	r2, r3
- 490:	d003      	beq.n	49a <_i2c_slave_interrupt_handler+0x52>
+ 5c2:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
+ 5c4:	b29b      	uxth	r3, r3
+ 5c6:	429a      	cmp	r2, r3
+ 5c8:	d003      	beq.n	5d2 <_i2c_slave_interrupt_handler+0x52>
 				module->transfer_direction == I2C_TRANSFER_READ) {
- 492:	2330      	movs	r3, #48	; 0x30
- 494:	5ce3      	ldrb	r3, [r4, r3]
+ 5ca:	2330      	movs	r3, #48	; 0x30
+ 5cc:	5ce3      	ldrb	r3, [r4, r3]
 		} else if (module->buffer_length != module->buffer_remaining &&
- 496:	2b01      	cmp	r3, #1
- 498:	d022      	beq.n	4e0 <_i2c_slave_interrupt_handler+0x98>
+ 5ce:	2b01      	cmp	r3, #1
+ 5d0:	d022      	beq.n	618 <_i2c_slave_interrupt_handler+0x98>
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))) {
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 			}
 		}
 
 		if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR |
- 49a:	8b6a      	ldrh	r2, [r5, #26]
- 49c:	2343      	movs	r3, #67	; 0x43
- 49e:	421a      	tst	r2, r3
- 4a0:	d004      	beq.n	4ac <_i2c_slave_interrupt_handler+0x64>
+ 5d2:	8b6a      	ldrh	r2, [r5, #26]
+ 5d4:	2343      	movs	r3, #67	; 0x43
+ 5d6:	421a      	tst	r2, r3
+ 5d8:	d004      	beq.n	5e4 <_i2c_slave_interrupt_handler+0x64>
 				SERCOM_I2CS_STATUS_COLL | SERCOM_I2CS_STATUS_LOWTOUT)) {
 			/* An error occurred in last packet transfer */
 			module->status = STATUS_ERR_IO;
- 4a2:	2210      	movs	r2, #16
- 4a4:	3b12      	subs	r3, #18
- 4a6:	54e2      	strb	r2, [r4, r3]
+ 5da:	2210      	movs	r2, #16
+ 5dc:	3b12      	subs	r3, #18
+ 5de:	54e2      	strb	r2, [r4, r3]
 
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER))) {
- 4a8:	06b3      	lsls	r3, r6, #26
- 4aa:	d424      	bmi.n	4f6 <_i2c_slave_interrupt_handler+0xae>
+ 5e0:	06b3      	lsls	r3, r6, #26
+ 5e2:	d424      	bmi.n	62e <_i2c_slave_interrupt_handler+0xae>
 				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
 			}
 		}
 		if (module->nack_on_address) {
- 4ac:	7a63      	ldrb	r3, [r4, #9]
- 4ae:	2b00      	cmp	r3, #0
- 4b0:	d125      	bne.n	4fe <_i2c_slave_interrupt_handler+0xb6>
+ 5e4:	7a63      	ldrb	r3, [r4, #9]
+ 5e6:	2b00      	cmp	r3, #0
+ 5e8:	d125      	bne.n	636 <_i2c_slave_interrupt_handler+0xb6>
 			/* NACK address, workaround 13574 */
 			_i2c_slave_set_ctrlb_ackact(module, false);
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR) {
- 4b2:	8b6b      	ldrh	r3, [r5, #26]
- 4b4:	071b      	lsls	r3, r3, #28
- 4b6:	d54a      	bpl.n	54e <_i2c_slave_interrupt_handler+0x106>
+ 5ea:	8b6b      	ldrh	r3, [r5, #26]
+ 5ec:	071b      	lsls	r3, r3, #28
+ 5ee:	d54a      	bpl.n	686 <_i2c_slave_interrupt_handler+0x106>
 			/* Set transfer direction in module instance */
 			module->transfer_direction = I2C_TRANSFER_READ;
- 4b8:	2201      	movs	r2, #1
- 4ba:	2330      	movs	r3, #48	; 0x30
- 4bc:	54e2      	strb	r2, [r4, r3]
+ 5f0:	2201      	movs	r2, #1
+ 5f2:	2330      	movs	r3, #48	; 0x30
+ 5f4:	54e2      	strb	r2, [r4, r3]
 
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
- 4be:	0773      	lsls	r3, r6, #29
- 4c0:	d438      	bmi.n	534 <_i2c_slave_interrupt_handler+0xec>
+ 5f6:	0773      	lsls	r3, r6, #29
+ 5f8:	d438      	bmi.n	66c <_i2c_slave_interrupt_handler+0xec>
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 			}
 
 			if (module->buffer_length == 0) {
- 4c2:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
- 4c4:	b29b      	uxth	r3, r3
- 4c6:	2b00      	cmp	r3, #0
- 4c8:	d138      	bne.n	53c <_i2c_slave_interrupt_handler+0xf4>
+ 5fa:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
+ 5fc:	b29b      	uxth	r3, r3
+ 5fe:	2b00      	cmp	r3, #0
+ 600:	d138      	bne.n	674 <_i2c_slave_interrupt_handler+0xf4>
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 4ca:	6825      	ldr	r5, [r4, #0]
+ 602:	6825      	ldr	r5, [r4, #0]
 	cpu_irq_enter_critical();
- 4cc:	4b7c      	ldr	r3, [pc, #496]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 4ce:	4798      	blx	r3
+ 604:	4b7c      	ldr	r3, [pc, #496]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 606:	4798      	blx	r3
 	i2c_hw->STATUS.reg = 0;
- 4d0:	2300      	movs	r3, #0
- 4d2:	836b      	strh	r3, [r5, #26]
+ 608:	2300      	movs	r3, #0
+ 60a:	836b      	strh	r3, [r5, #26]
 		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
- 4d4:	2380      	movs	r3, #128	; 0x80
- 4d6:	02db      	lsls	r3, r3, #11
- 4d8:	606b      	str	r3, [r5, #4]
+ 60c:	2380      	movs	r3, #128	; 0x80
+ 60e:	02db      	lsls	r3, r3, #11
+ 610:	606b      	str	r3, [r5, #4]
 	cpu_irq_leave_critical();
- 4da:	4b7a      	ldr	r3, [pc, #488]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 4dc:	4798      	blx	r3
- 4de:	e018      	b.n	512 <_i2c_slave_interrupt_handler+0xca>
+ 612:	4b7a      	ldr	r3, [pc, #488]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 614:	4798      	blx	r3
+ 616:	e018      	b.n	64a <_i2c_slave_interrupt_handler+0xca>
 			module->status = STATUS_OK;
- 4e0:	2300      	movs	r3, #0
- 4e2:	2231      	movs	r2, #49	; 0x31
- 4e4:	54a3      	strb	r3, [r4, r2]
+ 618:	2300      	movs	r3, #0
+ 61a:	2231      	movs	r2, #49	; 0x31
+ 61c:	54a3      	strb	r3, [r4, r2]
 			module->buffer_length = 0;
- 4e6:	84e3      	strh	r3, [r4, #38]	; 0x26
+ 61e:	84e3      	strh	r3, [r4, #38]	; 0x26
 			module->buffer_remaining = 0;
- 4e8:	8523      	strh	r3, [r4, #40]	; 0x28
+ 620:	8523      	strh	r3, [r4, #40]	; 0x28
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))) {
- 4ea:	07f3      	lsls	r3, r6, #31
- 4ec:	d5d5      	bpl.n	49a <_i2c_slave_interrupt_handler+0x52>
+ 622:	07f3      	lsls	r3, r6, #31
+ 624:	d5d5      	bpl.n	5d2 <_i2c_slave_interrupt_handler+0x52>
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
- 4ee:	68e3      	ldr	r3, [r4, #12]
- 4f0:	0020      	movs	r0, r4
- 4f2:	4798      	blx	r3
- 4f4:	e7d1      	b.n	49a <_i2c_slave_interrupt_handler+0x52>
+ 626:	68e3      	ldr	r3, [r4, #12]
+ 628:	0020      	movs	r0, r4
+ 62a:	4798      	blx	r3
+ 62c:	e7d1      	b.n	5d2 <_i2c_slave_interrupt_handler+0x52>
 				module->callbacks[I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER](module);
- 4f6:	6a23      	ldr	r3, [r4, #32]
- 4f8:	0020      	movs	r0, r4
- 4fa:	4798      	blx	r3
- 4fc:	e7d6      	b.n	4ac <_i2c_slave_interrupt_handler+0x64>
+ 62e:	6a23      	ldr	r3, [r4, #32]
+ 630:	0020      	movs	r0, r4
+ 632:	4798      	blx	r3
+ 634:	e7d6      	b.n	5e4 <_i2c_slave_interrupt_handler+0x64>
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 4fe:	6825      	ldr	r5, [r4, #0]
+ 636:	6825      	ldr	r5, [r4, #0]
 	cpu_irq_enter_critical();
- 500:	4b6f      	ldr	r3, [pc, #444]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 502:	4798      	blx	r3
+ 638:	4b6f      	ldr	r3, [pc, #444]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 63a:	4798      	blx	r3
 	i2c_hw->STATUS.reg = 0;
- 504:	2300      	movs	r3, #0
- 506:	836b      	strh	r3, [r5, #26]
+ 63c:	2300      	movs	r3, #0
+ 63e:	836b      	strh	r3, [r5, #26]
 		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
- 508:	2380      	movs	r3, #128	; 0x80
- 50a:	02db      	lsls	r3, r3, #11
- 50c:	606b      	str	r3, [r5, #4]
+ 640:	2380      	movs	r3, #128	; 0x80
+ 642:	02db      	lsls	r3, r3, #11
+ 644:	606b      	str	r3, [r5, #4]
 	cpu_irq_leave_critical();
- 50e:	4b6d      	ldr	r3, [pc, #436]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 510:	4798      	blx	r3
+ 646:	4b6d      	ldr	r3, [pc, #436]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 648:	4798      	blx	r3
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 512:	6823      	ldr	r3, [r4, #0]
+ 64a:	6823      	ldr	r3, [r4, #0]
 	if (i2c_hw->INTFLAG.bit.PREC) {
- 514:	7e1a      	ldrb	r2, [r3, #24]
- 516:	07d2      	lsls	r2, r2, #31
- 518:	d501      	bpl.n	51e <_i2c_slave_interrupt_handler+0xd6>
+ 64c:	7e1a      	ldrb	r2, [r3, #24]
+ 64e:	07d2      	lsls	r2, r2, #31
+ 650:	d501      	bpl.n	656 <_i2c_slave_interrupt_handler+0xd6>
 		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
- 51a:	2201      	movs	r2, #1
- 51c:	761a      	strb	r2, [r3, #24]
+ 652:	2201      	movs	r2, #1
+ 654:	761a      	strb	r2, [r3, #24]
 	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
- 51e:	2202      	movs	r2, #2
- 520:	761a      	strb	r2, [r3, #24]
+ 656:	2202      	movs	r2, #2
+ 658:	761a      	strb	r2, [r3, #24]
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 522:	6824      	ldr	r4, [r4, #0]
+ 65a:	6824      	ldr	r4, [r4, #0]
 	cpu_irq_enter_critical();
- 524:	4b66      	ldr	r3, [pc, #408]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 526:	4798      	blx	r3
+ 65c:	4b66      	ldr	r3, [pc, #408]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 65e:	4798      	blx	r3
 	i2c_hw->STATUS.reg = 0;
- 528:	2300      	movs	r3, #0
- 52a:	8363      	strh	r3, [r4, #26]
+ 660:	2300      	movs	r3, #0
+ 662:	8363      	strh	r3, [r4, #26]
 		i2c_hw->CTRLB.reg = 0;
- 52c:	6063      	str	r3, [r4, #4]
+ 664:	6063      	str	r3, [r4, #4]
 	cpu_irq_leave_critical();
- 52e:	4b65      	ldr	r3, [pc, #404]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 530:	4798      	blx	r3
+ 666:	4b65      	ldr	r3, [pc, #404]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 668:	4798      	blx	r3
 			} else {
 				_i2c_slave_write(module);
 			}
 		}
 	}
 }
- 532:	bd70      	pop	{r4, r5, r6, pc}
+ 66a:	bd70      	pop	{r4, r5, r6, pc}
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
- 534:	6963      	ldr	r3, [r4, #20]
- 536:	0020      	movs	r0, r4
- 538:	4798      	blx	r3
- 53a:	e7c2      	b.n	4c2 <_i2c_slave_interrupt_handler+0x7a>
+ 66c:	6963      	ldr	r3, [r4, #20]
+ 66e:	0020      	movs	r0, r4
+ 670:	4798      	blx	r3
+ 672:	e7c2      	b.n	5fa <_i2c_slave_interrupt_handler+0x7a>
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 53c:	6825      	ldr	r5, [r4, #0]
+ 674:	6825      	ldr	r5, [r4, #0]
 	cpu_irq_enter_critical();
- 53e:	4b60      	ldr	r3, [pc, #384]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 540:	4798      	blx	r3
-	i2c_hw->STATUS.reg = 0;
- 542:	2300      	movs	r3, #0
- 544:	836b      	strh	r3, [r5, #26]
-		i2c_hw->CTRLB.reg = 0;
- 546:	606b      	str	r3, [r5, #4]
-	cpu_irq_leave_critical();
- 548:	4b5e      	ldr	r3, [pc, #376]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 54a:	4798      	blx	r3
- 54c:	e7e1      	b.n	512 <_i2c_slave_interrupt_handler+0xca>
-			module->transfer_direction = I2C_TRANSFER_WRITE;
- 54e:	2200      	movs	r2, #0
- 550:	2330      	movs	r3, #48	; 0x30
- 552:	54e2      	strb	r2, [r4, r3]
-			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
- 554:	0733      	lsls	r3, r6, #28
- 556:	d40e      	bmi.n	576 <_i2c_slave_interrupt_handler+0x12e>
-			if (module->buffer_length == 0) {
- 558:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
- 55a:	b29b      	uxth	r3, r3
- 55c:	2b00      	cmp	r3, #0
- 55e:	d10e      	bne.n	57e <_i2c_slave_interrupt_handler+0x136>
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 560:	6825      	ldr	r5, [r4, #0]
-	cpu_irq_enter_critical();
- 562:	4b57      	ldr	r3, [pc, #348]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 564:	4798      	blx	r3
-	i2c_hw->STATUS.reg = 0;
- 566:	2300      	movs	r3, #0
- 568:	836b      	strh	r3, [r5, #26]
-		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
- 56a:	2380      	movs	r3, #128	; 0x80
- 56c:	02db      	lsls	r3, r3, #11
- 56e:	606b      	str	r3, [r5, #4]
-	cpu_irq_leave_critical();
- 570:	4b54      	ldr	r3, [pc, #336]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 572:	4798      	blx	r3
- 574:	e7cd      	b.n	512 <_i2c_slave_interrupt_handler+0xca>
-				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
- 576:	69a3      	ldr	r3, [r4, #24]
- 578:	0020      	movs	r0, r4
- 57a:	4798      	blx	r3
- 57c:	e7ec      	b.n	558 <_i2c_slave_interrupt_handler+0x110>
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
- 57e:	6825      	ldr	r5, [r4, #0]
-	cpu_irq_enter_critical();
- 580:	4b4f      	ldr	r3, [pc, #316]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 582:	4798      	blx	r3
-	i2c_hw->STATUS.reg = 0;
- 584:	2300      	movs	r3, #0
- 586:	836b      	strh	r3, [r5, #26]
-		i2c_hw->CTRLB.reg = 0;
- 588:	606b      	str	r3, [r5, #4]
-	cpu_irq_leave_critical();
- 58a:	4b4e      	ldr	r3, [pc, #312]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 58c:	4798      	blx	r3
- 58e:	e7c0      	b.n	512 <_i2c_slave_interrupt_handler+0xca>
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
- 590:	7e2b      	ldrb	r3, [r5, #24]
- 592:	07db      	lsls	r3, r3, #31
- 594:	d52e      	bpl.n	5f4 <_i2c_slave_interrupt_handler+0x1ac>
-		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
- 596:	2301      	movs	r3, #1
- 598:	762b      	strb	r3, [r5, #24]
-		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_DRDY;
- 59a:	3304      	adds	r3, #4
- 59c:	752b      	strb	r3, [r5, #20]
-		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
- 59e:	3320      	adds	r3, #32
- 5a0:	5ce3      	ldrb	r3, [r4, r3]
- 5a2:	075b      	lsls	r3, r3, #29
- 5a4:	d405      	bmi.n	5b2 <_i2c_slave_interrupt_handler+0x16a>
-				|| (module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
- 5a6:	2325      	movs	r3, #37	; 0x25
- 5a8:	5ce3      	ldrb	r3, [r4, r3]
-		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
- 5aa:	071b      	lsls	r3, r3, #28
- 5ac:	d401      	bmi.n	5b2 <_i2c_slave_interrupt_handler+0x16a>
-			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
- 5ae:	2302      	movs	r3, #2
- 5b0:	752b      	strb	r3, [r5, #20]
-		if (!(module->status == STATUS_ERR_OVERFLOW || module->status == STATUS_ERR_IO)) {
- 5b2:	2331      	movs	r3, #49	; 0x31
- 5b4:	5ce3      	ldrb	r3, [r4, r3]
- 5b6:	2b1e      	cmp	r3, #30
- 5b8:	d0bb      	beq.n	532 <_i2c_slave_interrupt_handler+0xea>
- 5ba:	2331      	movs	r3, #49	; 0x31
- 5bc:	5ce3      	ldrb	r3, [r4, r3]
- 5be:	2b10      	cmp	r3, #16
- 5c0:	d0b7      	beq.n	532 <_i2c_slave_interrupt_handler+0xea>
-			module->status = STATUS_OK;
- 5c2:	2300      	movs	r3, #0
- 5c4:	2231      	movs	r2, #49	; 0x31
- 5c6:	54a3      	strb	r3, [r4, r2]
-			module->buffer_length = 0;
- 5c8:	84e3      	strh	r3, [r4, #38]	; 0x26
-			module->buffer_remaining = 0;
- 5ca:	8523      	strh	r3, [r4, #40]	; 0x28
-			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
- 5cc:	07b3      	lsls	r3, r6, #30
- 5ce:	d503      	bpl.n	5d8 <_i2c_slave_interrupt_handler+0x190>
-					&& (module->transfer_direction == I2C_TRANSFER_WRITE)) {
- 5d0:	2330      	movs	r3, #48	; 0x30
- 5d2:	5ce3      	ldrb	r3, [r4, r3]
- 5d4:	2b00      	cmp	r3, #0
- 5d6:	d009      	beq.n	5ec <_i2c_slave_interrupt_handler+0x1a4>
-			} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
- 5d8:	07f3      	lsls	r3, r6, #31
- 5da:	d5aa      	bpl.n	532 <_i2c_slave_interrupt_handler+0xea>
-					&& (module->transfer_direction == I2C_TRANSFER_READ)) {
- 5dc:	2330      	movs	r3, #48	; 0x30
- 5de:	5ce3      	ldrb	r3, [r4, r3]
- 5e0:	2b01      	cmp	r3, #1
- 5e2:	d1a6      	bne.n	532 <_i2c_slave_interrupt_handler+0xea>
-				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
- 5e4:	68e3      	ldr	r3, [r4, #12]
- 5e6:	0020      	movs	r0, r4
- 5e8:	4798      	blx	r3
- 5ea:	e7a2      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
- 5ec:	6923      	ldr	r3, [r4, #16]
- 5ee:	0020      	movs	r0, r4
- 5f0:	4798      	blx	r3
- 5f2:	e79e      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
- 5f4:	7e2b      	ldrb	r3, [r5, #24]
- 5f6:	075b      	lsls	r3, r3, #29
- 5f8:	d59b      	bpl.n	532 <_i2c_slave_interrupt_handler+0xea>
-		if (module->buffer_remaining <= 0 ||
- 5fa:	8d23      	ldrh	r3, [r4, #40]	; 0x28
- 5fc:	2b00      	cmp	r3, #0
- 5fe:	d01e      	beq.n	63e <_i2c_slave_interrupt_handler+0x1f6>
-				(module->transfer_direction == I2C_TRANSFER_READ &&
- 600:	2230      	movs	r2, #48	; 0x30
- 602:	5ca2      	ldrb	r2, [r4, r2]
-		if (module->buffer_remaining <= 0 ||
- 604:	2a01      	cmp	r2, #1
- 606:	d013      	beq.n	630 <_i2c_slave_interrupt_handler+0x1e8>
-		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
- 608:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
- 60a:	b29b      	uxth	r3, r3
- 60c:	2b00      	cmp	r3, #0
- 60e:	d100      	bne.n	612 <_i2c_slave_interrupt_handler+0x1ca>
- 610:	e78f      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
- 612:	2330      	movs	r3, #48	; 0x30
- 614:	5ce3      	ldrb	r3, [r4, r3]
- 616:	2b00      	cmp	r3, #0
- 618:	d044      	beq.n	6a4 <_i2c_slave_interrupt_handler+0x25c>
-	i2c_hw->DATA.reg = *(module->buffer++);
- 61a:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
- 61c:	1c5a      	adds	r2, r3, #1
- 61e:	62e2      	str	r2, [r4, #44]	; 0x2c
- 620:	781b      	ldrb	r3, [r3, #0]
- 622:	b2db      	uxtb	r3, r3
- 624:	2228      	movs	r2, #40	; 0x28
- 626:	54ab      	strb	r3, [r5, r2]
-	module->buffer_remaining--;
- 628:	8d23      	ldrh	r3, [r4, #40]	; 0x28
- 62a:	3b01      	subs	r3, #1
- 62c:	8523      	strh	r3, [r4, #40]	; 0x28
-}
- 62e:	e780      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-				(module->buffer_length > module->buffer_remaining) &&
- 630:	8ce2      	ldrh	r2, [r4, #38]	; 0x26
- 632:	b292      	uxth	r2, r2
-				(module->transfer_direction == I2C_TRANSFER_READ &&
- 634:	4293      	cmp	r3, r2
- 636:	d2e7      	bcs.n	608 <_i2c_slave_interrupt_handler+0x1c0>
-				(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
- 638:	8b6b      	ldrh	r3, [r5, #26]
-				(module->buffer_length > module->buffer_remaining) &&
- 63a:	075b      	lsls	r3, r3, #29
- 63c:	d5e4      	bpl.n	608 <_i2c_slave_interrupt_handler+0x1c0>
-			module->buffer_remaining = 0;
- 63e:	2300      	movs	r3, #0
- 640:	8523      	strh	r3, [r4, #40]	; 0x28
-			module->buffer_length = 0;
- 642:	84e3      	strh	r3, [r4, #38]	; 0x26
-			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
- 644:	3330      	adds	r3, #48	; 0x30
- 646:	5ce3      	ldrb	r3, [r4, r3]
- 648:	2b00      	cmp	r3, #0
- 64a:	d117      	bne.n	67c <_i2c_slave_interrupt_handler+0x234>
-	cpu_irq_enter_critical();
- 64c:	4b1c      	ldr	r3, [pc, #112]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 64e:	4798      	blx	r3
-	i2c_hw->STATUS.reg = 0;
- 650:	2300      	movs	r3, #0
- 652:	836b      	strh	r3, [r5, #26]
-		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
- 654:	2380      	movs	r3, #128	; 0x80
- 656:	02db      	lsls	r3, r3, #11
- 658:	606b      	str	r3, [r5, #4]
-	cpu_irq_leave_critical();
- 65a:	4b1a      	ldr	r3, [pc, #104]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 65c:	4798      	blx	r3
-				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
- 65e:	686a      	ldr	r2, [r5, #4]
- 660:	2380      	movs	r3, #128	; 0x80
- 662:	029b      	lsls	r3, r3, #10
- 664:	4313      	orrs	r3, r2
- 666:	606b      	str	r3, [r5, #4]
-				module->status = STATUS_ERR_OVERFLOW;
- 668:	221e      	movs	r2, #30
- 66a:	2331      	movs	r3, #49	; 0x31
- 66c:	54e2      	strb	r2, [r4, r3]
-				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
- 66e:	06f3      	lsls	r3, r6, #27
- 670:	d400      	bmi.n	674 <_i2c_slave_interrupt_handler+0x22c>
- 672:	e75e      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
- 674:	69e3      	ldr	r3, [r4, #28]
- 676:	0020      	movs	r0, r4
+ 676:	4b60      	ldr	r3, [pc, #384]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
  678:	4798      	blx	r3
- 67a:	e75a      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-	cpu_irq_enter_critical();
- 67c:	4b10      	ldr	r3, [pc, #64]	; (6c0 <_i2c_slave_interrupt_handler+0x278>)
- 67e:	4798      	blx	r3
 	i2c_hw->STATUS.reg = 0;
- 680:	2300      	movs	r3, #0
- 682:	836b      	strh	r3, [r5, #26]
-		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
- 684:	2380      	movs	r3, #128	; 0x80
- 686:	02db      	lsls	r3, r3, #11
- 688:	606b      	str	r3, [r5, #4]
+ 67a:	2300      	movs	r3, #0
+ 67c:	836b      	strh	r3, [r5, #26]
+		i2c_hw->CTRLB.reg = 0;
+ 67e:	606b      	str	r3, [r5, #4]
 	cpu_irq_leave_critical();
- 68a:	4b0e      	ldr	r3, [pc, #56]	; (6c4 <_i2c_slave_interrupt_handler+0x27c>)
- 68c:	4798      	blx	r3
-				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
- 68e:	686a      	ldr	r2, [r5, #4]
- 690:	2380      	movs	r3, #128	; 0x80
- 692:	029b      	lsls	r3, r3, #10
- 694:	4313      	orrs	r3, r2
- 696:	606b      	str	r3, [r5, #4]
-				module->status = STATUS_OK;
- 698:	2331      	movs	r3, #49	; 0x31
- 69a:	2200      	movs	r2, #0
- 69c:	54e2      	strb	r2, [r4, r3]
-				i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_DRDY;
- 69e:	3b2d      	subs	r3, #45	; 0x2d
- 6a0:	752b      	strb	r3, [r5, #20]
- 6a2:	e746      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
-	*(module->buffer++) = i2c_hw->DATA.reg;
- 6a4:	6ae2      	ldr	r2, [r4, #44]	; 0x2c
- 6a6:	1c53      	adds	r3, r2, #1
- 6a8:	62e3      	str	r3, [r4, #44]	; 0x2c
- 6aa:	2328      	movs	r3, #40	; 0x28
- 6ac:	5ceb      	ldrb	r3, [r5, r3]
- 6ae:	b2db      	uxtb	r3, r3
- 6b0:	7013      	strb	r3, [r2, #0]
+ 680:	4b5e      	ldr	r3, [pc, #376]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 682:	4798      	blx	r3
+ 684:	e7e1      	b.n	64a <_i2c_slave_interrupt_handler+0xca>
+			module->transfer_direction = I2C_TRANSFER_WRITE;
+ 686:	2200      	movs	r2, #0
+ 688:	2330      	movs	r3, #48	; 0x30
+ 68a:	54e2      	strb	r2, [r4, r3]
+			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
+ 68c:	0733      	lsls	r3, r6, #28
+ 68e:	d40e      	bmi.n	6ae <_i2c_slave_interrupt_handler+0x12e>
+			if (module->buffer_length == 0) {
+ 690:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
+ 692:	b29b      	uxth	r3, r3
+ 694:	2b00      	cmp	r3, #0
+ 696:	d10e      	bne.n	6b6 <_i2c_slave_interrupt_handler+0x136>
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+ 698:	6825      	ldr	r5, [r4, #0]
+	cpu_irq_enter_critical();
+ 69a:	4b57      	ldr	r3, [pc, #348]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 69c:	4798      	blx	r3
+	i2c_hw->STATUS.reg = 0;
+ 69e:	2300      	movs	r3, #0
+ 6a0:	836b      	strh	r3, [r5, #26]
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
+ 6a2:	2380      	movs	r3, #128	; 0x80
+ 6a4:	02db      	lsls	r3, r3, #11
+ 6a6:	606b      	str	r3, [r5, #4]
+	cpu_irq_leave_critical();
+ 6a8:	4b54      	ldr	r3, [pc, #336]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 6aa:	4798      	blx	r3
+ 6ac:	e7cd      	b.n	64a <_i2c_slave_interrupt_handler+0xca>
+				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_REQUEST](module);
+ 6ae:	69a3      	ldr	r3, [r4, #24]
+ 6b0:	0020      	movs	r0, r4
+ 6b2:	4798      	blx	r3
+ 6b4:	e7ec      	b.n	690 <_i2c_slave_interrupt_handler+0x110>
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+ 6b6:	6825      	ldr	r5, [r4, #0]
+	cpu_irq_enter_critical();
+ 6b8:	4b4f      	ldr	r3, [pc, #316]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 6ba:	4798      	blx	r3
+	i2c_hw->STATUS.reg = 0;
+ 6bc:	2300      	movs	r3, #0
+ 6be:	836b      	strh	r3, [r5, #26]
+		i2c_hw->CTRLB.reg = 0;
+ 6c0:	606b      	str	r3, [r5, #4]
+	cpu_irq_leave_critical();
+ 6c2:	4b4e      	ldr	r3, [pc, #312]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 6c4:	4798      	blx	r3
+ 6c6:	e7c0      	b.n	64a <_i2c_slave_interrupt_handler+0xca>
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC) {
+ 6c8:	7e2b      	ldrb	r3, [r5, #24]
+ 6ca:	07db      	lsls	r3, r3, #31
+ 6cc:	d52e      	bpl.n	72c <_i2c_slave_interrupt_handler+0x1ac>
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
+ 6ce:	2301      	movs	r3, #1
+ 6d0:	762b      	strb	r3, [r5, #24]
+		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_DRDY;
+ 6d2:	3304      	adds	r3, #4
+ 6d4:	752b      	strb	r3, [r5, #20]
+		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
+ 6d6:	3320      	adds	r3, #32
+ 6d8:	5ce3      	ldrb	r3, [r4, r3]
+ 6da:	075b      	lsls	r3, r3, #29
+ 6dc:	d405      	bmi.n	6ea <_i2c_slave_interrupt_handler+0x16a>
+				|| (module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
+ 6de:	2325      	movs	r3, #37	; 0x25
+ 6e0:	5ce3      	ldrb	r3, [r4, r3]
+		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
+ 6e2:	071b      	lsls	r3, r3, #28
+ 6e4:	d401      	bmi.n	6ea <_i2c_slave_interrupt_handler+0x16a>
+			i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+ 6e6:	2302      	movs	r3, #2
+ 6e8:	752b      	strb	r3, [r5, #20]
+		if (!(module->status == STATUS_ERR_OVERFLOW || module->status == STATUS_ERR_IO)) {
+ 6ea:	2331      	movs	r3, #49	; 0x31
+ 6ec:	5ce3      	ldrb	r3, [r4, r3]
+ 6ee:	2b1e      	cmp	r3, #30
+ 6f0:	d0bb      	beq.n	66a <_i2c_slave_interrupt_handler+0xea>
+ 6f2:	2331      	movs	r3, #49	; 0x31
+ 6f4:	5ce3      	ldrb	r3, [r4, r3]
+ 6f6:	2b10      	cmp	r3, #16
+ 6f8:	d0b7      	beq.n	66a <_i2c_slave_interrupt_handler+0xea>
+			module->status = STATUS_OK;
+ 6fa:	2300      	movs	r3, #0
+ 6fc:	2231      	movs	r2, #49	; 0x31
+ 6fe:	54a3      	strb	r3, [r4, r2]
+			module->buffer_length = 0;
+ 700:	84e3      	strh	r3, [r4, #38]	; 0x26
+			module->buffer_remaining = 0;
+ 702:	8523      	strh	r3, [r4, #40]	; 0x28
+			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
+ 704:	07b3      	lsls	r3, r6, #30
+ 706:	d503      	bpl.n	710 <_i2c_slave_interrupt_handler+0x190>
+					&& (module->transfer_direction == I2C_TRANSFER_WRITE)) {
+ 708:	2330      	movs	r3, #48	; 0x30
+ 70a:	5ce3      	ldrb	r3, [r4, r3]
+ 70c:	2b00      	cmp	r3, #0
+ 70e:	d009      	beq.n	724 <_i2c_slave_interrupt_handler+0x1a4>
+			} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
+ 710:	07f3      	lsls	r3, r6, #31
+ 712:	d5aa      	bpl.n	66a <_i2c_slave_interrupt_handler+0xea>
+					&& (module->transfer_direction == I2C_TRANSFER_READ)) {
+ 714:	2330      	movs	r3, #48	; 0x30
+ 716:	5ce3      	ldrb	r3, [r4, r3]
+ 718:	2b01      	cmp	r3, #1
+ 71a:	d1a6      	bne.n	66a <_i2c_slave_interrupt_handler+0xea>
+				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
+ 71c:	68e3      	ldr	r3, [r4, #12]
+ 71e:	0020      	movs	r0, r4
+ 720:	4798      	blx	r3
+ 722:	e7a2      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
+ 724:	6923      	ldr	r3, [r4, #16]
+ 726:	0020      	movs	r0, r4
+ 728:	4798      	blx	r3
+ 72a:	e79e      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
+ 72c:	7e2b      	ldrb	r3, [r5, #24]
+ 72e:	075b      	lsls	r3, r3, #29
+ 730:	d59b      	bpl.n	66a <_i2c_slave_interrupt_handler+0xea>
+		if (module->buffer_remaining <= 0 ||
+ 732:	8d23      	ldrh	r3, [r4, #40]	; 0x28
+ 734:	2b00      	cmp	r3, #0
+ 736:	d01e      	beq.n	776 <_i2c_slave_interrupt_handler+0x1f6>
+				(module->transfer_direction == I2C_TRANSFER_READ &&
+ 738:	2230      	movs	r2, #48	; 0x30
+ 73a:	5ca2      	ldrb	r2, [r4, r2]
+		if (module->buffer_remaining <= 0 ||
+ 73c:	2a01      	cmp	r2, #1
+ 73e:	d013      	beq.n	768 <_i2c_slave_interrupt_handler+0x1e8>
+		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
+ 740:	8ce3      	ldrh	r3, [r4, #38]	; 0x26
+ 742:	b29b      	uxth	r3, r3
+ 744:	2b00      	cmp	r3, #0
+ 746:	d100      	bne.n	74a <_i2c_slave_interrupt_handler+0x1ca>
+ 748:	e78f      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
+ 74a:	2330      	movs	r3, #48	; 0x30
+ 74c:	5ce3      	ldrb	r3, [r4, r3]
+ 74e:	2b00      	cmp	r3, #0
+ 750:	d044      	beq.n	7dc <_i2c_slave_interrupt_handler+0x25c>
+	i2c_hw->DATA.reg = *(module->buffer++);
+ 752:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+ 754:	1c5a      	adds	r2, r3, #1
+ 756:	62e2      	str	r2, [r4, #44]	; 0x2c
+ 758:	781b      	ldrb	r3, [r3, #0]
+ 75a:	b2db      	uxtb	r3, r3
+ 75c:	2228      	movs	r2, #40	; 0x28
+ 75e:	54ab      	strb	r3, [r5, r2]
 	module->buffer_remaining--;
- 6b2:	8d23      	ldrh	r3, [r4, #40]	; 0x28
- 6b4:	3b01      	subs	r3, #1
- 6b6:	8523      	strh	r3, [r4, #40]	; 0x28
- 6b8:	e73b      	b.n	532 <_i2c_slave_interrupt_handler+0xea>
- 6ba:	46c0      	nop			; (mov r8, r8)
- 6bc:	2000053c 	.word	0x2000053c
- 6c0:	00000925 	.word	0x00000925
- 6c4:	00000965 	.word	0x00000965
+ 760:	8d23      	ldrh	r3, [r4, #40]	; 0x28
+ 762:	3b01      	subs	r3, #1
+ 764:	8523      	strh	r3, [r4, #40]	; 0x28
+}
+ 766:	e780      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+				(module->buffer_length > module->buffer_remaining) &&
+ 768:	8ce2      	ldrh	r2, [r4, #38]	; 0x26
+ 76a:	b292      	uxth	r2, r2
+				(module->transfer_direction == I2C_TRANSFER_READ &&
+ 76c:	4293      	cmp	r3, r2
+ 76e:	d2e7      	bcs.n	740 <_i2c_slave_interrupt_handler+0x1c0>
+				(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
+ 770:	8b6b      	ldrh	r3, [r5, #26]
+				(module->buffer_length > module->buffer_remaining) &&
+ 772:	075b      	lsls	r3, r3, #29
+ 774:	d5e4      	bpl.n	740 <_i2c_slave_interrupt_handler+0x1c0>
+			module->buffer_remaining = 0;
+ 776:	2300      	movs	r3, #0
+ 778:	8523      	strh	r3, [r4, #40]	; 0x28
+			module->buffer_length = 0;
+ 77a:	84e3      	strh	r3, [r4, #38]	; 0x26
+			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
+ 77c:	3330      	adds	r3, #48	; 0x30
+ 77e:	5ce3      	ldrb	r3, [r4, r3]
+ 780:	2b00      	cmp	r3, #0
+ 782:	d117      	bne.n	7b4 <_i2c_slave_interrupt_handler+0x234>
+	cpu_irq_enter_critical();
+ 784:	4b1c      	ldr	r3, [pc, #112]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 786:	4798      	blx	r3
+	i2c_hw->STATUS.reg = 0;
+ 788:	2300      	movs	r3, #0
+ 78a:	836b      	strh	r3, [r5, #26]
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
+ 78c:	2380      	movs	r3, #128	; 0x80
+ 78e:	02db      	lsls	r3, r3, #11
+ 790:	606b      	str	r3, [r5, #4]
+	cpu_irq_leave_critical();
+ 792:	4b1a      	ldr	r3, [pc, #104]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 794:	4798      	blx	r3
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+ 796:	686a      	ldr	r2, [r5, #4]
+ 798:	2380      	movs	r3, #128	; 0x80
+ 79a:	029b      	lsls	r3, r3, #10
+ 79c:	4313      	orrs	r3, r2
+ 79e:	606b      	str	r3, [r5, #4]
+				module->status = STATUS_ERR_OVERFLOW;
+ 7a0:	221e      	movs	r2, #30
+ 7a2:	2331      	movs	r3, #49	; 0x31
+ 7a4:	54e2      	strb	r2, [r4, r3]
+				if (callback_mask & (1 << I2C_SLAVE_CALLBACK_ERROR)) {
+ 7a6:	06f3      	lsls	r3, r6, #27
+ 7a8:	d400      	bmi.n	7ac <_i2c_slave_interrupt_handler+0x22c>
+ 7aa:	e75e      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+					module->callbacks[I2C_SLAVE_CALLBACK_ERROR](module);
+ 7ac:	69e3      	ldr	r3, [r4, #28]
+ 7ae:	0020      	movs	r0, r4
+ 7b0:	4798      	blx	r3
+ 7b2:	e75a      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+	cpu_irq_enter_critical();
+ 7b4:	4b10      	ldr	r3, [pc, #64]	; (7f8 <_i2c_slave_interrupt_handler+0x278>)
+ 7b6:	4798      	blx	r3
+	i2c_hw->STATUS.reg = 0;
+ 7b8:	2300      	movs	r3, #0
+ 7ba:	836b      	strh	r3, [r5, #26]
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
+ 7bc:	2380      	movs	r3, #128	; 0x80
+ 7be:	02db      	lsls	r3, r3, #11
+ 7c0:	606b      	str	r3, [r5, #4]
+	cpu_irq_leave_critical();
+ 7c2:	4b0e      	ldr	r3, [pc, #56]	; (7fc <_i2c_slave_interrupt_handler+0x27c>)
+ 7c4:	4798      	blx	r3
+				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
+ 7c6:	686a      	ldr	r2, [r5, #4]
+ 7c8:	2380      	movs	r3, #128	; 0x80
+ 7ca:	029b      	lsls	r3, r3, #10
+ 7cc:	4313      	orrs	r3, r2
+ 7ce:	606b      	str	r3, [r5, #4]
+				module->status = STATUS_OK;
+ 7d0:	2331      	movs	r3, #49	; 0x31
+ 7d2:	2200      	movs	r2, #0
+ 7d4:	54e2      	strb	r2, [r4, r3]
+				i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_DRDY;
+ 7d6:	3b2d      	subs	r3, #45	; 0x2d
+ 7d8:	752b      	strb	r3, [r5, #20]
+ 7da:	e746      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+	*(module->buffer++) = i2c_hw->DATA.reg;
+ 7dc:	6ae2      	ldr	r2, [r4, #44]	; 0x2c
+ 7de:	1c53      	adds	r3, r2, #1
+ 7e0:	62e3      	str	r3, [r4, #44]	; 0x2c
+ 7e2:	2328      	movs	r3, #40	; 0x28
+ 7e4:	5ceb      	ldrb	r3, [r5, r3]
+ 7e6:	b2db      	uxtb	r3, r3
+ 7e8:	7013      	strb	r3, [r2, #0]
+	module->buffer_remaining--;
+ 7ea:	8d23      	ldrh	r3, [r4, #40]	; 0x28
+ 7ec:	3b01      	subs	r3, #1
+ 7ee:	8523      	strh	r3, [r4, #40]	; 0x28
+ 7f0:	e73b      	b.n	66a <_i2c_slave_interrupt_handler+0xea>
+ 7f2:	46c0      	nop			; (mov r8, r8)
+ 7f4:	20000540 	.word	0x20000540
+ 7f8:	00000a81 	.word	0x00000a81
+ 7fc:	00000ac1 	.word	0x00000ac1
 
-000006c8 <WDT_Handler>:
+00000800 <WDT_Handler>:
 	}
 }
 
 /** Handler for the WDT hardware module interrupt. */
 void WDT_Handler(void)
 {
- 6c8:	b510      	push	{r4, lr}
+ 800:	b510      	push	{r4, lr}
  */
 static inline void wdt_clear_early_warning(void)
 {
 	Wdt *const WDT_module = WDT;
 
 	WDT_module->INTFLAG.reg = WDT_INTFLAG_EW;
- 6ca:	2201      	movs	r2, #1
- 6cc:	4b03      	ldr	r3, [pc, #12]	; (6dc <WDT_Handler+0x14>)
- 6ce:	719a      	strb	r2, [r3, #6]
+ 802:	2201      	movs	r2, #1
+ 804:	4b03      	ldr	r3, [pc, #12]	; (814 <WDT_Handler+0x14>)
+ 806:	719a      	strb	r2, [r3, #6]
 	wdt_clear_early_warning();
 
 	if (wdt_early_warning_callback) {
- 6d0:	4b03      	ldr	r3, [pc, #12]	; (6e0 <WDT_Handler+0x18>)
- 6d2:	681b      	ldr	r3, [r3, #0]
- 6d4:	2b00      	cmp	r3, #0
- 6d6:	d000      	beq.n	6da <WDT_Handler+0x12>
+ 808:	4b03      	ldr	r3, [pc, #12]	; (818 <WDT_Handler+0x18>)
+ 80a:	681b      	ldr	r3, [r3, #0]
+ 80c:	2b00      	cmp	r3, #0
+ 80e:	d000      	beq.n	812 <WDT_Handler+0x12>
 		wdt_early_warning_callback();
- 6d8:	4798      	blx	r3
+ 810:	4798      	blx	r3
 	}
 }
- 6da:	bd10      	pop	{r4, pc}
- 6dc:	40001000 	.word	0x40001000
- 6e0:	20000530 	.word	0x20000530
+ 812:	bd10      	pop	{r4, pc}
+ 814:	40001000 	.word	0x40001000
+ 818:	20000534 	.word	0x20000534
 
-000006e4 <_tc_interrupt_handler>:
+0000081c <_tc_interrupt_handler>:
  * \param[in]  instance  ID of the TC instance calling the interrupt
  *                       handler
  */
 void _tc_interrupt_handler(
 		uint8_t instance)
 {
- 6e4:	b570      	push	{r4, r5, r6, lr}
+ 81c:	b570      	push	{r4, r5, r6, lr}
 	/* Temporary variable */
 	uint8_t interrupt_and_callback_status_mask;
 
 	/* Get device instance from the look-up table */
 	struct tc_module *module
- 6e6:	0080      	lsls	r0, r0, #2
- 6e8:	4b16      	ldr	r3, [pc, #88]	; (744 <_tc_interrupt_handler+0x60>)
- 6ea:	58c4      	ldr	r4, [r0, r3]
+ 81e:	0080      	lsls	r0, r0, #2
+ 820:	4b16      	ldr	r3, [pc, #88]	; (87c <_tc_interrupt_handler+0x60>)
+ 822:	58c4      	ldr	r4, [r0, r3]
 			= (struct tc_module *)_tc_instances[instance];
 
 	/* Read and mask interrupt flag register */
 	interrupt_and_callback_status_mask = module->hw->COUNT8.INTFLAG.reg &
- 6ec:	6823      	ldr	r3, [r4, #0]
- 6ee:	7b9d      	ldrb	r5, [r3, #14]
- 6f0:	7e22      	ldrb	r2, [r4, #24]
- 6f2:	7e63      	ldrb	r3, [r4, #25]
- 6f4:	4013      	ands	r3, r2
- 6f6:	401d      	ands	r5, r3
+ 824:	6823      	ldr	r3, [r4, #0]
+ 826:	7b9d      	ldrb	r5, [r3, #14]
+ 828:	7e22      	ldrb	r2, [r4, #24]
+ 82a:	7e63      	ldrb	r3, [r4, #25]
+ 82c:	4013      	ands	r3, r2
+ 82e:	401d      	ands	r5, r3
 			module->register_callback_mask &
 			module->enable_callback_mask;
 
 	/* Check if an Overflow interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_OVF) {
- 6f8:	07eb      	lsls	r3, r5, #31
- 6fa:	d406      	bmi.n	70a <_tc_interrupt_handler+0x26>
+ 830:	07eb      	lsls	r3, r5, #31
+ 832:	d406      	bmi.n	842 <_tc_interrupt_handler+0x26>
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_OVF;
 	}
 
 	/* Check if an Error interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_ERR) {
- 6fc:	07ab      	lsls	r3, r5, #30
- 6fe:	d40b      	bmi.n	718 <_tc_interrupt_handler+0x34>
+ 834:	07ab      	lsls	r3, r5, #30
+ 836:	d40b      	bmi.n	850 <_tc_interrupt_handler+0x34>
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_ERR;
 	}
 
 	/* Check if an Match/Capture Channel 0 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(1)) {
- 700:	06eb      	lsls	r3, r5, #27
- 702:	d410      	bmi.n	726 <_tc_interrupt_handler+0x42>
+ 838:	06eb      	lsls	r3, r5, #27
+ 83a:	d410      	bmi.n	85e <_tc_interrupt_handler+0x42>
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
 	}
 
 	/* Check if an Match/Capture Channel 1 interrupt has occurred */
 	if (interrupt_and_callback_status_mask & TC_INTFLAG_MC(2)) {
- 704:	06ab      	lsls	r3, r5, #26
- 706:	d415      	bmi.n	734 <_tc_interrupt_handler+0x50>
+ 83c:	06ab      	lsls	r3, r5, #26
+ 83e:	d415      	bmi.n	86c <_tc_interrupt_handler+0x50>
 		/* Invoke registered and enabled callback function */
 		(module->callback[TC_CALLBACK_CC_CHANNEL1])(module);
 		/* Clear interrupt flag */
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);
 	}
 }
- 708:	bd70      	pop	{r4, r5, r6, pc}
+ 840:	bd70      	pop	{r4, r5, r6, pc}
 		(module->callback[TC_CALLBACK_OVERFLOW])(module);
- 70a:	0020      	movs	r0, r4
- 70c:	68a3      	ldr	r3, [r4, #8]
- 70e:	4798      	blx	r3
+ 842:	0020      	movs	r0, r4
+ 844:	68a3      	ldr	r3, [r4, #8]
+ 846:	4798      	blx	r3
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_OVF;
- 710:	2301      	movs	r3, #1
- 712:	6822      	ldr	r2, [r4, #0]
- 714:	7393      	strb	r3, [r2, #14]
- 716:	e7f1      	b.n	6fc <_tc_interrupt_handler+0x18>
+ 848:	2301      	movs	r3, #1
+ 84a:	6822      	ldr	r2, [r4, #0]
+ 84c:	7393      	strb	r3, [r2, #14]
+ 84e:	e7f1      	b.n	834 <_tc_interrupt_handler+0x18>
 		(module->callback[TC_CALLBACK_ERROR])(module);
- 718:	0020      	movs	r0, r4
- 71a:	68e3      	ldr	r3, [r4, #12]
- 71c:	4798      	blx	r3
+ 850:	0020      	movs	r0, r4
+ 852:	68e3      	ldr	r3, [r4, #12]
+ 854:	4798      	blx	r3
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_ERR;
- 71e:	2302      	movs	r3, #2
- 720:	6822      	ldr	r2, [r4, #0]
- 722:	7393      	strb	r3, [r2, #14]
- 724:	e7ec      	b.n	700 <_tc_interrupt_handler+0x1c>
+ 856:	2302      	movs	r3, #2
+ 858:	6822      	ldr	r2, [r4, #0]
+ 85a:	7393      	strb	r3, [r2, #14]
+ 85c:	e7ec      	b.n	838 <_tc_interrupt_handler+0x1c>
 		(module->callback[TC_CALLBACK_CC_CHANNEL0])(module);
- 726:	0020      	movs	r0, r4
- 728:	6923      	ldr	r3, [r4, #16]
- 72a:	4798      	blx	r3
+ 85e:	0020      	movs	r0, r4
+ 860:	6923      	ldr	r3, [r4, #16]
+ 862:	4798      	blx	r3
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(1);
- 72c:	2310      	movs	r3, #16
- 72e:	6822      	ldr	r2, [r4, #0]
- 730:	7393      	strb	r3, [r2, #14]
- 732:	e7e7      	b.n	704 <_tc_interrupt_handler+0x20>
+ 864:	2310      	movs	r3, #16
+ 866:	6822      	ldr	r2, [r4, #0]
+ 868:	7393      	strb	r3, [r2, #14]
+ 86a:	e7e7      	b.n	83c <_tc_interrupt_handler+0x20>
 		(module->callback[TC_CALLBACK_CC_CHANNEL1])(module);
- 734:	0020      	movs	r0, r4
- 736:	6963      	ldr	r3, [r4, #20]
- 738:	4798      	blx	r3
+ 86c:	0020      	movs	r0, r4
+ 86e:	6963      	ldr	r3, [r4, #20]
+ 870:	4798      	blx	r3
 		module->hw->COUNT8.INTFLAG.reg = TC_INTFLAG_MC(2);
- 73a:	6823      	ldr	r3, [r4, #0]
- 73c:	2220      	movs	r2, #32
- 73e:	739a      	strb	r2, [r3, #14]
+ 872:	6823      	ldr	r3, [r4, #0]
+ 874:	2220      	movs	r2, #32
+ 876:	739a      	strb	r2, [r3, #14]
 }
- 740:	e7e2      	b.n	708 <_tc_interrupt_handler+0x24>
- 742:	46c0      	nop			; (mov r8, r8)
- 744:	20000534 	.word	0x20000534
+ 878:	e7e2      	b.n	840 <_tc_interrupt_handler+0x24>
+ 87a:	46c0      	nop			; (mov r8, r8)
+ 87c:	20000538 	.word	0x20000538
 
-00000748 <TC1_Handler>:
+00000880 <TC1_Handler>:
 	MRECURSION(TC_INST_NUM, _TC_INTERRUPT_HANDLER, TC_INST_MAX_ID)
- 748:	b510      	push	{r4, lr}
- 74a:	2000      	movs	r0, #0
- 74c:	4b01      	ldr	r3, [pc, #4]	; (754 <TC1_Handler+0xc>)
- 74e:	4798      	blx	r3
- 750:	bd10      	pop	{r4, pc}
- 752:	46c0      	nop			; (mov r8, r8)
- 754:	000006e5 	.word	0x000006e5
+ 880:	b510      	push	{r4, lr}
+ 882:	2000      	movs	r0, #0
+ 884:	4b01      	ldr	r3, [pc, #4]	; (88c <TC1_Handler+0xc>)
+ 886:	4798      	blx	r3
+ 888:	bd10      	pop	{r4, pc}
+ 88a:	46c0      	nop			; (mov r8, r8)
+ 88c:	0000081d 	.word	0x0000081d
 
-00000758 <TC2_Handler>:
- 758:	b510      	push	{r4, lr}
- 75a:	2001      	movs	r0, #1
- 75c:	4b01      	ldr	r3, [pc, #4]	; (764 <TC2_Handler+0xc>)
- 75e:	4798      	blx	r3
- 760:	bd10      	pop	{r4, pc}
- 762:	46c0      	nop			; (mov r8, r8)
- 764:	000006e5 	.word	0x000006e5
+00000890 <TC2_Handler>:
+ 890:	b510      	push	{r4, lr}
+ 892:	2001      	movs	r0, #1
+ 894:	4b01      	ldr	r3, [pc, #4]	; (89c <TC2_Handler+0xc>)
+ 896:	4798      	blx	r3
+ 898:	bd10      	pop	{r4, pc}
+ 89a:	46c0      	nop			; (mov r8, r8)
+ 89c:	0000081d 	.word	0x0000081d
 
-00000768 <sercom_set_gclk_generator>:
+000008a0 <sercom_set_gclk_generator>:
  *                                         forced.
  */
 enum status_code sercom_set_gclk_generator(
 		const enum gclk_generator generator_source,
 		const bool force_change)
 {
- 768:	b510      	push	{r4, lr}
- 76a:	b082      	sub	sp, #8
- 76c:	0004      	movs	r4, r0
+ 8a0:	b510      	push	{r4, lr}
+ 8a2:	b082      	sub	sp, #8
+ 8a4:	0004      	movs	r4, r0
 	/* Check if valid option */
 	if (!_sercom_config.generator_is_set || force_change) {
- 76e:	4b0e      	ldr	r3, [pc, #56]	; (7a8 <sercom_set_gclk_generator+0x40>)
- 770:	781b      	ldrb	r3, [r3, #0]
- 772:	2b00      	cmp	r3, #0
- 774:	d007      	beq.n	786 <sercom_set_gclk_generator+0x1e>
- 776:	2900      	cmp	r1, #0
- 778:	d105      	bne.n	786 <sercom_set_gclk_generator+0x1e>
+ 8a6:	4b0e      	ldr	r3, [pc, #56]	; (8e0 <sercom_set_gclk_generator+0x40>)
+ 8a8:	781b      	ldrb	r3, [r3, #0]
+ 8aa:	2b00      	cmp	r3, #0
+ 8ac:	d007      	beq.n	8be <sercom_set_gclk_generator+0x1e>
+ 8ae:	2900      	cmp	r1, #0
+ 8b0:	d105      	bne.n	8be <sercom_set_gclk_generator+0x1e>
 		/* Save config */
 		_sercom_config.generator_source = generator_source;
 		_sercom_config.generator_is_set = true;
 
 		return STATUS_OK;
 	} else if (generator_source == _sercom_config.generator_source) {
- 77a:	4b0b      	ldr	r3, [pc, #44]	; (7a8 <sercom_set_gclk_generator+0x40>)
- 77c:	785b      	ldrb	r3, [r3, #1]
- 77e:	4283      	cmp	r3, r0
- 780:	d010      	beq.n	7a4 <sercom_set_gclk_generator+0x3c>
+ 8b2:	4b0b      	ldr	r3, [pc, #44]	; (8e0 <sercom_set_gclk_generator+0x40>)
+ 8b4:	785b      	ldrb	r3, [r3, #1]
+ 8b6:	4283      	cmp	r3, r0
+ 8b8:	d010      	beq.n	8dc <sercom_set_gclk_generator+0x3c>
 		/* Return status OK if same config */
 		return STATUS_OK;
 	}
 
 	/* Return invalid config to already initialized GCLK */
 	return STATUS_ERR_ALREADY_INITIALIZED;
- 782:	201d      	movs	r0, #29
- 784:	e00c      	b.n	7a0 <sercom_set_gclk_generator+0x38>
+ 8ba:	201d      	movs	r0, #29
+ 8bc:	e00c      	b.n	8d8 <sercom_set_gclk_generator+0x38>
 		gclk_chan_conf.source_generator = generator_source;
- 786:	a901      	add	r1, sp, #4
- 788:	700c      	strb	r4, [r1, #0]
+ 8be:	a901      	add	r1, sp, #4
+ 8c0:	700c      	strb	r4, [r1, #0]
 		system_gclk_chan_set_config(SERCOM_GCLK_ID, &gclk_chan_conf);
- 78a:	200d      	movs	r0, #13
- 78c:	4b07      	ldr	r3, [pc, #28]	; (7ac <sercom_set_gclk_generator+0x44>)
- 78e:	4798      	blx	r3
+ 8c2:	200d      	movs	r0, #13
+ 8c4:	4b07      	ldr	r3, [pc, #28]	; (8e4 <sercom_set_gclk_generator+0x44>)
+ 8c6:	4798      	blx	r3
 		system_gclk_chan_enable(SERCOM_GCLK_ID);
- 790:	200d      	movs	r0, #13
- 792:	4b07      	ldr	r3, [pc, #28]	; (7b0 <sercom_set_gclk_generator+0x48>)
- 794:	4798      	blx	r3
+ 8c8:	200d      	movs	r0, #13
+ 8ca:	4b07      	ldr	r3, [pc, #28]	; (8e8 <sercom_set_gclk_generator+0x48>)
+ 8cc:	4798      	blx	r3
 		_sercom_config.generator_source = generator_source;
- 796:	4b04      	ldr	r3, [pc, #16]	; (7a8 <sercom_set_gclk_generator+0x40>)
- 798:	705c      	strb	r4, [r3, #1]
+ 8ce:	4b04      	ldr	r3, [pc, #16]	; (8e0 <sercom_set_gclk_generator+0x40>)
+ 8d0:	705c      	strb	r4, [r3, #1]
 		_sercom_config.generator_is_set = true;
- 79a:	2201      	movs	r2, #1
- 79c:	701a      	strb	r2, [r3, #0]
+ 8d2:	2201      	movs	r2, #1
+ 8d4:	701a      	strb	r2, [r3, #0]
 		return STATUS_OK;
- 79e:	2000      	movs	r0, #0
+ 8d6:	2000      	movs	r0, #0
 }
- 7a0:	b002      	add	sp, #8
- 7a2:	bd10      	pop	{r4, pc}
+ 8d8:	b002      	add	sp, #8
+ 8da:	bd10      	pop	{r4, pc}
 		return STATUS_OK;
- 7a4:	2000      	movs	r0, #0
- 7a6:	e7fb      	b.n	7a0 <sercom_set_gclk_generator+0x38>
- 7a8:	200004dc 	.word	0x200004dc
- 7ac:	00000a21 	.word	0x00000a21
- 7b0:	00000995 	.word	0x00000995
+ 8dc:	2000      	movs	r0, #0
+ 8de:	e7fb      	b.n	8d8 <sercom_set_gclk_generator+0x38>
+ 8e0:	200004e0 	.word	0x200004e0
+ 8e4:	00000b7d 	.word	0x00000b7d
+ 8e8:	00000af1 	.word	0x00000af1
 
-000007b4 <_sercom_get_default_pad>:
+000008ec <_sercom_get_default_pad>:
  */
 uint32_t _sercom_get_default_pad(
 		Sercom *const sercom_module,
 		const uint8_t pad)
 {
 	switch ((uintptr_t)sercom_module) {
- 7b4:	4b15      	ldr	r3, [pc, #84]	; (80c <_sercom_get_default_pad+0x58>)
- 7b6:	4298      	cmp	r0, r3
- 7b8:	d004      	beq.n	7c4 <_sercom_get_default_pad+0x10>
- 7ba:	4b15      	ldr	r3, [pc, #84]	; (810 <_sercom_get_default_pad+0x5c>)
- 7bc:	4298      	cmp	r0, r3
- 7be:	d011      	beq.n	7e4 <_sercom_get_default_pad+0x30>
+ 8ec:	4b15      	ldr	r3, [pc, #84]	; (944 <_sercom_get_default_pad+0x58>)
+ 8ee:	4298      	cmp	r0, r3
+ 8f0:	d004      	beq.n	8fc <_sercom_get_default_pad+0x10>
+ 8f2:	4b15      	ldr	r3, [pc, #84]	; (948 <_sercom_get_default_pad+0x5c>)
+ 8f4:	4298      	cmp	r0, r3
+ 8f6:	d011      	beq.n	91c <_sercom_get_default_pad+0x30>
 		/* Auto-generate a lookup table for the default SERCOM pad defaults */
 		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
 	}
 
 	Assert(false);
 	return 0;
- 7c0:	2000      	movs	r0, #0
+ 8f8:	2000      	movs	r0, #0
 }
- 7c2:	4770      	bx	lr
+ 8fa:	4770      	bx	lr
 		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
- 7c4:	2901      	cmp	r1, #1
- 7c6:	d007      	beq.n	7d8 <_sercom_get_default_pad+0x24>
- 7c8:	2900      	cmp	r1, #0
- 7ca:	d01b      	beq.n	804 <_sercom_get_default_pad+0x50>
- 7cc:	2902      	cmp	r1, #2
- 7ce:	d005      	beq.n	7dc <_sercom_get_default_pad+0x28>
- 7d0:	2903      	cmp	r1, #3
- 7d2:	d005      	beq.n	7e0 <_sercom_get_default_pad+0x2c>
+ 8fc:	2901      	cmp	r1, #1
+ 8fe:	d007      	beq.n	910 <_sercom_get_default_pad+0x24>
+ 900:	2900      	cmp	r1, #0
+ 902:	d01b      	beq.n	93c <_sercom_get_default_pad+0x50>
+ 904:	2902      	cmp	r1, #2
+ 906:	d005      	beq.n	914 <_sercom_get_default_pad+0x28>
+ 908:	2903      	cmp	r1, #3
+ 90a:	d005      	beq.n	918 <_sercom_get_default_pad+0x2c>
 	return 0;
- 7d4:	2000      	movs	r0, #0
- 7d6:	e7f4      	b.n	7c2 <_sercom_get_default_pad+0xe>
+ 90c:	2000      	movs	r0, #0
+ 90e:	e7f4      	b.n	8fa <_sercom_get_default_pad+0xe>
 		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
- 7d8:	480e      	ldr	r0, [pc, #56]	; (814 <_sercom_get_default_pad+0x60>)
- 7da:	e7f2      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 7dc:	480e      	ldr	r0, [pc, #56]	; (818 <_sercom_get_default_pad+0x64>)
- 7de:	e7f0      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 7e0:	480e      	ldr	r0, [pc, #56]	; (81c <_sercom_get_default_pad+0x68>)
- 7e2:	e7ee      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 7e4:	2901      	cmp	r1, #1
- 7e6:	d007      	beq.n	7f8 <_sercom_get_default_pad+0x44>
- 7e8:	2900      	cmp	r1, #0
- 7ea:	d00d      	beq.n	808 <_sercom_get_default_pad+0x54>
- 7ec:	2902      	cmp	r1, #2
- 7ee:	d005      	beq.n	7fc <_sercom_get_default_pad+0x48>
- 7f0:	2903      	cmp	r1, #3
- 7f2:	d005      	beq.n	800 <_sercom_get_default_pad+0x4c>
+ 910:	480e      	ldr	r0, [pc, #56]	; (94c <_sercom_get_default_pad+0x60>)
+ 912:	e7f2      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 914:	480e      	ldr	r0, [pc, #56]	; (950 <_sercom_get_default_pad+0x64>)
+ 916:	e7f0      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 918:	480e      	ldr	r0, [pc, #56]	; (954 <_sercom_get_default_pad+0x68>)
+ 91a:	e7ee      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 91c:	2901      	cmp	r1, #1
+ 91e:	d007      	beq.n	930 <_sercom_get_default_pad+0x44>
+ 920:	2900      	cmp	r1, #0
+ 922:	d00d      	beq.n	940 <_sercom_get_default_pad+0x54>
+ 924:	2902      	cmp	r1, #2
+ 926:	d005      	beq.n	934 <_sercom_get_default_pad+0x48>
+ 928:	2903      	cmp	r1, #3
+ 92a:	d005      	beq.n	938 <_sercom_get_default_pad+0x4c>
 	return 0;
- 7f4:	2000      	movs	r0, #0
- 7f6:	e7e4      	b.n	7c2 <_sercom_get_default_pad+0xe>
+ 92c:	2000      	movs	r0, #0
+ 92e:	e7e4      	b.n	8fa <_sercom_get_default_pad+0xe>
 		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
- 7f8:	4809      	ldr	r0, [pc, #36]	; (820 <_sercom_get_default_pad+0x6c>)
- 7fa:	e7e2      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 7fc:	4809      	ldr	r0, [pc, #36]	; (824 <_sercom_get_default_pad+0x70>)
- 7fe:	e7e0      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 800:	4809      	ldr	r0, [pc, #36]	; (828 <_sercom_get_default_pad+0x74>)
- 802:	e7de      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 804:	4809      	ldr	r0, [pc, #36]	; (82c <_sercom_get_default_pad+0x78>)
- 806:	e7dc      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 808:	4809      	ldr	r0, [pc, #36]	; (830 <_sercom_get_default_pad+0x7c>)
- 80a:	e7da      	b.n	7c2 <_sercom_get_default_pad+0xe>
- 80c:	42000800 	.word	0x42000800
- 810:	42000c00 	.word	0x42000c00
- 814:	00050003 	.word	0x00050003
- 818:	00080003 	.word	0x00080003
- 81c:	00090003 	.word	0x00090003
- 820:	001f0002 	.word	0x001f0002
- 824:	00180002 	.word	0x00180002
- 828:	00190002 	.word	0x00190002
- 82c:	00040003 	.word	0x00040003
- 830:	001e0002 	.word	0x001e0002
+ 930:	4809      	ldr	r0, [pc, #36]	; (958 <_sercom_get_default_pad+0x6c>)
+ 932:	e7e2      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 934:	4809      	ldr	r0, [pc, #36]	; (95c <_sercom_get_default_pad+0x70>)
+ 936:	e7e0      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 938:	4809      	ldr	r0, [pc, #36]	; (960 <_sercom_get_default_pad+0x74>)
+ 93a:	e7de      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 93c:	4809      	ldr	r0, [pc, #36]	; (964 <_sercom_get_default_pad+0x78>)
+ 93e:	e7dc      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 940:	4809      	ldr	r0, [pc, #36]	; (968 <_sercom_get_default_pad+0x7c>)
+ 942:	e7da      	b.n	8fa <_sercom_get_default_pad+0xe>
+ 944:	42000800 	.word	0x42000800
+ 948:	42000c00 	.word	0x42000c00
+ 94c:	00050003 	.word	0x00050003
+ 950:	00080003 	.word	0x00080003
+ 954:	00090003 	.word	0x00090003
+ 958:	001f0002 	.word	0x001f0002
+ 95c:	00180002 	.word	0x00180002
+ 960:	00190002 	.word	0x00190002
+ 964:	00040003 	.word	0x00040003
+ 968:	001e0002 	.word	0x001e0002
 
-00000834 <_sercom_get_sercom_inst_index>:
+0000096c <_sercom_get_sercom_inst_index>:
 	/* Save all available SERCOM instances for compare */
 	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
 
 	/* Find index for sercom instance */
 	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
 		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
- 834:	4b06      	ldr	r3, [pc, #24]	; (850 <_sercom_get_sercom_inst_index+0x1c>)
- 836:	4298      	cmp	r0, r3
- 838:	d008      	beq.n	84c <_sercom_get_sercom_inst_index+0x18>
- 83a:	4a06      	ldr	r2, [pc, #24]	; (854 <_sercom_get_sercom_inst_index+0x20>)
+ 96c:	4b06      	ldr	r3, [pc, #24]	; (988 <_sercom_get_sercom_inst_index+0x1c>)
+ 96e:	4298      	cmp	r0, r3
+ 970:	d008      	beq.n	984 <_sercom_get_sercom_inst_index+0x18>
+ 972:	4a06      	ldr	r2, [pc, #24]	; (98c <_sercom_get_sercom_inst_index+0x20>)
 		}
 	}
 
 	/* Invalid data given */
 	Assert(false);
 	return 0;
- 83c:	2300      	movs	r3, #0
+ 974:	2300      	movs	r3, #0
 		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
- 83e:	4290      	cmp	r0, r2
- 840:	d001      	beq.n	846 <_sercom_get_sercom_inst_index+0x12>
+ 976:	4290      	cmp	r0, r2
+ 978:	d001      	beq.n	97e <_sercom_get_sercom_inst_index+0x12>
 }
- 842:	0018      	movs	r0, r3
- 844:	4770      	bx	lr
- 846:	3301      	adds	r3, #1
+ 97a:	0018      	movs	r0, r3
+ 97c:	4770      	bx	lr
+ 97e:	3301      	adds	r3, #1
 			return i;
- 848:	b2db      	uxtb	r3, r3
- 84a:	e7fa      	b.n	842 <_sercom_get_sercom_inst_index+0xe>
+ 980:	b2db      	uxtb	r3, r3
+ 982:	e7fa      	b.n	97a <_sercom_get_sercom_inst_index+0xe>
 	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
- 84c:	2300      	movs	r3, #0
- 84e:	e7fb      	b.n	848 <_sercom_get_sercom_inst_index+0x14>
- 850:	42000800 	.word	0x42000800
- 854:	42000c00 	.word	0x42000c00
+ 984:	2300      	movs	r3, #0
+ 986:	e7fb      	b.n	980 <_sercom_get_sercom_inst_index+0x14>
+ 988:	42000800 	.word	0x42000800
+ 98c:	42000c00 	.word	0x42000c00
 
-00000858 <_sercom_default_handler>:
+00000990 <_sercom_default_handler>:
  */
 static void _sercom_default_handler(
 		const uint8_t instance)
 {
 	Assert(false);
 }
- 858:	4770      	bx	lr
+ 990:	4770      	bx	lr
 	...
 
-0000085c <_sercom_set_handler>:
+00000994 <_sercom_set_handler>:
  * \param[in]  interrupt_handler  Pointer to instance callback handler.
  */
 void _sercom_set_handler(
 		const uint8_t instance,
 		const sercom_handler_t interrupt_handler)
 {
- 85c:	b530      	push	{r4, r5, lr}
+ 994:	b530      	push	{r4, r5, lr}
 	/* Initialize handlers with default handler and device instances with 0 */
 	if (_handler_table_initialized == false) {
- 85e:	4b09      	ldr	r3, [pc, #36]	; (884 <_sercom_set_handler+0x28>)
- 860:	781b      	ldrb	r3, [r3, #0]
- 862:	2b00      	cmp	r3, #0
- 864:	d10a      	bne.n	87c <_sercom_set_handler+0x20>
+ 996:	4b09      	ldr	r3, [pc, #36]	; (9bc <_sercom_set_handler+0x28>)
+ 998:	781b      	ldrb	r3, [r3, #0]
+ 99a:	2b00      	cmp	r3, #0
+ 99c:	d10a      	bne.n	9b4 <_sercom_set_handler+0x20>
 		for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
- 866:	4c08      	ldr	r4, [pc, #32]	; (888 <_sercom_set_handler+0x2c>)
- 868:	4d08      	ldr	r5, [pc, #32]	; (88c <_sercom_set_handler+0x30>)
- 86a:	6025      	str	r5, [r4, #0]
+ 99e:	4c08      	ldr	r4, [pc, #32]	; (9c0 <_sercom_set_handler+0x2c>)
+ 9a0:	4d08      	ldr	r5, [pc, #32]	; (9c4 <_sercom_set_handler+0x30>)
+ 9a2:	6025      	str	r5, [r4, #0]
 			_sercom_instances[i] = NULL;
- 86c:	4b08      	ldr	r3, [pc, #32]	; (890 <_sercom_set_handler+0x34>)
- 86e:	2200      	movs	r2, #0
- 870:	601a      	str	r2, [r3, #0]
+ 9a4:	4b08      	ldr	r3, [pc, #32]	; (9c8 <_sercom_set_handler+0x34>)
+ 9a6:	2200      	movs	r2, #0
+ 9a8:	601a      	str	r2, [r3, #0]
 			_sercom_interrupt_handlers[i] = &_sercom_default_handler;
- 872:	6065      	str	r5, [r4, #4]
+ 9aa:	6065      	str	r5, [r4, #4]
 			_sercom_instances[i] = NULL;
- 874:	605a      	str	r2, [r3, #4]
+ 9ac:	605a      	str	r2, [r3, #4]
 		}
 
 		_handler_table_initialized = true;
- 876:	3201      	adds	r2, #1
- 878:	4b02      	ldr	r3, [pc, #8]	; (884 <_sercom_set_handler+0x28>)
- 87a:	701a      	strb	r2, [r3, #0]
+ 9ae:	3201      	adds	r2, #1
+ 9b0:	4b02      	ldr	r3, [pc, #8]	; (9bc <_sercom_set_handler+0x28>)
+ 9b2:	701a      	strb	r2, [r3, #0]
 	}
 
 	/* Save interrupt handler */
 	_sercom_interrupt_handlers[instance] = interrupt_handler;
- 87c:	0080      	lsls	r0, r0, #2
- 87e:	4b02      	ldr	r3, [pc, #8]	; (888 <_sercom_set_handler+0x2c>)
- 880:	50c1      	str	r1, [r0, r3]
+ 9b4:	0080      	lsls	r0, r0, #2
+ 9b6:	4b02      	ldr	r3, [pc, #8]	; (9c0 <_sercom_set_handler+0x2c>)
+ 9b8:	50c1      	str	r1, [r0, r3]
 }
- 882:	bd30      	pop	{r4, r5, pc}
- 884:	200004de 	.word	0x200004de
- 888:	200004e0 	.word	0x200004e0
- 88c:	00000859 	.word	0x00000859
- 890:	2000053c 	.word	0x2000053c
+ 9ba:	bd30      	pop	{r4, r5, pc}
+ 9bc:	200004e2 	.word	0x200004e2
+ 9c0:	200004e4 	.word	0x200004e4
+ 9c4:	00000991 	.word	0x00000991
+ 9c8:	20000540 	.word	0x20000540
 
-00000894 <_sercom_get_interrupt_vector>:
+000009cc <_sercom_get_interrupt_vector>:
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM6
  * \retval SYSTEM_INTERRUPT_MODULE_SERCOM7
  */
 enum system_interrupt_vector _sercom_get_interrupt_vector(
 		Sercom *const sercom_instance)
 {
- 894:	b510      	push	{r4, lr}
- 896:	b082      	sub	sp, #8
+ 9cc:	b510      	push	{r4, lr}
+ 9ce:	b082      	sub	sp, #8
 	const uint8_t sercom_int_vectors[SERCOM_INST_NUM] =
- 898:	ac01      	add	r4, sp, #4
- 89a:	2309      	movs	r3, #9
- 89c:	7023      	strb	r3, [r4, #0]
- 89e:	3301      	adds	r3, #1
- 8a0:	7063      	strb	r3, [r4, #1]
+ 9d0:	ac01      	add	r4, sp, #4
+ 9d2:	2309      	movs	r3, #9
+ 9d4:	7023      	strb	r3, [r4, #0]
+ 9d6:	3301      	adds	r3, #1
+ 9d8:	7063      	strb	r3, [r4, #1]
 		{
 			MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_VECT_NUM, ~)
 		};
 
 	/* Retrieve the index of the SERCOM being requested */
 	uint8_t instance_index = _sercom_get_sercom_inst_index(sercom_instance);
- 8a2:	4b02      	ldr	r3, [pc, #8]	; (8ac <_sercom_get_interrupt_vector+0x18>)
- 8a4:	4798      	blx	r3
+ 9da:	4b02      	ldr	r3, [pc, #8]	; (9e4 <_sercom_get_interrupt_vector+0x18>)
+ 9dc:	4798      	blx	r3
 
 	/* Get the vector number from the lookup table for the requested SERCOM */
 	return (enum system_interrupt_vector)sercom_int_vectors[instance_index];
- 8a6:	5620      	ldrsb	r0, [r4, r0]
+ 9de:	5620      	ldrsb	r0, [r4, r0]
 }
- 8a8:	b002      	add	sp, #8
- 8aa:	bd10      	pop	{r4, pc}
- 8ac:	00000835 	.word	0x00000835
+ 9e0:	b002      	add	sp, #8
+ 9e2:	bd10      	pop	{r4, pc}
+ 9e4:	0000096d 	.word	0x0000096d
 
-000008b0 <SERCOM0_Handler>:
+000009e8 <SERCOM0_Handler>:
 
 /** Auto-generate a set of interrupt handlers for each SERCOM in the device */
 MREPEAT(SERCOM_INST_NUM, _SERCOM_INTERRUPT_HANDLER, ~)
- 8b0:	b510      	push	{r4, lr}
- 8b2:	4b02      	ldr	r3, [pc, #8]	; (8bc <SERCOM0_Handler+0xc>)
- 8b4:	681b      	ldr	r3, [r3, #0]
- 8b6:	2000      	movs	r0, #0
- 8b8:	4798      	blx	r3
- 8ba:	bd10      	pop	{r4, pc}
- 8bc:	200004e0 	.word	0x200004e0
+ 9e8:	b510      	push	{r4, lr}
+ 9ea:	4b02      	ldr	r3, [pc, #8]	; (9f4 <SERCOM0_Handler+0xc>)
+ 9ec:	681b      	ldr	r3, [r3, #0]
+ 9ee:	2000      	movs	r0, #0
+ 9f0:	4798      	blx	r3
+ 9f2:	bd10      	pop	{r4, pc}
+ 9f4:	200004e4 	.word	0x200004e4
 
-000008c0 <SERCOM1_Handler>:
- 8c0:	b510      	push	{r4, lr}
- 8c2:	4b02      	ldr	r3, [pc, #8]	; (8cc <SERCOM1_Handler+0xc>)
- 8c4:	685b      	ldr	r3, [r3, #4]
- 8c6:	2001      	movs	r0, #1
- 8c8:	4798      	blx	r3
- 8ca:	bd10      	pop	{r4, pc}
- 8cc:	200004e0 	.word	0x200004e0
+000009f8 <SERCOM1_Handler>:
+ 9f8:	b510      	push	{r4, lr}
+ 9fa:	4b02      	ldr	r3, [pc, #8]	; (a04 <SERCOM1_Handler+0xc>)
+ 9fc:	685b      	ldr	r3, [r3, #4]
+ 9fe:	2001      	movs	r0, #1
+ a00:	4798      	blx	r3
+ a02:	bd10      	pop	{r4, pc}
+ a04:	200004e4 	.word	0x200004e4
 
-000008d0 <EIC_Handler>:
+00000a08 <EIC_Handler>:
 	return _current_channel;
 }
 
 /** Handler for the EXTINT hardware module interrupt. */
 void EIC_Handler(void)
 {
- 8d0:	b570      	push	{r4, r5, r6, lr}
+ a08:	b570      	push	{r4, r5, r6, lr}
 	/* Find any triggered channels, run associated callback handlers */
 	for (_current_channel = 0; _current_channel < EIC_NUMBER_OF_INTERRUPTS ; _current_channel++) {
- 8d2:	2200      	movs	r2, #0
- 8d4:	4b10      	ldr	r3, [pc, #64]	; (918 <EIC_Handler+0x48>)
- 8d6:	701a      	strb	r2, [r3, #0]
- 8d8:	2300      	movs	r3, #0
+ a0a:	2200      	movs	r2, #0
+ a0c:	4b10      	ldr	r3, [pc, #64]	; (a50 <EIC_Handler+0x48>)
+ a0e:	701a      	strb	r2, [r3, #0]
+ a10:	2300      	movs	r3, #0
 
 	if (eic_index < EIC_INST_NUM) {
 		/* Array of available EICs */
 		Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 		return eics[eic_index];
- 8da:	4910      	ldr	r1, [pc, #64]	; (91c <EIC_Handler+0x4c>)
+ a12:	4910      	ldr	r1, [pc, #64]	; (a54 <EIC_Handler+0x4c>)
  */
 static inline bool extint_chan_is_detected(
 		const uint8_t channel)
 {
 	Eic *const eic_module = _extint_get_eic_from_channel(channel);
 	uint32_t eic_mask   = (1UL << (channel % 32));
- 8dc:	251f      	movs	r5, #31
+ a14:	251f      	movs	r5, #31
 		if (extint_chan_is_detected(_current_channel)) {
 			/* Clear flag */
 			extint_chan_clear_detected(_current_channel);
 			/* Find any associated callback entries in the callback table */
 			if (_extint_dev.callbacks[_current_channel] != NULL) {
- 8de:	4e10      	ldr	r6, [pc, #64]	; (920 <EIC_Handler+0x50>)
+ a16:	4e10      	ldr	r6, [pc, #64]	; (a58 <EIC_Handler+0x50>)
 	for (_current_channel = 0; _current_channel < EIC_NUMBER_OF_INTERRUPTS ; _current_channel++) {
- 8e0:	4c0d      	ldr	r4, [pc, #52]	; (918 <EIC_Handler+0x48>)
- 8e2:	e00a      	b.n	8fa <EIC_Handler+0x2a>
+ a18:	4c0d      	ldr	r4, [pc, #52]	; (a50 <EIC_Handler+0x48>)
+ a1a:	e00a      	b.n	a32 <EIC_Handler+0x2a>
 		return eics[eic_index];
- 8e4:	490d      	ldr	r1, [pc, #52]	; (91c <EIC_Handler+0x4c>)
- 8e6:	e008      	b.n	8fa <EIC_Handler+0x2a>
- 8e8:	7823      	ldrb	r3, [r4, #0]
- 8ea:	3301      	adds	r3, #1
- 8ec:	b2db      	uxtb	r3, r3
- 8ee:	7023      	strb	r3, [r4, #0]
- 8f0:	2b0f      	cmp	r3, #15
- 8f2:	d810      	bhi.n	916 <EIC_Handler+0x46>
+ a1c:	490d      	ldr	r1, [pc, #52]	; (a54 <EIC_Handler+0x4c>)
+ a1e:	e008      	b.n	a32 <EIC_Handler+0x2a>
+ a20:	7823      	ldrb	r3, [r4, #0]
+ a22:	3301      	adds	r3, #1
+ a24:	b2db      	uxtb	r3, r3
+ a26:	7023      	strb	r3, [r4, #0]
+ a28:	2b0f      	cmp	r3, #15
+ a2a:	d810      	bhi.n	a4e <EIC_Handler+0x46>
 		return NULL;
- 8f4:	2100      	movs	r1, #0
+ a2c:	2100      	movs	r1, #0
 	if (eic_index < EIC_INST_NUM) {
- 8f6:	2b1f      	cmp	r3, #31
- 8f8:	d9f4      	bls.n	8e4 <EIC_Handler+0x14>
+ a2e:	2b1f      	cmp	r3, #31
+ a30:	d9f4      	bls.n	a1c <EIC_Handler+0x14>
 	uint32_t eic_mask   = (1UL << (channel % 32));
- 8fa:	0028      	movs	r0, r5
- 8fc:	4018      	ands	r0, r3
- 8fe:	2201      	movs	r2, #1
- 900:	4082      	lsls	r2, r0
+ a32:	0028      	movs	r0, r5
+ a34:	4018      	ands	r0, r3
+ a36:	2201      	movs	r2, #1
+ a38:	4082      	lsls	r2, r0
 
 	return (eic_module->INTFLAG.reg & eic_mask);
- 902:	6908      	ldr	r0, [r1, #16]
+ a3a:	6908      	ldr	r0, [r1, #16]
 		if (extint_chan_is_detected(_current_channel)) {
- 904:	4210      	tst	r0, r2
- 906:	d0ef      	beq.n	8e8 <EIC_Handler+0x18>
+ a3c:	4210      	tst	r0, r2
+ a3e:	d0ef      	beq.n	a20 <EIC_Handler+0x18>
 		const uint8_t channel)
 {
 	Eic *const eic_module = _extint_get_eic_from_channel(channel);
 	uint32_t eic_mask   = (1UL << (channel % 32));
 
 	eic_module->INTFLAG.reg = eic_mask;
- 908:	610a      	str	r2, [r1, #16]
+ a40:	610a      	str	r2, [r1, #16]
 			if (_extint_dev.callbacks[_current_channel] != NULL) {
- 90a:	009b      	lsls	r3, r3, #2
- 90c:	599b      	ldr	r3, [r3, r6]
- 90e:	2b00      	cmp	r3, #0
- 910:	d0ea      	beq.n	8e8 <EIC_Handler+0x18>
+ a42:	009b      	lsls	r3, r3, #2
+ a44:	599b      	ldr	r3, [r3, r6]
+ a46:	2b00      	cmp	r3, #0
+ a48:	d0ea      	beq.n	a20 <EIC_Handler+0x18>
 				/* Run the registered callback */
 				_extint_dev.callbacks[_current_channel]();
- 912:	4798      	blx	r3
- 914:	e7e8      	b.n	8e8 <EIC_Handler+0x18>
+ a4a:	4798      	blx	r3
+ a4c:	e7e8      	b.n	a20 <EIC_Handler+0x18>
 			}
 		}
 	}
 }
- 916:	bd70      	pop	{r4, r5, r6, pc}
- 918:	20000544 	.word	0x20000544
- 91c:	40001800 	.word	0x40001800
- 920:	200004f0 	.word	0x200004f0
+ a4e:	bd70      	pop	{r4, r5, r6, pc}
+ a50:	20000548 	.word	0x20000548
+ a54:	40001800 	.word	0x40001800
+ a58:	200004f4 	.word	0x200004f4
 
-00000924 <cpu_irq_enter_critical>:
+00000a5c <port_pin_set_config>:
+ *  \param[in] config    Configuration settings for the pin
+ */
+void port_pin_set_config(
+		const uint8_t gpio_pin,
+		const struct port_config *const config)
+{
+ a5c:	b500      	push	{lr}
+ a5e:	b083      	sub	sp, #12
+	config->mux_position = SYSTEM_PINMUX_GPIO;
+ a60:	ab01      	add	r3, sp, #4
+ a62:	2280      	movs	r2, #128	; 0x80
+ a64:	701a      	strb	r2, [r3, #0]
+
+	struct system_pinmux_config pinmux_config;
+	system_pinmux_get_config_defaults(&pinmux_config);
+
+	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
+	pinmux_config.direction    = (enum system_pinmux_pin_dir)config->direction;
+ a66:	780a      	ldrb	r2, [r1, #0]
+ a68:	705a      	strb	r2, [r3, #1]
+	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->input_pull;
+ a6a:	784a      	ldrb	r2, [r1, #1]
+ a6c:	709a      	strb	r2, [r3, #2]
+	pinmux_config.powersave    = config->powersave;
+ a6e:	788a      	ldrb	r2, [r1, #2]
+ a70:	70da      	strb	r2, [r3, #3]
+
+	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
+ a72:	0019      	movs	r1, r3
+ a74:	4b01      	ldr	r3, [pc, #4]	; (a7c <port_pin_set_config+0x20>)
+ a76:	4798      	blx	r3
+}
+ a78:	b003      	add	sp, #12
+ a7a:	bd00      	pop	{pc}
+ a7c:	00000c41 	.word	0x00000c41
+
+00000a80 <cpu_irq_enter_critical>:
 volatile bool g_interrupt_enabled = true;
 #endif
 
 void cpu_irq_enter_critical(void)
 {
 	if (cpu_irq_critical_section_counter == 0) {
- 924:	4b0c      	ldr	r3, [pc, #48]	; (958 <cpu_irq_enter_critical+0x34>)
- 926:	681b      	ldr	r3, [r3, #0]
- 928:	2b00      	cmp	r3, #0
- 92a:	d106      	bne.n	93a <cpu_irq_enter_critical+0x16>
+ a80:	4b0c      	ldr	r3, [pc, #48]	; (ab4 <cpu_irq_enter_critical+0x34>)
+ a82:	681b      	ldr	r3, [r3, #0]
+ a84:	2b00      	cmp	r3, #0
+ a86:	d106      	bne.n	a96 <cpu_irq_enter_critical+0x16>
  */
 __STATIC_FORCEINLINE uint32_t __get_PRIMASK(void)
 {
   uint32_t result;
 
   __ASM volatile ("MRS %0, primask" : "=r" (result) :: "memory");
- 92c:	f3ef 8310 	mrs	r3, PRIMASK
+ a88:	f3ef 8310 	mrs	r3, PRIMASK
 		if (cpu_irq_is_enabled()) {
- 930:	2b00      	cmp	r3, #0
- 932:	d007      	beq.n	944 <cpu_irq_enter_critical+0x20>
+ a8c:	2b00      	cmp	r3, #0
+ a8e:	d007      	beq.n	aa0 <cpu_irq_enter_critical+0x20>
 			cpu_irq_disable();
 			cpu_irq_prev_interrupt_state = true;
 		} else {
 			/* Make sure the to save the prev state as false */
 			cpu_irq_prev_interrupt_state = false;
- 934:	2200      	movs	r2, #0
- 936:	4b09      	ldr	r3, [pc, #36]	; (95c <cpu_irq_enter_critical+0x38>)
- 938:	701a      	strb	r2, [r3, #0]
+ a90:	2200      	movs	r2, #0
+ a92:	4b09      	ldr	r3, [pc, #36]	; (ab8 <cpu_irq_enter_critical+0x38>)
+ a94:	701a      	strb	r2, [r3, #0]
 		}
 
 	}
 
 	cpu_irq_critical_section_counter++;
- 93a:	4a07      	ldr	r2, [pc, #28]	; (958 <cpu_irq_enter_critical+0x34>)
- 93c:	6813      	ldr	r3, [r2, #0]
- 93e:	3301      	adds	r3, #1
- 940:	6013      	str	r3, [r2, #0]
+ a96:	4a07      	ldr	r2, [pc, #28]	; (ab4 <cpu_irq_enter_critical+0x34>)
+ a98:	6813      	ldr	r3, [r2, #0]
+ a9a:	3301      	adds	r3, #1
+ a9c:	6013      	str	r3, [r2, #0]
 }
- 942:	4770      	bx	lr
+ a9e:	4770      	bx	lr
   __ASM volatile ("cpsid i" : : : "memory");
- 944:	b672      	cpsid	i
+ aa0:	b672      	cpsid	i
   \details Ensures the apparent order of the explicit memory operations before
            and after the instruction, without ensuring their completion.
  */
 __STATIC_FORCEINLINE void __DMB(void)
 {
   __ASM volatile ("dmb 0xF":::"memory");
- 946:	f3bf 8f5f 	dmb	sy
+ aa2:	f3bf 8f5f 	dmb	sy
 			cpu_irq_disable();
- 94a:	2200      	movs	r2, #0
- 94c:	4b04      	ldr	r3, [pc, #16]	; (960 <cpu_irq_enter_critical+0x3c>)
- 94e:	701a      	strb	r2, [r3, #0]
+ aa6:	2200      	movs	r2, #0
+ aa8:	4b04      	ldr	r3, [pc, #16]	; (abc <cpu_irq_enter_critical+0x3c>)
+ aaa:	701a      	strb	r2, [r3, #0]
 			cpu_irq_prev_interrupt_state = true;
- 950:	3201      	adds	r2, #1
- 952:	4b02      	ldr	r3, [pc, #8]	; (95c <cpu_irq_enter_critical+0x38>)
- 954:	701a      	strb	r2, [r3, #0]
- 956:	e7f0      	b.n	93a <cpu_irq_enter_critical+0x16>
- 958:	200004e8 	.word	0x200004e8
- 95c:	200004ec 	.word	0x200004ec
- 960:	2000000a 	.word	0x2000000a
+ aac:	3201      	adds	r2, #1
+ aae:	4b02      	ldr	r3, [pc, #8]	; (ab8 <cpu_irq_enter_critical+0x38>)
+ ab0:	701a      	strb	r2, [r3, #0]
+ ab2:	e7f0      	b.n	a96 <cpu_irq_enter_critical+0x16>
+ ab4:	200004ec 	.word	0x200004ec
+ ab8:	200004f0 	.word	0x200004f0
+ abc:	20000000 	.word	0x20000000
 
-00000964 <cpu_irq_leave_critical>:
+00000ac0 <cpu_irq_leave_critical>:
 void cpu_irq_leave_critical(void)
 {
 	/* Check if the user is trying to leave a critical section when not in a critical section */
 	Assert(cpu_irq_critical_section_counter > 0);
 
 	cpu_irq_critical_section_counter--;
- 964:	4b08      	ldr	r3, [pc, #32]	; (988 <cpu_irq_leave_critical+0x24>)
- 966:	681a      	ldr	r2, [r3, #0]
- 968:	3a01      	subs	r2, #1
- 96a:	601a      	str	r2, [r3, #0]
+ ac0:	4b08      	ldr	r3, [pc, #32]	; (ae4 <cpu_irq_leave_critical+0x24>)
+ ac2:	681a      	ldr	r2, [r3, #0]
+ ac4:	3a01      	subs	r2, #1
+ ac6:	601a      	str	r2, [r3, #0]
 
 	/* Only enable global interrupts when the counter reaches 0 and the state of the global interrupt flag
 	   was enabled when entering critical state */
 	if ((cpu_irq_critical_section_counter == 0) && (cpu_irq_prev_interrupt_state)) {
- 96c:	681b      	ldr	r3, [r3, #0]
- 96e:	2b00      	cmp	r3, #0
- 970:	d109      	bne.n	986 <cpu_irq_leave_critical+0x22>
- 972:	4b06      	ldr	r3, [pc, #24]	; (98c <cpu_irq_leave_critical+0x28>)
- 974:	781b      	ldrb	r3, [r3, #0]
- 976:	2b00      	cmp	r3, #0
- 978:	d005      	beq.n	986 <cpu_irq_leave_critical+0x22>
+ ac8:	681b      	ldr	r3, [r3, #0]
+ aca:	2b00      	cmp	r3, #0
+ acc:	d109      	bne.n	ae2 <cpu_irq_leave_critical+0x22>
+ ace:	4b06      	ldr	r3, [pc, #24]	; (ae8 <cpu_irq_leave_critical+0x28>)
+ ad0:	781b      	ldrb	r3, [r3, #0]
+ ad2:	2b00      	cmp	r3, #0
+ ad4:	d005      	beq.n	ae2 <cpu_irq_leave_critical+0x22>
 		cpu_irq_enable();
- 97a:	2201      	movs	r2, #1
- 97c:	4b04      	ldr	r3, [pc, #16]	; (990 <cpu_irq_leave_critical+0x2c>)
- 97e:	701a      	strb	r2, [r3, #0]
- 980:	f3bf 8f5f 	dmb	sy
+ ad6:	2201      	movs	r2, #1
+ ad8:	4b04      	ldr	r3, [pc, #16]	; (aec <cpu_irq_leave_critical+0x2c>)
+ ada:	701a      	strb	r2, [r3, #0]
+ adc:	f3bf 8f5f 	dmb	sy
   __ASM volatile ("cpsie i" : : : "memory");
- 984:	b662      	cpsie	i
+ ae0:	b662      	cpsie	i
 	}
 }
- 986:	4770      	bx	lr
- 988:	200004e8 	.word	0x200004e8
- 98c:	200004ec 	.word	0x200004ec
- 990:	2000000a 	.word	0x2000000a
+ ae2:	4770      	bx	lr
+ ae4:	200004ec 	.word	0x200004ec
+ ae8:	200004f0 	.word	0x200004f0
+ aec:	20000000 	.word	0x20000000
 
-00000994 <system_gclk_chan_enable>:
+00000af0 <system_gclk_chan_enable>:
  *
  * \param[in] channel   Generic Clock channel to enable
  */
 void system_gclk_chan_enable(
 		const uint8_t channel)
 {
- 994:	b510      	push	{r4, lr}
- 996:	0004      	movs	r4, r0
+ af0:	b510      	push	{r4, lr}
+ af2:	0004      	movs	r4, r0
 	cpu_irq_enter_critical();
- 998:	4b06      	ldr	r3, [pc, #24]	; (9b4 <system_gclk_chan_enable+0x20>)
- 99a:	4798      	blx	r3
+ af4:	4b06      	ldr	r3, [pc, #24]	; (b10 <system_gclk_chan_enable+0x20>)
+ af6:	4798      	blx	r3
 	system_interrupt_enter_critical_section();
 
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
- 99c:	4b06      	ldr	r3, [pc, #24]	; (9b8 <system_gclk_chan_enable+0x24>)
- 99e:	701c      	strb	r4, [r3, #0]
+ af8:	4b06      	ldr	r3, [pc, #24]	; (b14 <system_gclk_chan_enable+0x24>)
+ afa:	701c      	strb	r4, [r3, #0]
 
 	/* Enable the generic clock */
 	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
- 9a0:	4a06      	ldr	r2, [pc, #24]	; (9bc <system_gclk_chan_enable+0x28>)
- 9a2:	8853      	ldrh	r3, [r2, #2]
- 9a4:	2180      	movs	r1, #128	; 0x80
- 9a6:	01c9      	lsls	r1, r1, #7
- 9a8:	430b      	orrs	r3, r1
- 9aa:	8053      	strh	r3, [r2, #2]
+ afc:	4a06      	ldr	r2, [pc, #24]	; (b18 <system_gclk_chan_enable+0x28>)
+ afe:	8853      	ldrh	r3, [r2, #2]
+ b00:	2180      	movs	r1, #128	; 0x80
+ b02:	01c9      	lsls	r1, r1, #7
+ b04:	430b      	orrs	r3, r1
+ b06:	8053      	strh	r3, [r2, #2]
 	cpu_irq_leave_critical();
- 9ac:	4b04      	ldr	r3, [pc, #16]	; (9c0 <system_gclk_chan_enable+0x2c>)
- 9ae:	4798      	blx	r3
+ b08:	4b04      	ldr	r3, [pc, #16]	; (b1c <system_gclk_chan_enable+0x2c>)
+ b0a:	4798      	blx	r3
 
 	system_interrupt_leave_critical_section();
 }
- 9b0:	bd10      	pop	{r4, pc}
- 9b2:	46c0      	nop			; (mov r8, r8)
- 9b4:	00000925 	.word	0x00000925
- 9b8:	40000c02 	.word	0x40000c02
- 9bc:	40000c00 	.word	0x40000c00
- 9c0:	00000965 	.word	0x00000965
+ b0c:	bd10      	pop	{r4, pc}
+ b0e:	46c0      	nop			; (mov r8, r8)
+ b10:	00000a81 	.word	0x00000a81
+ b14:	40000c02 	.word	0x40000c02
+ b18:	40000c00 	.word	0x40000c00
+ b1c:	00000ac1 	.word	0x00000ac1
 
-000009c4 <system_gclk_chan_disable>:
+00000b20 <system_gclk_chan_disable>:
  *
  * \param[in] channel  Generic Clock channel to disable
  */
 void system_gclk_chan_disable(
 		const uint8_t channel)
 {
- 9c4:	b510      	push	{r4, lr}
- 9c6:	0004      	movs	r4, r0
+ b20:	b510      	push	{r4, lr}
+ b22:	0004      	movs	r4, r0
 	cpu_irq_enter_critical();
- 9c8:	4b0f      	ldr	r3, [pc, #60]	; (a08 <system_gclk_chan_disable+0x44>)
- 9ca:	4798      	blx	r3
+ b24:	4b0f      	ldr	r3, [pc, #60]	; (b64 <system_gclk_chan_disable+0x44>)
+ b26:	4798      	blx	r3
 	system_interrupt_enter_critical_section();
 
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
- 9cc:	4b0f      	ldr	r3, [pc, #60]	; (a0c <system_gclk_chan_disable+0x48>)
- 9ce:	701c      	strb	r4, [r3, #0]
+ b28:	4b0f      	ldr	r3, [pc, #60]	; (b68 <system_gclk_chan_disable+0x48>)
+ b2a:	701c      	strb	r4, [r3, #0]
 
 	/* Sanity check WRTLOCK */
 	Assert(!GCLK->CLKCTRL.bit.WRTLOCK);
 
 	/* Switch to known-working source so that the channel can be disabled */
 	uint32_t prev_gen_id = GCLK->CLKCTRL.bit.GEN;
- 9d0:	4a0f      	ldr	r2, [pc, #60]	; (a10 <system_gclk_chan_disable+0x4c>)
- 9d2:	8853      	ldrh	r3, [r2, #2]
- 9d4:	051b      	lsls	r3, r3, #20
- 9d6:	0f18      	lsrs	r0, r3, #28
+ b2c:	4a0f      	ldr	r2, [pc, #60]	; (b6c <system_gclk_chan_disable+0x4c>)
+ b2e:	8853      	ldrh	r3, [r2, #2]
+ b30:	051b      	lsls	r3, r3, #20
+ b32:	0f18      	lsrs	r0, r3, #28
 	GCLK->CLKCTRL.bit.GEN = 0;
- 9d8:	8853      	ldrh	r3, [r2, #2]
- 9da:	490e      	ldr	r1, [pc, #56]	; (a14 <system_gclk_chan_disable+0x50>)
- 9dc:	400b      	ands	r3, r1
- 9de:	8053      	strh	r3, [r2, #2]
+ b34:	8853      	ldrh	r3, [r2, #2]
+ b36:	490e      	ldr	r1, [pc, #56]	; (b70 <system_gclk_chan_disable+0x50>)
+ b38:	400b      	ands	r3, r1
+ b3a:	8053      	strh	r3, [r2, #2]
 
 	/* Disable the generic clock */
 	GCLK->CLKCTRL.reg &= ~GCLK_CLKCTRL_CLKEN;
- 9e0:	8853      	ldrh	r3, [r2, #2]
- 9e2:	490d      	ldr	r1, [pc, #52]	; (a18 <system_gclk_chan_disable+0x54>)
- 9e4:	400b      	ands	r3, r1
- 9e6:	8053      	strh	r3, [r2, #2]
+ b3c:	8853      	ldrh	r3, [r2, #2]
+ b3e:	490d      	ldr	r1, [pc, #52]	; (b74 <system_gclk_chan_disable+0x54>)
+ b40:	400b      	ands	r3, r1
+ b42:	8053      	strh	r3, [r2, #2]
 	while (GCLK->CLKCTRL.reg & GCLK_CLKCTRL_CLKEN) {
- 9e8:	0011      	movs	r1, r2
- 9ea:	2280      	movs	r2, #128	; 0x80
- 9ec:	01d2      	lsls	r2, r2, #7
- 9ee:	884b      	ldrh	r3, [r1, #2]
- 9f0:	4213      	tst	r3, r2
- 9f2:	d1fc      	bne.n	9ee <system_gclk_chan_disable+0x2a>
+ b44:	0011      	movs	r1, r2
+ b46:	2280      	movs	r2, #128	; 0x80
+ b48:	01d2      	lsls	r2, r2, #7
+ b4a:	884b      	ldrh	r3, [r1, #2]
+ b4c:	4213      	tst	r3, r2
+ b4e:	d1fc      	bne.n	b4a <system_gclk_chan_disable+0x2a>
 		/* Wait for clock to become disabled */
 	}
 
 	/* Restore previous configured clock generator */
 	GCLK->CLKCTRL.bit.GEN = prev_gen_id;
- 9f4:	4906      	ldr	r1, [pc, #24]	; (a10 <system_gclk_chan_disable+0x4c>)
- 9f6:	884a      	ldrh	r2, [r1, #2]
- 9f8:	0203      	lsls	r3, r0, #8
- 9fa:	4806      	ldr	r0, [pc, #24]	; (a14 <system_gclk_chan_disable+0x50>)
- 9fc:	4002      	ands	r2, r0
- 9fe:	4313      	orrs	r3, r2
- a00:	804b      	strh	r3, [r1, #2]
+ b50:	4906      	ldr	r1, [pc, #24]	; (b6c <system_gclk_chan_disable+0x4c>)
+ b52:	884a      	ldrh	r2, [r1, #2]
+ b54:	0203      	lsls	r3, r0, #8
+ b56:	4806      	ldr	r0, [pc, #24]	; (b70 <system_gclk_chan_disable+0x50>)
+ b58:	4002      	ands	r2, r0
+ b5a:	4313      	orrs	r3, r2
+ b5c:	804b      	strh	r3, [r1, #2]
 	cpu_irq_leave_critical();
- a02:	4b06      	ldr	r3, [pc, #24]	; (a1c <system_gclk_chan_disable+0x58>)
- a04:	4798      	blx	r3
+ b5e:	4b06      	ldr	r3, [pc, #24]	; (b78 <system_gclk_chan_disable+0x58>)
+ b60:	4798      	blx	r3
 
 	system_interrupt_leave_critical_section();
 }
- a06:	bd10      	pop	{r4, pc}
- a08:	00000925 	.word	0x00000925
- a0c:	40000c02 	.word	0x40000c02
- a10:	40000c00 	.word	0x40000c00
- a14:	fffff0ff 	.word	0xfffff0ff
- a18:	ffffbfff 	.word	0xffffbfff
- a1c:	00000965 	.word	0x00000965
+ b62:	bd10      	pop	{r4, pc}
+ b64:	00000a81 	.word	0x00000a81
+ b68:	40000c02 	.word	0x40000c02
+ b6c:	40000c00 	.word	0x40000c00
+ b70:	fffff0ff 	.word	0xfffff0ff
+ b74:	ffffbfff 	.word	0xffffbfff
+ b78:	00000ac1 	.word	0x00000ac1
 
-00000a20 <system_gclk_chan_set_config>:
+00000b7c <system_gclk_chan_set_config>:
 {
- a20:	b510      	push	{r4, lr}
+ b7c:	b510      	push	{r4, lr}
 	new_clkctrl_config |= config->source_generator << GCLK_CLKCTRL_GEN_Pos;
- a22:	780c      	ldrb	r4, [r1, #0]
- a24:	0224      	lsls	r4, r4, #8
- a26:	4304      	orrs	r4, r0
+ b7e:	780c      	ldrb	r4, [r1, #0]
+ b80:	0224      	lsls	r4, r4, #8
+ b82:	4304      	orrs	r4, r0
 	system_gclk_chan_disable(channel);
- a28:	4b02      	ldr	r3, [pc, #8]	; (a34 <system_gclk_chan_set_config+0x14>)
- a2a:	4798      	blx	r3
+ b84:	4b02      	ldr	r3, [pc, #8]	; (b90 <system_gclk_chan_set_config+0x14>)
+ b86:	4798      	blx	r3
 	GCLK->CLKCTRL.reg = new_clkctrl_config;
- a2c:	b2a4      	uxth	r4, r4
- a2e:	4b02      	ldr	r3, [pc, #8]	; (a38 <system_gclk_chan_set_config+0x18>)
- a30:	805c      	strh	r4, [r3, #2]
+ b88:	b2a4      	uxth	r4, r4
+ b8a:	4b02      	ldr	r3, [pc, #8]	; (b94 <system_gclk_chan_set_config+0x18>)
+ b8c:	805c      	strh	r4, [r3, #2]
 }
- a32:	bd10      	pop	{r4, pc}
- a34:	000009c5 	.word	0x000009c5
- a38:	40000c00 	.word	0x40000c00
+ b8e:	bd10      	pop	{r4, pc}
+ b90:	00000b21 	.word	0x00000b21
+ b94:	40000c00 	.word	0x40000c00
 
-00000a3c <_system_pinmux_config>:
+00000b98 <_system_pinmux_config>:
  */
 static void _system_pinmux_config(
 		PortGroup *const port,
 		const uint32_t pin_mask,
 		const struct system_pinmux_config *const config)
 {
- a3c:	b530      	push	{r4, r5, lr}
+ b98:	b530      	push	{r4, r5, lr}
 
 	/* Track the configuration bits into a temporary variable before writing */
 	uint32_t pin_cfg = 0;
 
 	/* Enabled powersave mode, don't create configuration */
 	if (!config->powersave) {
- a3e:	78d3      	ldrb	r3, [r2, #3]
- a40:	2b00      	cmp	r3, #0
- a42:	d135      	bne.n	ab0 <_system_pinmux_config+0x74>
+ b9a:	78d3      	ldrb	r3, [r2, #3]
+ b9c:	2b00      	cmp	r3, #0
+ b9e:	d135      	bne.n	c0c <_system_pinmux_config+0x74>
 		/* Enable the pin peripheral MUX flag if non-GPIO selected (pinmux will
 		 * be written later) and store the new MUX mask */
 		if (config->mux_position != SYSTEM_PINMUX_GPIO) {
- a44:	7813      	ldrb	r3, [r2, #0]
- a46:	2b80      	cmp	r3, #128	; 0x80
- a48:	d029      	beq.n	a9e <_system_pinmux_config+0x62>
+ ba0:	7813      	ldrb	r3, [r2, #0]
+ ba2:	2b80      	cmp	r3, #128	; 0x80
+ ba4:	d029      	beq.n	bfa <_system_pinmux_config+0x62>
 			pin_cfg |= PORT_WRCONFIG_PMUXEN;
 			pin_cfg |= (config->mux_position << PORT_WRCONFIG_PMUX_Pos);
- a4a:	061b      	lsls	r3, r3, #24
- a4c:	2480      	movs	r4, #128	; 0x80
- a4e:	0264      	lsls	r4, r4, #9
- a50:	4323      	orrs	r3, r4
+ ba6:	061b      	lsls	r3, r3, #24
+ ba8:	2480      	movs	r4, #128	; 0x80
+ baa:	0264      	lsls	r4, r4, #9
+ bac:	4323      	orrs	r3, r4
 		}
 
 		/* Check if the user has requested that the input buffer be enabled */
 		if ((config->direction == SYSTEM_PINMUX_PIN_DIR_INPUT) ||
- a52:	7854      	ldrb	r4, [r2, #1]
- a54:	2502      	movs	r5, #2
- a56:	43ac      	bics	r4, r5
- a58:	d106      	bne.n	a68 <_system_pinmux_config+0x2c>
+ bae:	7854      	ldrb	r4, [r2, #1]
+ bb0:	2502      	movs	r5, #2
+ bb2:	43ac      	bics	r4, r5
+ bb4:	d106      	bne.n	bc4 <_system_pinmux_config+0x2c>
 				(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
 			/* Enable input buffer flag */
 			pin_cfg |= PORT_WRCONFIG_INEN;
 
 			/* Enable pull-up/pull-down control flag if requested */
 			if (config->input_pull != SYSTEM_PINMUX_PIN_PULL_NONE) {
- a5a:	7894      	ldrb	r4, [r2, #2]
- a5c:	2c00      	cmp	r4, #0
- a5e:	d120      	bne.n	aa2 <_system_pinmux_config+0x66>
+ bb6:	7894      	ldrb	r4, [r2, #2]
+ bb8:	2c00      	cmp	r4, #0
+ bba:	d120      	bne.n	bfe <_system_pinmux_config+0x66>
 			pin_cfg |= PORT_WRCONFIG_INEN;
- a60:	2480      	movs	r4, #128	; 0x80
- a62:	02a4      	lsls	r4, r4, #10
- a64:	4323      	orrs	r3, r4
+ bbc:	2480      	movs	r4, #128	; 0x80
+ bbe:	02a4      	lsls	r4, r4, #10
+ bc0:	4323      	orrs	r3, r4
 				pin_cfg |= PORT_WRCONFIG_PULLEN;
 			}
 
 			/* Clear the port DIR bits to disable the output buffer */
 			port->DIRCLR.reg = pin_mask;
- a66:	6041      	str	r1, [r0, #4]
+ bc2:	6041      	str	r1, [r0, #4]
 		}
 
 		/* Check if the user has requested that the output buffer be enabled */
 		if ((config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT) ||
- a68:	7854      	ldrb	r4, [r2, #1]
- a6a:	3c01      	subs	r4, #1
- a6c:	2c01      	cmp	r4, #1
- a6e:	d91c      	bls.n	aaa <_system_pinmux_config+0x6e>
+ bc4:	7854      	ldrb	r4, [r2, #1]
+ bc6:	3c01      	subs	r4, #1
+ bc8:	2c01      	cmp	r4, #1
+ bca:	d91c      	bls.n	c06 <_system_pinmux_config+0x6e>
 		port->DIRCLR.reg = pin_mask;
 	}
 
 	/* The Write Configuration register (WRCONFIG) requires the
 	 * pins to to grouped into two 16-bit half-words - split them out here */
 	uint32_t lower_pin_mask = (pin_mask & 0xFFFF);
- a70:	040d      	lsls	r5, r1, #16
- a72:	0c2d      	lsrs	r5, r5, #16
+ bcc:	040d      	lsls	r5, r1, #16
+ bce:	0c2d      	lsrs	r5, r5, #16
 
 	/* Configure the lower 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
 	port->WRCONFIG.reg
 		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
 			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
- a74:	24a0      	movs	r4, #160	; 0xa0
- a76:	05e4      	lsls	r4, r4, #23
- a78:	432c      	orrs	r4, r5
- a7a:	431c      	orrs	r4, r3
+ bd0:	24a0      	movs	r4, #160	; 0xa0
+ bd2:	05e4      	lsls	r4, r4, #23
+ bd4:	432c      	orrs	r4, r5
+ bd6:	431c      	orrs	r4, r3
 		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
- a7c:	6284      	str	r4, [r0, #40]	; 0x28
+ bd8:	6284      	str	r4, [r0, #40]	; 0x28
 	uint32_t upper_pin_mask = (pin_mask >> 16);
- a7e:	0c0d      	lsrs	r5, r1, #16
+ bda:	0c0d      	lsrs	r5, r1, #16
 
 	/* Configure the upper 16-bits of the port to the desired configuration,
 	 * including the pin peripheral multiplexer just in case it is enabled */
 	port->WRCONFIG.reg
 		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
 			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
- a80:	24d0      	movs	r4, #208	; 0xd0
- a82:	0624      	lsls	r4, r4, #24
- a84:	432c      	orrs	r4, r5
- a86:	431c      	orrs	r4, r3
+ bdc:	24d0      	movs	r4, #208	; 0xd0
+ bde:	0624      	lsls	r4, r4, #24
+ be0:	432c      	orrs	r4, r5
+ be2:	431c      	orrs	r4, r3
 		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
- a88:	6284      	str	r4, [r0, #40]	; 0x28
+ be4:	6284      	str	r4, [r0, #40]	; 0x28
 			PORT_WRCONFIG_HWSEL;
 
 	if(!config->powersave) {
- a8a:	78d4      	ldrb	r4, [r2, #3]
- a8c:	2c00      	cmp	r4, #0
- a8e:	d122      	bne.n	ad6 <_system_pinmux_config+0x9a>
+ be6:	78d4      	ldrb	r4, [r2, #3]
+ be8:	2c00      	cmp	r4, #0
+ bea:	d122      	bne.n	c32 <_system_pinmux_config+0x9a>
 		/* Set the pull-up state once the port pins are configured if one was
 		 * requested and it does not violate the valid set of port
 		 * configurations */
 		if (pin_cfg & PORT_WRCONFIG_PULLEN) {
- a90:	035b      	lsls	r3, r3, #13
- a92:	d51c      	bpl.n	ace <_system_pinmux_config+0x92>
+ bec:	035b      	lsls	r3, r3, #13
+ bee:	d51c      	bpl.n	c2a <_system_pinmux_config+0x92>
 			/* Set the OUT register bits to enable the pull-up if requested,
 			 * clear to enable pull-down */
 			if (config->input_pull == SYSTEM_PINMUX_PIN_PULL_UP) {
- a94:	7893      	ldrb	r3, [r2, #2]
- a96:	2b01      	cmp	r3, #1
- a98:	d01e      	beq.n	ad8 <_system_pinmux_config+0x9c>
+ bf0:	7893      	ldrb	r3, [r2, #2]
+ bf2:	2b01      	cmp	r3, #1
+ bf4:	d01e      	beq.n	c34 <_system_pinmux_config+0x9c>
 				port->OUTSET.reg = pin_mask;
 			} else {
 				port->OUTCLR.reg = pin_mask;
- a9a:	6141      	str	r1, [r0, #20]
- a9c:	e017      	b.n	ace <_system_pinmux_config+0x92>
+ bf6:	6141      	str	r1, [r0, #20]
+ bf8:	e017      	b.n	c2a <_system_pinmux_config+0x92>
 	uint32_t pin_cfg = 0;
- a9e:	2300      	movs	r3, #0
- aa0:	e7d7      	b.n	a52 <_system_pinmux_config+0x16>
+ bfa:	2300      	movs	r3, #0
+ bfc:	e7d7      	b.n	bae <_system_pinmux_config+0x16>
 				pin_cfg |= PORT_WRCONFIG_PULLEN;
- aa2:	24c0      	movs	r4, #192	; 0xc0
- aa4:	02e4      	lsls	r4, r4, #11
- aa6:	4323      	orrs	r3, r4
- aa8:	e7dd      	b.n	a66 <_system_pinmux_config+0x2a>
+ bfe:	24c0      	movs	r4, #192	; 0xc0
+ c00:	02e4      	lsls	r4, r4, #11
+ c02:	4323      	orrs	r3, r4
+ c04:	e7dd      	b.n	bc2 <_system_pinmux_config+0x2a>
 			pin_cfg &= ~PORT_WRCONFIG_PULLEN;
- aaa:	4c0d      	ldr	r4, [pc, #52]	; (ae0 <_system_pinmux_config+0xa4>)
- aac:	4023      	ands	r3, r4
- aae:	e7df      	b.n	a70 <_system_pinmux_config+0x34>
+ c06:	4c0d      	ldr	r4, [pc, #52]	; (c3c <_system_pinmux_config+0xa4>)
+ c08:	4023      	ands	r3, r4
+ c0a:	e7df      	b.n	bcc <_system_pinmux_config+0x34>
 		port->DIRCLR.reg = pin_mask;
- ab0:	6041      	str	r1, [r0, #4]
+ c0c:	6041      	str	r1, [r0, #4]
 	uint32_t lower_pin_mask = (pin_mask & 0xFFFF);
- ab2:	040c      	lsls	r4, r1, #16
- ab4:	0c24      	lsrs	r4, r4, #16
+ c0e:	040c      	lsls	r4, r1, #16
+ c10:	0c24      	lsrs	r4, r4, #16
 			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
- ab6:	23a0      	movs	r3, #160	; 0xa0
- ab8:	05db      	lsls	r3, r3, #23
- aba:	4323      	orrs	r3, r4
+ c12:	23a0      	movs	r3, #160	; 0xa0
+ c14:	05db      	lsls	r3, r3, #23
+ c16:	4323      	orrs	r3, r4
 		= (lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
- abc:	6283      	str	r3, [r0, #40]	; 0x28
+ c18:	6283      	str	r3, [r0, #40]	; 0x28
 	uint32_t upper_pin_mask = (pin_mask >> 16);
- abe:	0c0c      	lsrs	r4, r1, #16
+ c1a:	0c0c      	lsrs	r4, r1, #16
 			pin_cfg | PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
- ac0:	23d0      	movs	r3, #208	; 0xd0
- ac2:	061b      	lsls	r3, r3, #24
- ac4:	4323      	orrs	r3, r4
+ c1c:	23d0      	movs	r3, #208	; 0xd0
+ c1e:	061b      	lsls	r3, r3, #24
+ c20:	4323      	orrs	r3, r4
 		= (upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
- ac6:	6283      	str	r3, [r0, #40]	; 0x28
+ c22:	6283      	str	r3, [r0, #40]	; 0x28
 	if(!config->powersave) {
- ac8:	78d3      	ldrb	r3, [r2, #3]
- aca:	2b00      	cmp	r3, #0
- acc:	d103      	bne.n	ad6 <_system_pinmux_config+0x9a>
+ c24:	78d3      	ldrb	r3, [r2, #3]
+ c26:	2b00      	cmp	r3, #0
+ c28:	d103      	bne.n	c32 <_system_pinmux_config+0x9a>
 			}
 		}
 
 		/* Check if the user has requested that the output buffer be enabled */
 		if ((config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT) ||
- ace:	7853      	ldrb	r3, [r2, #1]
- ad0:	3b01      	subs	r3, #1
- ad2:	2b01      	cmp	r3, #1
- ad4:	d902      	bls.n	adc <_system_pinmux_config+0xa0>
+ c2a:	7853      	ldrb	r3, [r2, #1]
+ c2c:	3b01      	subs	r3, #1
+ c2e:	2b01      	cmp	r3, #1
+ c30:	d902      	bls.n	c38 <_system_pinmux_config+0xa0>
 				(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
 			/* Set the port DIR bits to enable the output buffer */
 			port->DIRSET.reg = pin_mask;
 		}
 	}
 }
- ad6:	bd30      	pop	{r4, r5, pc}
+ c32:	bd30      	pop	{r4, r5, pc}
 				port->OUTSET.reg = pin_mask;
- ad8:	6181      	str	r1, [r0, #24]
- ada:	e7f8      	b.n	ace <_system_pinmux_config+0x92>
+ c34:	6181      	str	r1, [r0, #24]
+ c36:	e7f8      	b.n	c2a <_system_pinmux_config+0x92>
 			port->DIRSET.reg = pin_mask;
- adc:	6081      	str	r1, [r0, #8]
+ c38:	6081      	str	r1, [r0, #8]
 }
- ade:	e7fa      	b.n	ad6 <_system_pinmux_config+0x9a>
- ae0:	fffbffff 	.word	0xfffbffff
+ c3a:	e7fa      	b.n	c32 <_system_pinmux_config+0x9a>
+ c3c:	fffbffff 	.word	0xfffbffff
 
-00000ae4 <system_pinmux_pin_set_config>:
+00000c40 <system_pinmux_pin_set_config>:
  * \param[in] config    Configuration settings for the pin
  */
 void system_pinmux_pin_set_config(
 		const uint8_t gpio_pin,
 		const struct system_pinmux_config *const config)
 {
- ae4:	b510      	push	{r4, lr}
- ae6:	000a      	movs	r2, r1
+ c40:	b510      	push	{r4, lr}
+ c42:	000a      	movs	r2, r1
 	uint8_t group_index = (gpio_pin / 32);
 
 	/* Array of available ports */
 	Port *const ports[PORT_INST_NUM] = PORT_INSTS;
 
 	if (port_index < PORT_INST_NUM) {
- ae8:	09c1      	lsrs	r1, r0, #7
+ c44:	09c1      	lsrs	r1, r0, #7
 		return &(ports[port_index]->Group[group_index]);
 	} else {
 		Assert(false);
 		return NULL;
- aea:	2300      	movs	r3, #0
+ c46:	2300      	movs	r3, #0
 	if (port_index < PORT_INST_NUM) {
- aec:	2900      	cmp	r1, #0
- aee:	d104      	bne.n	afa <system_pinmux_pin_set_config+0x16>
+ c48:	2900      	cmp	r1, #0
+ c4a:	d104      	bne.n	c56 <system_pinmux_pin_set_config+0x16>
 		return &(ports[port_index]->Group[group_index]);
- af0:	0943      	lsrs	r3, r0, #5
- af2:	01db      	lsls	r3, r3, #7
- af4:	4905      	ldr	r1, [pc, #20]	; (b0c <system_pinmux_pin_set_config+0x28>)
- af6:	468c      	mov	ip, r1
- af8:	4463      	add	r3, ip
+ c4c:	0943      	lsrs	r3, r0, #5
+ c4e:	01db      	lsls	r3, r3, #7
+ c50:	4905      	ldr	r1, [pc, #20]	; (c68 <system_pinmux_pin_set_config+0x28>)
+ c52:	468c      	mov	ip, r1
+ c54:	4463      	add	r3, ip
 	PortGroup *const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
 	uint32_t pin_mask = (1UL << (gpio_pin % 32));
- afa:	241f      	movs	r4, #31
- afc:	4020      	ands	r0, r4
- afe:	2101      	movs	r1, #1
- b00:	4081      	lsls	r1, r0
+ c56:	241f      	movs	r4, #31
+ c58:	4020      	ands	r0, r4
+ c5a:	2101      	movs	r1, #1
+ c5c:	4081      	lsls	r1, r0
 
 	_system_pinmux_config(port, pin_mask, config);
- b02:	0018      	movs	r0, r3
- b04:	4b02      	ldr	r3, [pc, #8]	; (b10 <system_pinmux_pin_set_config+0x2c>)
- b06:	4798      	blx	r3
+ c5e:	0018      	movs	r0, r3
+ c60:	4b02      	ldr	r3, [pc, #8]	; (c6c <system_pinmux_pin_set_config+0x2c>)
+ c62:	4798      	blx	r3
 }
- b08:	bd10      	pop	{r4, pc}
- b0a:	46c0      	nop			; (mov r8, r8)
- b0c:	41004400 	.word	0x41004400
- b10:	00000a3d 	.word	0x00000a3d
+ c64:	bd10      	pop	{r4, pc}
+ c66:	46c0      	nop			; (mov r8, r8)
+ c68:	41004400 	.word	0x41004400
+ c6c:	00000b99 	.word	0x00000b99
 
-00000b14 <Dummy_Handler>:
+00000c70 <Dummy_Handler>:
 
 /**
  * \brief Default interrupt handler for unused IRQs.
  */
 void Dummy_Handler(void)
 {
- b14:	e7fe      	b.n	b14 <Dummy_Handler>
+ c70:	e7fe      	b.n	c70 <Dummy_Handler>
 	...
 
-00000b18 <Reset_Handler>:
+00000c74 <Reset_Handler>:
 {
- b18:	b510      	push	{r4, lr}
+ c74:	b510      	push	{r4, lr}
         if (pSrc != pDest) {
- b1a:	4a26      	ldr	r2, [pc, #152]	; (bb4 <Reset_Handler+0x9c>)
- b1c:	4b26      	ldr	r3, [pc, #152]	; (bb8 <Reset_Handler+0xa0>)
- b1e:	429a      	cmp	r2, r3
- b20:	d011      	beq.n	b46 <Reset_Handler+0x2e>
+ c76:	4a26      	ldr	r2, [pc, #152]	; (d10 <Reset_Handler+0x9c>)
+ c78:	4b26      	ldr	r3, [pc, #152]	; (d14 <Reset_Handler+0xa0>)
+ c7a:	429a      	cmp	r2, r3
+ c7c:	d011      	beq.n	ca2 <Reset_Handler+0x2e>
                 for (; pDest < &_erelocate;) {
- b22:	001a      	movs	r2, r3
- b24:	4b25      	ldr	r3, [pc, #148]	; (bbc <Reset_Handler+0xa4>)
- b26:	429a      	cmp	r2, r3
- b28:	d20d      	bcs.n	b46 <Reset_Handler+0x2e>
- b2a:	4a25      	ldr	r2, [pc, #148]	; (bc0 <Reset_Handler+0xa8>)
- b2c:	3303      	adds	r3, #3
- b2e:	1a9b      	subs	r3, r3, r2
- b30:	089b      	lsrs	r3, r3, #2
- b32:	3301      	adds	r3, #1
- b34:	009b      	lsls	r3, r3, #2
- b36:	2200      	movs	r2, #0
+ c7e:	001a      	movs	r2, r3
+ c80:	4b25      	ldr	r3, [pc, #148]	; (d18 <Reset_Handler+0xa4>)
+ c82:	429a      	cmp	r2, r3
+ c84:	d20d      	bcs.n	ca2 <Reset_Handler+0x2e>
+ c86:	4a25      	ldr	r2, [pc, #148]	; (d1c <Reset_Handler+0xa8>)
+ c88:	3303      	adds	r3, #3
+ c8a:	1a9b      	subs	r3, r3, r2
+ c8c:	089b      	lsrs	r3, r3, #2
+ c8e:	3301      	adds	r3, #1
+ c90:	009b      	lsls	r3, r3, #2
+ c92:	2200      	movs	r2, #0
                         *pDest++ = *pSrc++;
- b38:	481f      	ldr	r0, [pc, #124]	; (bb8 <Reset_Handler+0xa0>)
- b3a:	491e      	ldr	r1, [pc, #120]	; (bb4 <Reset_Handler+0x9c>)
- b3c:	588c      	ldr	r4, [r1, r2]
- b3e:	5084      	str	r4, [r0, r2]
- b40:	3204      	adds	r2, #4
+ c94:	481f      	ldr	r0, [pc, #124]	; (d14 <Reset_Handler+0xa0>)
+ c96:	491e      	ldr	r1, [pc, #120]	; (d10 <Reset_Handler+0x9c>)
+ c98:	588c      	ldr	r4, [r1, r2]
+ c9a:	5084      	str	r4, [r0, r2]
+ c9c:	3204      	adds	r2, #4
                 for (; pDest < &_erelocate;) {
- b42:	429a      	cmp	r2, r3
- b44:	d1fa      	bne.n	b3c <Reset_Handler+0x24>
+ c9e:	429a      	cmp	r2, r3
+ ca0:	d1fa      	bne.n	c98 <Reset_Handler+0x24>
         for (pDest = &_szero; pDest < &_ezero;) {
- b46:	4a1f      	ldr	r2, [pc, #124]	; (bc4 <Reset_Handler+0xac>)
- b48:	4b1f      	ldr	r3, [pc, #124]	; (bc8 <Reset_Handler+0xb0>)
- b4a:	429a      	cmp	r2, r3
- b4c:	d20a      	bcs.n	b64 <Reset_Handler+0x4c>
- b4e:	43d3      	mvns	r3, r2
- b50:	491d      	ldr	r1, [pc, #116]	; (bc8 <Reset_Handler+0xb0>)
- b52:	185b      	adds	r3, r3, r1
- b54:	2103      	movs	r1, #3
- b56:	438b      	bics	r3, r1
- b58:	3304      	adds	r3, #4
- b5a:	189b      	adds	r3, r3, r2
+ ca2:	4a1f      	ldr	r2, [pc, #124]	; (d20 <Reset_Handler+0xac>)
+ ca4:	4b1f      	ldr	r3, [pc, #124]	; (d24 <Reset_Handler+0xb0>)
+ ca6:	429a      	cmp	r2, r3
+ ca8:	d20a      	bcs.n	cc0 <Reset_Handler+0x4c>
+ caa:	43d3      	mvns	r3, r2
+ cac:	491d      	ldr	r1, [pc, #116]	; (d24 <Reset_Handler+0xb0>)
+ cae:	185b      	adds	r3, r3, r1
+ cb0:	2103      	movs	r1, #3
+ cb2:	438b      	bics	r3, r1
+ cb4:	3304      	adds	r3, #4
+ cb6:	189b      	adds	r3, r3, r2
                 *pDest++ = 0;
- b5c:	2100      	movs	r1, #0
- b5e:	c202      	stmia	r2!, {r1}
+ cb8:	2100      	movs	r1, #0
+ cba:	c202      	stmia	r2!, {r1}
         for (pDest = &_szero; pDest < &_ezero;) {
- b60:	4293      	cmp	r3, r2
- b62:	d1fc      	bne.n	b5e <Reset_Handler+0x46>
+ cbc:	4293      	cmp	r3, r2
+ cbe:	d1fc      	bne.n	cba <Reset_Handler+0x46>
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
- b64:	4a19      	ldr	r2, [pc, #100]	; (bcc <Reset_Handler+0xb4>)
- b66:	21ff      	movs	r1, #255	; 0xff
- b68:	4b19      	ldr	r3, [pc, #100]	; (bd0 <Reset_Handler+0xb8>)
- b6a:	438b      	bics	r3, r1
- b6c:	6093      	str	r3, [r2, #8]
+ cc0:	4a19      	ldr	r2, [pc, #100]	; (d28 <Reset_Handler+0xb4>)
+ cc2:	21ff      	movs	r1, #255	; 0xff
+ cc4:	4b19      	ldr	r3, [pc, #100]	; (d2c <Reset_Handler+0xb8>)
+ cc6:	438b      	bics	r3, r1
+ cc8:	6093      	str	r3, [r2, #8]
         SBMATRIX->SFR[SBMATRIX_SLAVE_HMCRAMC0].reg = 2;
- b6e:	39fd      	subs	r1, #253	; 0xfd
- b70:	2390      	movs	r3, #144	; 0x90
- b72:	005b      	lsls	r3, r3, #1
- b74:	4a17      	ldr	r2, [pc, #92]	; (bd4 <Reset_Handler+0xbc>)
- b76:	50d1      	str	r1, [r2, r3]
+ cca:	39fd      	subs	r1, #253	; 0xfd
+ ccc:	2390      	movs	r3, #144	; 0x90
+ cce:	005b      	lsls	r3, r3, #1
+ cd0:	4a17      	ldr	r2, [pc, #92]	; (d30 <Reset_Handler+0xbc>)
+ cd2:	50d1      	str	r1, [r2, r3]
         DMAC->QOSCTRL.bit.DQOS = 2;
- b78:	4b17      	ldr	r3, [pc, #92]	; (bd8 <Reset_Handler+0xc0>)
- b7a:	7b9a      	ldrb	r2, [r3, #14]
- b7c:	312e      	adds	r1, #46	; 0x2e
- b7e:	438a      	bics	r2, r1
- b80:	2120      	movs	r1, #32
- b82:	430a      	orrs	r2, r1
- b84:	739a      	strb	r2, [r3, #14]
+ cd4:	4b17      	ldr	r3, [pc, #92]	; (d34 <Reset_Handler+0xc0>)
+ cd6:	7b9a      	ldrb	r2, [r3, #14]
+ cd8:	312e      	adds	r1, #46	; 0x2e
+ cda:	438a      	bics	r2, r1
+ cdc:	2120      	movs	r1, #32
+ cde:	430a      	orrs	r2, r1
+ ce0:	739a      	strb	r2, [r3, #14]
         DMAC->QOSCTRL.bit.FQOS = 2;
- b86:	7b9a      	ldrb	r2, [r3, #14]
- b88:	210c      	movs	r1, #12
- b8a:	438a      	bics	r2, r1
- b8c:	2108      	movs	r1, #8
- b8e:	430a      	orrs	r2, r1
- b90:	739a      	strb	r2, [r3, #14]
+ ce2:	7b9a      	ldrb	r2, [r3, #14]
+ ce4:	210c      	movs	r1, #12
+ ce6:	438a      	bics	r2, r1
+ ce8:	2108      	movs	r1, #8
+ cea:	430a      	orrs	r2, r1
+ cec:	739a      	strb	r2, [r3, #14]
         DMAC->QOSCTRL.bit.WRBQOS = 2;
- b92:	7b9a      	ldrb	r2, [r3, #14]
- b94:	2103      	movs	r1, #3
- b96:	438a      	bics	r2, r1
- b98:	2102      	movs	r1, #2
- b9a:	430a      	orrs	r2, r1
- b9c:	739a      	strb	r2, [r3, #14]
+ cee:	7b9a      	ldrb	r2, [r3, #14]
+ cf0:	2103      	movs	r1, #3
+ cf2:	438a      	bics	r2, r1
+ cf4:	2102      	movs	r1, #2
+ cf6:	430a      	orrs	r2, r1
+ cf8:	739a      	strb	r2, [r3, #14]
         NVMCTRL->CTRLB.bit.MANW = 1;
- b9e:	4a0f      	ldr	r2, [pc, #60]	; (bdc <Reset_Handler+0xc4>)
- ba0:	6853      	ldr	r3, [r2, #4]
- ba2:	2180      	movs	r1, #128	; 0x80
- ba4:	430b      	orrs	r3, r1
- ba6:	6053      	str	r3, [r2, #4]
+ cfa:	4a0f      	ldr	r2, [pc, #60]	; (d38 <Reset_Handler+0xc4>)
+ cfc:	6853      	ldr	r3, [r2, #4]
+ cfe:	2180      	movs	r1, #128	; 0x80
+ d00:	430b      	orrs	r3, r1
+ d02:	6053      	str	r3, [r2, #4]
         __libc_init_array();
- ba8:	4b0d      	ldr	r3, [pc, #52]	; (be0 <Reset_Handler+0xc8>)
- baa:	4798      	blx	r3
+ d04:	4b0d      	ldr	r3, [pc, #52]	; (d3c <Reset_Handler+0xc8>)
+ d06:	4798      	blx	r3
         main();
- bac:	4b0d      	ldr	r3, [pc, #52]	; (be4 <Reset_Handler+0xcc>)
- bae:	4798      	blx	r3
- bb0:	e7fe      	b.n	bb0 <Reset_Handler+0x98>
- bb2:	46c0      	nop			; (mov r8, r8)
- bb4:	00000dc0 	.word	0x00000dc0
- bb8:	20000000 	.word	0x20000000
- bbc:	2000043c 	.word	0x2000043c
- bc0:	20000004 	.word	0x20000004
- bc4:	2000043c 	.word	0x2000043c
- bc8:	2000056c 	.word	0x2000056c
- bcc:	e000ed00 	.word	0xe000ed00
- bd0:	00000000 	.word	0x00000000
- bd4:	41007000 	.word	0x41007000
- bd8:	41004800 	.word	0x41004800
- bdc:	41004000 	.word	0x41004000
- be0:	00000bf9 	.word	0x00000bf9
- be4:	0000020d 	.word	0x0000020d
+ d08:	4b0d      	ldr	r3, [pc, #52]	; (d40 <Reset_Handler+0xcc>)
+ d0a:	4798      	blx	r3
+ d0c:	e7fe      	b.n	d0c <Reset_Handler+0x98>
+ d0e:	46c0      	nop			; (mov r8, r8)
+ d10:	00000f1c 	.word	0x00000f1c
+ d14:	20000000 	.word	0x20000000
+ d18:	20000434 	.word	0x20000434
+ d1c:	20000004 	.word	0x20000004
+ d20:	20000434 	.word	0x20000434
+ d24:	20000570 	.word	0x20000570
+ d28:	e000ed00 	.word	0xe000ed00
+ d2c:	00000000 	.word	0x00000000
+ d30:	41007000 	.word	0x41007000
+ d34:	41004800 	.word	0x41004800
+ d38:	41004000 	.word	0x41004000
+ d3c:	00000d55 	.word	0x00000d55
+ d40:	00000225 	.word	0x00000225
 
-00000be8 <SystemInit>:
+00000d44 <SystemInit>:
  *         Initialize the System and update the SystemCoreClock variable.
  */
 void SystemInit(void)
 {
 	// Keep the default device state after reset
 	SystemCoreClock = __SYSTEM_CLOCK;
- be8:	4a01      	ldr	r2, [pc, #4]	; (bf0 <SystemInit+0x8>)
- bea:	4b02      	ldr	r3, [pc, #8]	; (bf4 <SystemInit+0xc>)
- bec:	601a      	str	r2, [r3, #0]
+ d44:	4a01      	ldr	r2, [pc, #4]	; (d4c <SystemInit+0x8>)
+ d46:	4b02      	ldr	r3, [pc, #8]	; (d50 <SystemInit+0xc>)
+ d48:	601a      	str	r2, [r3, #0]
 	return;
 }
- bee:	4770      	bx	lr
- bf0:	000f4240 	.word	0x000f4240
- bf4:	2000000c 	.word	0x2000000c
+ d4a:	4770      	bx	lr
+ d4c:	000f4240 	.word	0x000f4240
+ d50:	20000004 	.word	0x20000004
 
-00000bf8 <__libc_init_array>:
- bf8:	b570      	push	{r4, r5, r6, lr}
- bfa:	4e0d      	ldr	r6, [pc, #52]	; (c30 <__libc_init_array+0x38>)
- bfc:	4d0d      	ldr	r5, [pc, #52]	; (c34 <__libc_init_array+0x3c>)
- bfe:	2400      	movs	r4, #0
- c00:	1bad      	subs	r5, r5, r6
- c02:	10ad      	asrs	r5, r5, #2
- c04:	d005      	beq.n	c12 <__libc_init_array+0x1a>
- c06:	00a3      	lsls	r3, r4, #2
- c08:	58f3      	ldr	r3, [r6, r3]
- c0a:	3401      	adds	r4, #1
- c0c:	4798      	blx	r3
- c0e:	42a5      	cmp	r5, r4
- c10:	d1f9      	bne.n	c06 <__libc_init_array+0xe>
- c12:	f000 f8c3 	bl	d9c <_init>
- c16:	4e08      	ldr	r6, [pc, #32]	; (c38 <__libc_init_array+0x40>)
- c18:	4d08      	ldr	r5, [pc, #32]	; (c3c <__libc_init_array+0x44>)
- c1a:	2400      	movs	r4, #0
- c1c:	1bad      	subs	r5, r5, r6
- c1e:	10ad      	asrs	r5, r5, #2
- c20:	d005      	beq.n	c2e <__libc_init_array+0x36>
- c22:	00a3      	lsls	r3, r4, #2
- c24:	58f3      	ldr	r3, [r6, r3]
- c26:	3401      	adds	r4, #1
- c28:	4798      	blx	r3
- c2a:	42a5      	cmp	r5, r4
- c2c:	d1f9      	bne.n	c22 <__libc_init_array+0x2a>
- c2e:	bd70      	pop	{r4, r5, r6, pc}
- c30:	00000da8 	.word	0x00000da8
- c34:	00000da8 	.word	0x00000da8
- c38:	00000da8 	.word	0x00000da8
- c3c:	00000db0 	.word	0x00000db0
+00000d54 <__libc_init_array>:
+ d54:	b570      	push	{r4, r5, r6, lr}
+ d56:	4e0d      	ldr	r6, [pc, #52]	; (d8c <__libc_init_array+0x38>)
+ d58:	4d0d      	ldr	r5, [pc, #52]	; (d90 <__libc_init_array+0x3c>)
+ d5a:	2400      	movs	r4, #0
+ d5c:	1bad      	subs	r5, r5, r6
+ d5e:	10ad      	asrs	r5, r5, #2
+ d60:	d005      	beq.n	d6e <__libc_init_array+0x1a>
+ d62:	00a3      	lsls	r3, r4, #2
+ d64:	58f3      	ldr	r3, [r6, r3]
+ d66:	3401      	adds	r4, #1
+ d68:	4798      	blx	r3
+ d6a:	42a5      	cmp	r5, r4
+ d6c:	d1f9      	bne.n	d62 <__libc_init_array+0xe>
+ d6e:	f000 f8c3 	bl	ef8 <_init>
+ d72:	4e08      	ldr	r6, [pc, #32]	; (d94 <__libc_init_array+0x40>)
+ d74:	4d08      	ldr	r5, [pc, #32]	; (d98 <__libc_init_array+0x44>)
+ d76:	2400      	movs	r4, #0
+ d78:	1bad      	subs	r5, r5, r6
+ d7a:	10ad      	asrs	r5, r5, #2
+ d7c:	d005      	beq.n	d8a <__libc_init_array+0x36>
+ d7e:	00a3      	lsls	r3, r4, #2
+ d80:	58f3      	ldr	r3, [r6, r3]
+ d82:	3401      	adds	r4, #1
+ d84:	4798      	blx	r3
+ d86:	42a5      	cmp	r5, r4
+ d88:	d1f9      	bne.n	d7e <__libc_init_array+0x2a>
+ d8a:	bd70      	pop	{r4, r5, r6, pc}
+ d8c:	00000f04 	.word	0x00000f04
+ d90:	00000f04 	.word	0x00000f04
+ d94:	00000f04 	.word	0x00000f04
+ d98:	00000f0c 	.word	0x00000f0c
 
-00000c40 <register_fini>:
- c40:	4b03      	ldr	r3, [pc, #12]	; (c50 <register_fini+0x10>)
- c42:	b510      	push	{r4, lr}
- c44:	2b00      	cmp	r3, #0
- c46:	d002      	beq.n	c4e <register_fini+0xe>
- c48:	4802      	ldr	r0, [pc, #8]	; (c54 <register_fini+0x14>)
- c4a:	f000 f805 	bl	c58 <atexit>
- c4e:	bd10      	pop	{r4, pc}
- c50:	00000000 	.word	0x00000000
- c54:	00000c69 	.word	0x00000c69
+00000d9c <register_fini>:
+ d9c:	4b03      	ldr	r3, [pc, #12]	; (dac <register_fini+0x10>)
+ d9e:	b510      	push	{r4, lr}
+ da0:	2b00      	cmp	r3, #0
+ da2:	d002      	beq.n	daa <register_fini+0xe>
+ da4:	4802      	ldr	r0, [pc, #8]	; (db0 <register_fini+0x14>)
+ da6:	f000 f805 	bl	db4 <atexit>
+ daa:	bd10      	pop	{r4, pc}
+ dac:	00000000 	.word	0x00000000
+ db0:	00000dc5 	.word	0x00000dc5
 
-00000c58 <atexit>:
- c58:	b510      	push	{r4, lr}
- c5a:	0001      	movs	r1, r0
- c5c:	2300      	movs	r3, #0
- c5e:	2200      	movs	r2, #0
- c60:	2000      	movs	r0, #0
- c62:	f000 f81f 	bl	ca4 <__register_exitproc>
- c66:	bd10      	pop	{r4, pc}
+00000db4 <atexit>:
+ db4:	b510      	push	{r4, lr}
+ db6:	0001      	movs	r1, r0
+ db8:	2300      	movs	r3, #0
+ dba:	2200      	movs	r2, #0
+ dbc:	2000      	movs	r0, #0
+ dbe:	f000 f81f 	bl	e00 <__register_exitproc>
+ dc2:	bd10      	pop	{r4, pc}
 
-00000c68 <__libc_fini_array>:
- c68:	b570      	push	{r4, r5, r6, lr}
- c6a:	4b09      	ldr	r3, [pc, #36]	; (c90 <__libc_fini_array+0x28>)
- c6c:	4c09      	ldr	r4, [pc, #36]	; (c94 <__libc_fini_array+0x2c>)
- c6e:	1ae4      	subs	r4, r4, r3
- c70:	10a4      	asrs	r4, r4, #2
- c72:	d009      	beq.n	c88 <__libc_fini_array+0x20>
- c74:	4a08      	ldr	r2, [pc, #32]	; (c98 <__libc_fini_array+0x30>)
- c76:	18a5      	adds	r5, r4, r2
- c78:	00ad      	lsls	r5, r5, #2
- c7a:	18ed      	adds	r5, r5, r3
- c7c:	682b      	ldr	r3, [r5, #0]
- c7e:	3c01      	subs	r4, #1
- c80:	4798      	blx	r3
- c82:	3d04      	subs	r5, #4
- c84:	2c00      	cmp	r4, #0
- c86:	d1f9      	bne.n	c7c <__libc_fini_array+0x14>
- c88:	f000 f892 	bl	db0 <_fini>
- c8c:	bd70      	pop	{r4, r5, r6, pc}
- c8e:	46c0      	nop			; (mov r8, r8)
- c90:	00000dbc 	.word	0x00000dbc
- c94:	00000dc0 	.word	0x00000dc0
- c98:	3fffffff 	.word	0x3fffffff
+00000dc4 <__libc_fini_array>:
+ dc4:	b570      	push	{r4, r5, r6, lr}
+ dc6:	4b09      	ldr	r3, [pc, #36]	; (dec <__libc_fini_array+0x28>)
+ dc8:	4c09      	ldr	r4, [pc, #36]	; (df0 <__libc_fini_array+0x2c>)
+ dca:	1ae4      	subs	r4, r4, r3
+ dcc:	10a4      	asrs	r4, r4, #2
+ dce:	d009      	beq.n	de4 <__libc_fini_array+0x20>
+ dd0:	4a08      	ldr	r2, [pc, #32]	; (df4 <__libc_fini_array+0x30>)
+ dd2:	18a5      	adds	r5, r4, r2
+ dd4:	00ad      	lsls	r5, r5, #2
+ dd6:	18ed      	adds	r5, r5, r3
+ dd8:	682b      	ldr	r3, [r5, #0]
+ dda:	3c01      	subs	r4, #1
+ ddc:	4798      	blx	r3
+ dde:	3d04      	subs	r5, #4
+ de0:	2c00      	cmp	r4, #0
+ de2:	d1f9      	bne.n	dd8 <__libc_fini_array+0x14>
+ de4:	f000 f892 	bl	f0c <_fini>
+ de8:	bd70      	pop	{r4, r5, r6, pc}
+ dea:	46c0      	nop			; (mov r8, r8)
+ dec:	00000f18 	.word	0x00000f18
+ df0:	00000f1c 	.word	0x00000f1c
+ df4:	3fffffff 	.word	0x3fffffff
 
-00000c9c <__retarget_lock_acquire_recursive>:
- c9c:	4770      	bx	lr
- c9e:	46c0      	nop			; (mov r8, r8)
+00000df8 <__retarget_lock_acquire_recursive>:
+ df8:	4770      	bx	lr
+ dfa:	46c0      	nop			; (mov r8, r8)
 
-00000ca0 <__retarget_lock_release_recursive>:
- ca0:	4770      	bx	lr
- ca2:	46c0      	nop			; (mov r8, r8)
+00000dfc <__retarget_lock_release_recursive>:
+ dfc:	4770      	bx	lr
+ dfe:	46c0      	nop			; (mov r8, r8)
 
-00000ca4 <__register_exitproc>:
- ca4:	b5f0      	push	{r4, r5, r6, r7, lr}
- ca6:	464e      	mov	r6, r9
- ca8:	4645      	mov	r5, r8
- caa:	46de      	mov	lr, fp
- cac:	4657      	mov	r7, sl
- cae:	b5e0      	push	{r5, r6, r7, lr}
- cb0:	4d36      	ldr	r5, [pc, #216]	; (d8c <__register_exitproc+0xe8>)
- cb2:	b083      	sub	sp, #12
- cb4:	0006      	movs	r6, r0
- cb6:	6828      	ldr	r0, [r5, #0]
- cb8:	4698      	mov	r8, r3
- cba:	000f      	movs	r7, r1
- cbc:	4691      	mov	r9, r2
- cbe:	f7ff ffed 	bl	c9c <__retarget_lock_acquire_recursive>
- cc2:	4b33      	ldr	r3, [pc, #204]	; (d90 <__register_exitproc+0xec>)
- cc4:	681c      	ldr	r4, [r3, #0]
- cc6:	23a4      	movs	r3, #164	; 0xa4
- cc8:	005b      	lsls	r3, r3, #1
- cca:	58e0      	ldr	r0, [r4, r3]
- ccc:	2800      	cmp	r0, #0
- cce:	d052      	beq.n	d76 <__register_exitproc+0xd2>
- cd0:	6843      	ldr	r3, [r0, #4]
- cd2:	2b1f      	cmp	r3, #31
- cd4:	dc13      	bgt.n	cfe <__register_exitproc+0x5a>
- cd6:	1c5a      	adds	r2, r3, #1
- cd8:	9201      	str	r2, [sp, #4]
- cda:	2e00      	cmp	r6, #0
- cdc:	d128      	bne.n	d30 <__register_exitproc+0x8c>
- cde:	9a01      	ldr	r2, [sp, #4]
- ce0:	3302      	adds	r3, #2
- ce2:	009b      	lsls	r3, r3, #2
- ce4:	6042      	str	r2, [r0, #4]
- ce6:	501f      	str	r7, [r3, r0]
- ce8:	6828      	ldr	r0, [r5, #0]
- cea:	f7ff ffd9 	bl	ca0 <__retarget_lock_release_recursive>
- cee:	2000      	movs	r0, #0
- cf0:	b003      	add	sp, #12
- cf2:	bc3c      	pop	{r2, r3, r4, r5}
- cf4:	4690      	mov	r8, r2
- cf6:	4699      	mov	r9, r3
- cf8:	46a2      	mov	sl, r4
- cfa:	46ab      	mov	fp, r5
- cfc:	bdf0      	pop	{r4, r5, r6, r7, pc}
- cfe:	4b25      	ldr	r3, [pc, #148]	; (d94 <__register_exitproc+0xf0>)
- d00:	2b00      	cmp	r3, #0
- d02:	d03d      	beq.n	d80 <__register_exitproc+0xdc>
- d04:	20c8      	movs	r0, #200	; 0xc8
- d06:	0040      	lsls	r0, r0, #1
- d08:	e000      	b.n	d0c <__register_exitproc+0x68>
- d0a:	bf00      	nop
- d0c:	2800      	cmp	r0, #0
- d0e:	d037      	beq.n	d80 <__register_exitproc+0xdc>
- d10:	22a4      	movs	r2, #164	; 0xa4
- d12:	2300      	movs	r3, #0
- d14:	0052      	lsls	r2, r2, #1
- d16:	58a1      	ldr	r1, [r4, r2]
- d18:	6043      	str	r3, [r0, #4]
- d1a:	6001      	str	r1, [r0, #0]
- d1c:	50a0      	str	r0, [r4, r2]
- d1e:	3240      	adds	r2, #64	; 0x40
- d20:	5083      	str	r3, [r0, r2]
- d22:	3204      	adds	r2, #4
- d24:	5083      	str	r3, [r0, r2]
- d26:	3301      	adds	r3, #1
- d28:	9301      	str	r3, [sp, #4]
- d2a:	2300      	movs	r3, #0
- d2c:	2e00      	cmp	r6, #0
- d2e:	d0d6      	beq.n	cde <__register_exitproc+0x3a>
- d30:	009a      	lsls	r2, r3, #2
- d32:	4692      	mov	sl, r2
- d34:	4482      	add	sl, r0
- d36:	464a      	mov	r2, r9
- d38:	2188      	movs	r1, #136	; 0x88
- d3a:	4654      	mov	r4, sl
- d3c:	5062      	str	r2, [r4, r1]
- d3e:	22c4      	movs	r2, #196	; 0xc4
- d40:	0052      	lsls	r2, r2, #1
- d42:	4691      	mov	r9, r2
- d44:	4481      	add	r9, r0
- d46:	464a      	mov	r2, r9
- d48:	3987      	subs	r1, #135	; 0x87
- d4a:	4099      	lsls	r1, r3
- d4c:	6812      	ldr	r2, [r2, #0]
- d4e:	468b      	mov	fp, r1
- d50:	430a      	orrs	r2, r1
- d52:	4694      	mov	ip, r2
- d54:	464a      	mov	r2, r9
- d56:	4661      	mov	r1, ip
- d58:	6011      	str	r1, [r2, #0]
- d5a:	2284      	movs	r2, #132	; 0x84
- d5c:	4641      	mov	r1, r8
- d5e:	0052      	lsls	r2, r2, #1
- d60:	50a1      	str	r1, [r4, r2]
- d62:	2e02      	cmp	r6, #2
- d64:	d1bb      	bne.n	cde <__register_exitproc+0x3a>
- d66:	0002      	movs	r2, r0
- d68:	465c      	mov	r4, fp
- d6a:	328d      	adds	r2, #141	; 0x8d
- d6c:	32ff      	adds	r2, #255	; 0xff
- d6e:	6811      	ldr	r1, [r2, #0]
- d70:	430c      	orrs	r4, r1
- d72:	6014      	str	r4, [r2, #0]
- d74:	e7b3      	b.n	cde <__register_exitproc+0x3a>
- d76:	0020      	movs	r0, r4
- d78:	304d      	adds	r0, #77	; 0x4d
- d7a:	30ff      	adds	r0, #255	; 0xff
- d7c:	50e0      	str	r0, [r4, r3]
- d7e:	e7a7      	b.n	cd0 <__register_exitproc+0x2c>
- d80:	6828      	ldr	r0, [r5, #0]
- d82:	f7ff ff8d 	bl	ca0 <__retarget_lock_release_recursive>
- d86:	2001      	movs	r0, #1
- d88:	4240      	negs	r0, r0
- d8a:	e7b1      	b.n	cf0 <__register_exitproc+0x4c>
- d8c:	20000438 	.word	0x20000438
- d90:	00000d98 	.word	0x00000d98
- d94:	00000000 	.word	0x00000000
+00000e00 <__register_exitproc>:
+ e00:	b5f0      	push	{r4, r5, r6, r7, lr}
+ e02:	464e      	mov	r6, r9
+ e04:	4645      	mov	r5, r8
+ e06:	46de      	mov	lr, fp
+ e08:	4657      	mov	r7, sl
+ e0a:	b5e0      	push	{r5, r6, r7, lr}
+ e0c:	4d36      	ldr	r5, [pc, #216]	; (ee8 <__register_exitproc+0xe8>)
+ e0e:	b083      	sub	sp, #12
+ e10:	0006      	movs	r6, r0
+ e12:	6828      	ldr	r0, [r5, #0]
+ e14:	4698      	mov	r8, r3
+ e16:	000f      	movs	r7, r1
+ e18:	4691      	mov	r9, r2
+ e1a:	f7ff ffed 	bl	df8 <__retarget_lock_acquire_recursive>
+ e1e:	4b33      	ldr	r3, [pc, #204]	; (eec <__register_exitproc+0xec>)
+ e20:	681c      	ldr	r4, [r3, #0]
+ e22:	23a4      	movs	r3, #164	; 0xa4
+ e24:	005b      	lsls	r3, r3, #1
+ e26:	58e0      	ldr	r0, [r4, r3]
+ e28:	2800      	cmp	r0, #0
+ e2a:	d052      	beq.n	ed2 <__register_exitproc+0xd2>
+ e2c:	6843      	ldr	r3, [r0, #4]
+ e2e:	2b1f      	cmp	r3, #31
+ e30:	dc13      	bgt.n	e5a <__register_exitproc+0x5a>
+ e32:	1c5a      	adds	r2, r3, #1
+ e34:	9201      	str	r2, [sp, #4]
+ e36:	2e00      	cmp	r6, #0
+ e38:	d128      	bne.n	e8c <__register_exitproc+0x8c>
+ e3a:	9a01      	ldr	r2, [sp, #4]
+ e3c:	3302      	adds	r3, #2
+ e3e:	009b      	lsls	r3, r3, #2
+ e40:	6042      	str	r2, [r0, #4]
+ e42:	501f      	str	r7, [r3, r0]
+ e44:	6828      	ldr	r0, [r5, #0]
+ e46:	f7ff ffd9 	bl	dfc <__retarget_lock_release_recursive>
+ e4a:	2000      	movs	r0, #0
+ e4c:	b003      	add	sp, #12
+ e4e:	bc3c      	pop	{r2, r3, r4, r5}
+ e50:	4690      	mov	r8, r2
+ e52:	4699      	mov	r9, r3
+ e54:	46a2      	mov	sl, r4
+ e56:	46ab      	mov	fp, r5
+ e58:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ e5a:	4b25      	ldr	r3, [pc, #148]	; (ef0 <__register_exitproc+0xf0>)
+ e5c:	2b00      	cmp	r3, #0
+ e5e:	d03d      	beq.n	edc <__register_exitproc+0xdc>
+ e60:	20c8      	movs	r0, #200	; 0xc8
+ e62:	0040      	lsls	r0, r0, #1
+ e64:	e000      	b.n	e68 <__register_exitproc+0x68>
+ e66:	bf00      	nop
+ e68:	2800      	cmp	r0, #0
+ e6a:	d037      	beq.n	edc <__register_exitproc+0xdc>
+ e6c:	22a4      	movs	r2, #164	; 0xa4
+ e6e:	2300      	movs	r3, #0
+ e70:	0052      	lsls	r2, r2, #1
+ e72:	58a1      	ldr	r1, [r4, r2]
+ e74:	6043      	str	r3, [r0, #4]
+ e76:	6001      	str	r1, [r0, #0]
+ e78:	50a0      	str	r0, [r4, r2]
+ e7a:	3240      	adds	r2, #64	; 0x40
+ e7c:	5083      	str	r3, [r0, r2]
+ e7e:	3204      	adds	r2, #4
+ e80:	5083      	str	r3, [r0, r2]
+ e82:	3301      	adds	r3, #1
+ e84:	9301      	str	r3, [sp, #4]
+ e86:	2300      	movs	r3, #0
+ e88:	2e00      	cmp	r6, #0
+ e8a:	d0d6      	beq.n	e3a <__register_exitproc+0x3a>
+ e8c:	009a      	lsls	r2, r3, #2
+ e8e:	4692      	mov	sl, r2
+ e90:	4482      	add	sl, r0
+ e92:	464a      	mov	r2, r9
+ e94:	2188      	movs	r1, #136	; 0x88
+ e96:	4654      	mov	r4, sl
+ e98:	5062      	str	r2, [r4, r1]
+ e9a:	22c4      	movs	r2, #196	; 0xc4
+ e9c:	0052      	lsls	r2, r2, #1
+ e9e:	4691      	mov	r9, r2
+ ea0:	4481      	add	r9, r0
+ ea2:	464a      	mov	r2, r9
+ ea4:	3987      	subs	r1, #135	; 0x87
+ ea6:	4099      	lsls	r1, r3
+ ea8:	6812      	ldr	r2, [r2, #0]
+ eaa:	468b      	mov	fp, r1
+ eac:	430a      	orrs	r2, r1
+ eae:	4694      	mov	ip, r2
+ eb0:	464a      	mov	r2, r9
+ eb2:	4661      	mov	r1, ip
+ eb4:	6011      	str	r1, [r2, #0]
+ eb6:	2284      	movs	r2, #132	; 0x84
+ eb8:	4641      	mov	r1, r8
+ eba:	0052      	lsls	r2, r2, #1
+ ebc:	50a1      	str	r1, [r4, r2]
+ ebe:	2e02      	cmp	r6, #2
+ ec0:	d1bb      	bne.n	e3a <__register_exitproc+0x3a>
+ ec2:	0002      	movs	r2, r0
+ ec4:	465c      	mov	r4, fp
+ ec6:	328d      	adds	r2, #141	; 0x8d
+ ec8:	32ff      	adds	r2, #255	; 0xff
+ eca:	6811      	ldr	r1, [r2, #0]
+ ecc:	430c      	orrs	r4, r1
+ ece:	6014      	str	r4, [r2, #0]
+ ed0:	e7b3      	b.n	e3a <__register_exitproc+0x3a>
+ ed2:	0020      	movs	r0, r4
+ ed4:	304d      	adds	r0, #77	; 0x4d
+ ed6:	30ff      	adds	r0, #255	; 0xff
+ ed8:	50e0      	str	r0, [r4, r3]
+ eda:	e7a7      	b.n	e2c <__register_exitproc+0x2c>
+ edc:	6828      	ldr	r0, [r5, #0]
+ ede:	f7ff ff8d 	bl	dfc <__retarget_lock_release_recursive>
+ ee2:	2001      	movs	r0, #1
+ ee4:	4240      	negs	r0, r0
+ ee6:	e7b1      	b.n	e4c <__register_exitproc+0x4c>
+ ee8:	20000430 	.word	0x20000430
+ eec:	00000ef4 	.word	0x00000ef4
+ ef0:	00000000 	.word	0x00000000
 
-00000d98 <_global_impure_ptr>:
- d98:	20000010                                ... 
+00000ef4 <_global_impure_ptr>:
+ ef4:	20000008                                ... 
 
-00000d9c <_init>:
- d9c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- d9e:	46c0      	nop			; (mov r8, r8)
- da0:	bcf8      	pop	{r3, r4, r5, r6, r7}
- da2:	bc08      	pop	{r3}
- da4:	469e      	mov	lr, r3
- da6:	4770      	bx	lr
+00000ef8 <_init>:
+ ef8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ efa:	46c0      	nop			; (mov r8, r8)
+ efc:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ efe:	bc08      	pop	{r3}
+ f00:	469e      	mov	lr, r3
+ f02:	4770      	bx	lr
 
-00000da8 <__init_array_start>:
- da8:	00000c41 	.word	0x00000c41
+00000f04 <__init_array_start>:
+ f04:	00000d9d 	.word	0x00000d9d
 
-00000dac <__frame_dummy_init_array_entry>:
- dac:	000000b5                                ....
+00000f08 <__frame_dummy_init_array_entry>:
+ f08:	000000b5                                ....
 
-00000db0 <_fini>:
- db0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- db2:	46c0      	nop			; (mov r8, r8)
- db4:	bcf8      	pop	{r3, r4, r5, r6, r7}
- db6:	bc08      	pop	{r3}
- db8:	469e      	mov	lr, r3
- dba:	4770      	bx	lr
+00000f0c <_fini>:
+ f0c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ f0e:	46c0      	nop			; (mov r8, r8)
+ f10:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ f12:	bc08      	pop	{r3}
+ f14:	469e      	mov	lr, r3
+ f16:	4770      	bx	lr
 
-00000dbc <__fini_array_start>:
- dbc:	0000008d 	.word	0x0000008d
+00000f18 <__fini_array_start>:
+ f18:	0000008d 	.word	0x0000008d

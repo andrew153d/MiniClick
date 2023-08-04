@@ -10,16 +10,35 @@
 extern "C" {
 	#include "asf.h"
 }
+#include <queue>
 
 
 
-#define DATA_LENGTH 10
+const int BUTTON_PIN_1 = 16;
+const int BUTTON_PIN_2 = 17;
+const int BUTTON_PIN_3 = 22;
+const int BUTTON_PIN_4 = 23;
 
-static uint8_t write_buffer[DATA_LENGTH] = {
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-};
-static uint8_t read_buffer [DATA_LENGTH];
-#define SLAVE_ADDRESS 0x1F
+struct buttons{
+	bool button_1;
+	bool button_2;
+	bool button_3;
+	bool button_4;
+	}last_button_level, current_button_level;
+
+#define BUTTON_PRESSED 0x80
+#define BUTTON_RELEASED 0x40
+#define CLICK_QUEUE_SIZE_POSITION 0x00
+#define CLICK_QUEUE_HEAD_POSITION 0x01
+#define ADDRESS_BASE 0x50
+
+uint8_t device_registers[10];
+
+
+
+
+static uint8_t read_buffer[2];
+#define SLAVE_ADDRESS 0x12
 struct i2c_slave_module i2c_slave_instance;
 static struct i2c_slave_packet packet;
 Sercom slave_instance;
@@ -41,9 +60,13 @@ void configure_i2c_slave(void)
 void i2c_read_request_callback(
 struct i2c_slave_module *const module)
 {
+	volatile uint8_t read_address = packet.data[0];
+	
 	/* Init i2c packet */
-	packet.data_length = DATA_LENGTH;
-	packet.data        = write_buffer;
+	packet.data_length = 1;
+	uint8_t dat = device_registers[read_address & 0x0F];
+	packet.data        = &dat;
+	
 	/* Write buffer to master */
 	i2c_slave_write_packet_job(module, &packet);
 }
@@ -51,10 +74,11 @@ struct i2c_slave_module *const module)
 void i2c_write_request_callback(struct i2c_slave_module *const module)
 {
 	/* Init i2c packet */
-	packet.data_length = DATA_LENGTH;
+	packet.data_length = 1;
 	packet.data        = read_buffer;
 	/* Read buffer from master */
 	if (i2c_slave_read_packet_job(module, &packet) != STATUS_OK) {
+		//packet.data        = read_buffer;
 	}
 }
 
@@ -78,6 +102,17 @@ int main(void)
 	/* Initialize the SAM system */
 	SystemInit();
 	
+	//set pins for GPIO input
+	struct port_config config_port_pin;
+	port_get_config_defaults(&config_port_pin);
+	config_port_pin.direction = PORT_PIN_DIR_INPUT;
+	config_port_pin.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_PIN_1, &config_port_pin);
+	port_pin_set_config(BUTTON_PIN_2, &config_port_pin);
+	port_pin_set_config(BUTTON_PIN_3, &config_port_pin);
+	port_pin_set_config(BUTTON_PIN_4, &config_port_pin);
+	
+	//set pinmux for I2C lines
 	 struct system_pinmux_config config_pinmux;
 	 system_pinmux_get_config_defaults(&config_pinmux);
 	 config_pinmux.mux_position = 1 << 1;
@@ -89,5 +124,38 @@ int main(void)
 	configure_i2c_slave_callbacks();
 	
 	while (1)
-	{}
+	{
+		last_button_level = current_button_level;
+		current_button_level.button_1 = port_pin_get_input_level(BUTTON_PIN_1);
+		current_button_level.button_2 = port_pin_get_input_level(BUTTON_PIN_2);
+		current_button_level.button_3 = port_pin_get_input_level(BUTTON_PIN_3);
+		current_button_level.button_4 = port_pin_get_input_level(BUTTON_PIN_4);
+		
+		if(!current_button_level.button_1 && last_button_level.button_1){
+			device_registers[1] = 0x01 | BUTTON_PRESSED;
+		}
+		if(!current_button_level.button_2 && last_button_level.button_2){
+			device_registers[1] = 0x02 | BUTTON_PRESSED;
+		}
+		if(!current_button_level.button_3 && last_button_level.button_3){
+			device_registers[1] = 0x03 | BUTTON_PRESSED;
+		}
+		if(!current_button_level.button_4 && last_button_level.button_4){
+			device_registers[1] = 0x04 | BUTTON_PRESSED;
+		}
+		if(current_button_level.button_1 && !last_button_level.button_1){
+			device_registers[1] = 0x01 | BUTTON_RELEASED;
+		}
+		if(current_button_level.button_2 && !last_button_level.button_2){
+			device_registers[1] = 0x02 | BUTTON_RELEASED;
+		}
+		if(current_button_level.button_3 && !last_button_level.button_3){
+			device_registers[1] = 0x03 | BUTTON_RELEASED;
+		}
+		if(current_button_level.button_4 && !last_button_level.button_4){
+			device_registers[1] = 0x04 | BUTTON_RELEASED;
+		}
+		
+		
+	}
 }
