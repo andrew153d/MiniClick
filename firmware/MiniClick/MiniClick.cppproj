@@ -651,6 +651,12 @@
     <Compile Include="src\CircularBuffer\circularBuffer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ws2812b\ws2812b.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ws2812b\ws2812b.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\sam0\drivers\wdt\quick_start_callback\qs_wdt_callback.h">
       <SubType>compile</SubType>
     </None>
@@ -1090,6 +1096,7 @@
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
     <Folder Include="src\config\" />
     <Folder Include="src\CircularBuffer" />
+    <Folder Include="src\ws2812b" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Device_Startup\samd09d14a_flash.ld">

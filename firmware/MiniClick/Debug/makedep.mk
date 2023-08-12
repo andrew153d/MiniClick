@@ -14,6 +14,8 @@ src\ASF\sam0\drivers\tc\tc_sam_d_r_h\tc.c
 
 src\CircularBuffer\circularBuffer.cpp
 
+src\ws2812b\ws2812b.cpp
+
 src\ASF\sam0\drivers\wdt\wdt.c
 
 src\ASF\sam0\drivers\wdt\wdt_callback.c

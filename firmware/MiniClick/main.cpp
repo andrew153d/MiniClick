@@ -11,82 +11,11 @@ extern "C" {
 	#include "asf.h"
 }
 #include "samd09.h"
-
+#include <string.h>
 #include "port.h"
+#include "ws2812b/ws2812b.h"
 #define NEO_PIN 10
 
-
-void expand(uint8_t* in_array, uint8_t* pixels, uint16_t num_bytes) {
-    for (int i = 0; i < num_bytes; i++) {
-        uint8_t byte = in_array[i];
-        for (int j = 0; j < 8; j++) {
-            pixels[i * 8 + j] = (byte >> (7 - j)) & 1;
-        }
-    }
-}
-/*
-	0:  HIGH: .4us
-		LOW : .85us
-		
-	1:	HIGH: .8us
-		LOW : .45us
-	
-	each nop statement is .125 us
-	
-	each clock cycle is .125us
-	.4us		: .4/.125 = 3.2		-> 3 cycles = .375us
-	.45us	: .45/.125 = 3.6	-> 4 cycles = 0.5us
-	.8us		: .8/.125 = 6.4		-> 6 cycles = 0.75us
-	.85us	: .85/.125 = 6.8	-> 7 cycles = 0.875us
-	*/
-void ws2812_write(uint32_t pin, uint8_t *pixels, uint16_t numBytes)
-{
-
-	uint8_t  *ptr, *end, p, bitMask;
-	uint32_t  pinMask;
-
-	PortGroup *const port_base = port_get_group_from_gpio_pin(pin);
-	uint32_t pin_mask  = (1UL << (pin % 32));
-	bool level = false;
-	/* Set the pin to high or low atomically based on the requested level */
-	//if (level) {
-	//	port_base->OUTSET.reg = pin_mask;
-	//	} else {
-	//	port_base->OUTCLR.reg = pin_mask;
-	//}
-
-
-	 volatile uint32_t *set = &(port_base->OUTSET.reg);
-	 volatile uint32_t *clr = &(port_base->OUTCLR.reg);
-	
-
-	pinMask =  1ul << pin;
-	ptr     =  pixels;
-	end     =  ptr + numBytes;
-	p       = *ptr++;
-	bitMask =  0x80;
-
-	
-
-	for(;;) {
-		 *set = pinMask;
-		 asm("nop; nop; nop; nop; nop; nop;");
-		 if(p & bitMask) {
-			 asm("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");
-			 *clr = pinMask;
-			 } else {
-			 *clr = pinMask;
-			 asm("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");
-		 }
-		 if(bitMask >>= 1) {
-			 asm("nop; nop; nop; nop; nop; nop; nop;");
-			 } else {
-			 if(ptr >= end) break;
-			 p       = *ptr++;
-			 bitMask = 0x80;
-		 }
-	}
-}
 
 const int BUTTON_PIN_1 = 16;
 const int BUTTON_PIN_2 = 17;
@@ -185,7 +114,6 @@ void configure_gpio_pins()
 	port_pin_set_config(BUTTON_PIN_4, &config_port_pin);
 	config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(LED_PIN, &config_port_pin);
-	port_pin_set_config(NEO_PIN, &config_port_pin);
 }
 
 void configure_i2c_pinmux()
@@ -223,9 +151,21 @@ int main(void)
 	//I2C setup
 	configure_i2c_slave();
 	configure_i2c_slave_callbacks();
-	uint8_t pixels[3]{0xFF, 0x00, 0x0F};
+	
+	uint8_t pixels[4*3];
+	uint32_t color = 0;
+	memset(pixels, 0, sizeof(pixels));
+	ws2812b ledStrip(&pixels[0], 4, NEO_PIN);
+	ledStrip.write();
+	//ledStrip.setLEDColor(0, colorRGB(0xEEA255));
+	//ledStrip.setLEDColor(2, colorRGB(0x0011FF));
+	
+	
 	while (1)
 	{
+		
+		
+		volatile uint32_t clk_speed = system_gclk_gen_get_hz(0);
 		last_button_level = current_button_level;
 		current_button_level.button_1 = port_pin_get_input_level(BUTTON_PIN_1);
 		current_button_level.button_2 = port_pin_get_input_level(BUTTON_PIN_2);
@@ -235,37 +175,46 @@ int main(void)
 		if(!current_button_level.button_1 && last_button_level.button_1){
 			buffer.write(0x01 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
+			ledStrip.setLEDColor(0, colorRGB(0xFF8000));
+			
 		}
 		if(!current_button_level.button_2 && last_button_level.button_2){
 			buffer.write(0x02 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
+			ledStrip.setLEDColor(1, colorRGB(0xFF8000));
 		}
 		if(!current_button_level.button_3 && last_button_level.button_3){
 			buffer.write(0x03 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
+			ledStrip.setLEDColor(2, colorRGB(0xFF8000));
 		}
 		if(!current_button_level.button_4 && last_button_level.button_4){
 			buffer.write(0x04 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
+			ledStrip.setLEDColor(3, colorRGB(0xFF8000));
 		}
 		if(current_button_level.button_1 && !last_button_level.button_1){
 			buffer.write(0x01 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
+			ledStrip.setLEDColor(0, colorRGB(0x000000));
 		}
 		if(current_button_level.button_2 && !last_button_level.button_2){
 			buffer.write(0x02 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
+			ledStrip.setLEDColor(1, colorRGB(0x000000));
 		}
 		if(current_button_level.button_3 && !last_button_level.button_3){
 			buffer.write(0x03 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
+			ledStrip.setLEDColor(2, colorRGB(0x000000));
 		}
 		if(current_button_level.button_4 && !last_button_level.button_4){
 			buffer.write(0x04 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
+			ledStrip.setLEDColor(3, colorRGB(0x000000));
 		}
-		
-		ws2812_write(NEO_PIN, &pixels[0], 3);
+		delay_cycles_ms(10);
+		ledStrip.write();
 		
 		
 	}
