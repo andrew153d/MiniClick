@@ -97,7 +97,7 @@ SUBDIRS :=  \
 ../src/ASF/thirdparty/CMSIS/Lib/ \
 ../src/ASF/thirdparty/CMSIS/Lib/GCC/ \
 ../src/config/ \
-../src/circularBuffer
+../src/CircularBuffer
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
@@ -107,7 +107,7 @@ C_SRCS +=  \
 ../src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave.c \
 ../src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave_interrupt.c \
 ../src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.c \
-../src/circularBuffer/circularBuffer.cpp \
+../src/CircularBuffer/circularBuffer.cpp \
 ../src/ASF/sam0/drivers/wdt/wdt.c \
 ../src/ASF/sam0/drivers/wdt/wdt_callback.c \
 ../src/ASF/sam0/drivers/tc/tc_interrupt.c \
@@ -140,7 +140,7 @@ src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.o \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave.o \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave_interrupt.o \
 src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.o \
-src/circularBuffer/circularBuffer.o \
+src/CircularBuffer/circularBuffer.o \
 src/ASF/sam0/drivers/wdt/wdt.o \
 src/ASF/sam0/drivers/wdt/wdt_callback.o \
 src/ASF/sam0/drivers/tc/tc_interrupt.o \
@@ -166,7 +166,7 @@ src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.o \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave.o \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave_interrupt.o \
 src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.o \
-src/circularBuffer/circularBuffer.o \
+src/CircularBuffer/circularBuffer.o \
 src/ASF/sam0/drivers/wdt/wdt.o \
 src/ASF/sam0/drivers/wdt/wdt_callback.o \
 src/ASF/sam0/drivers/tc/tc_interrupt.o \
@@ -192,7 +192,7 @@ src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.d \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave.d \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave_interrupt.d \
 src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.d \
-src/circularBuffer/circularBuffer.d \
+src/CircularBuffer/circularBuffer.d \
 src/ASF/sam0/drivers/wdt/wdt.d \
 src/ASF/sam0/drivers/wdt/wdt_callback.d \
 src/ASF/sam0/drivers/tc/tc_interrupt.d \
@@ -218,7 +218,7 @@ src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.d \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave.d \
 src/ASF/sam0/drivers/sercom/i2c/i2c_sam0/i2c_slave_interrupt.d \
 src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.d \
-src/circularBuffer/circularBuffer.d \
+src/CircularBuffer/circularBuffer.d \
 src/ASF/sam0/drivers/wdt/wdt.d \
 src/ASF/sam0/drivers/wdt/wdt_callback.d \
 src/ASF/sam0/drivers/tc/tc_interrupt.d \
@@ -290,7 +290,7 @@ src/ASF/sam0/drivers/tc/tc_sam_d_r_h/tc.o: ../src/ASF/sam0/drivers/tc/tc_sam_d_r
 	@echo Finished building: $<
 	
 
-src/circularBuffer/circularBuffer.o: ../src/circularBuffer/circularBuffer.cpp
+src/CircularBuffer/circularBuffer.o: ../src/CircularBuffer/circularBuffer.cpp
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-g++.exe$(QUOTE) -mthumb -D__SAMD09D14A__ -DNDEBUG -DBOARD=USER_BOARD -DARM_MATH_CM0PLUS=true -DSYSTICK_MODE -DEXTINT_CALLBACK_MODE=true -DI2C_SLAVE_CALLBACK_MODE=true -DTC_ASYNC=true -DWDT_CALLBACK_MODE=true  -I"../src/ASF/common/boards" -I"../src/ASF/sam0/utils" -I"../src/ASF/sam0/utils/header_files" -I"../src/ASF/sam0/utils/preprocessor" -I"../src/ASF/thirdparty/CMSIS/Include" -I"../src/ASF/thirdparty/CMSIS/Lib/GCC" -I"../src/ASF/common/utils" -I"../src/ASF/sam0/utils/cmsis/samd09/include" -I"../src/ASF/sam0/utils/cmsis/samd09/source" -I"../src/ASF/sam0/drivers/system" -I"../src/ASF/sam0/drivers/system/clock" -I"../src/ASF/sam0/drivers/system/clock/clock_samd09_d10_d11" -I"../src/ASF/sam0/drivers/system/interrupt" -I"../src/ASF/sam0/drivers/system/interrupt/system_interrupt_samd09" -I"../src/ASF/sam0/drivers/system/pinmux" -I"../src/ASF/sam0/drivers/system/power" -I"../src/ASF/sam0/drivers/system/power/power_sam_d_r_h" -I"../src/ASF/sam0/drivers/system/reset" -I"../src/ASF/sam0/drivers/system/reset/reset_sam_d_r_h" -I"../src/ASF/common2/boards/user_board" -I"../src" -I"../src/config" -I"../src/ASF/sam0/drivers/port" -I"../src/ASF/common2/services/delay" -I"../src/ASF/common2/services/delay/sam0" -I"../src/ASF/sam0/drivers/extint" -I"../src/ASF/sam0/drivers/extint/extint_sam_d_r_h" -I"../src/ASF/sam0/drivers/sercom" -I"../src/ASF/sam0/drivers/sercom/i2c" -I"../src/ASF/sam0/drivers/sercom/i2c/i2c_sam0" -I"../src/ASF/sam0/drivers/tc" -I"../src/ASF/sam0/drivers/tc/tc_sam_d_r_h" -I"../src/ASF/sam0/drivers/wdt"  -Os -ffunction-sections -fno-rtti -fno-exceptions -mlong-calls -Wall -mcpu=cortex-m0plus -c "-std=c++14" -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

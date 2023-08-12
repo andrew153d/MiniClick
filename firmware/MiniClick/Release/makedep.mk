@@ -12,7 +12,7 @@ src\ASF\sam0\drivers\sercom\i2c\i2c_sam0\i2c_slave_interrupt.c
 
 src\ASF\sam0\drivers\tc\tc_sam_d_r_h\tc.c
 
-src\circularBuffer\circularBuffer.cpp
+src\CircularBuffer\circularBuffer.cpp
 
 src\ASF\sam0\drivers\wdt\wdt.c
 
