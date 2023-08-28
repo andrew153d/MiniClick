@@ -458,7 +458,7 @@ void port_group_set_config(
  *
  *  \return Status of the port pin's input buffer.
  */
-static inline bool port_pin_get_input_level(
+static  bool port_pin_get_input_level(
 		const uint8_t gpio_pin)
 {
 	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);

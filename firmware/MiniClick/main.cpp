@@ -17,11 +17,14 @@ extern "C" {
 #define NEO_PIN 10
 
 
-const int BUTTON_PIN_1 = 16;
-const int BUTTON_PIN_2 = 17;
-const int BUTTON_PIN_3 = 22;
-const int BUTTON_PIN_4 = 23;
-const int LED_PIN = 27;
+const int BUTTON_PIN_1 = 6;
+const int BUTTON_PIN_2 = 7;
+const int BUTTON_PIN_3 = 8;
+const int BUTTON_PIN_4 = 11;
+const int LED_PIN = 9;
+
+const int PA24 = 24;
+const int PA25 = 25;
 
 struct buttons{
 	bool button_1;
@@ -108,10 +111,13 @@ void configure_gpio_pins()
 	port_get_config_defaults(&config_port_pin);
 	config_port_pin.direction = PORT_PIN_DIR_INPUT;
 	config_port_pin.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(PA24, &config_port_pin);
+	port_pin_set_config(PA25, &config_port_pin);
 	port_pin_set_config(BUTTON_PIN_1, &config_port_pin);
 	port_pin_set_config(BUTTON_PIN_2, &config_port_pin);
 	port_pin_set_config(BUTTON_PIN_3, &config_port_pin);
 	port_pin_set_config(BUTTON_PIN_4, &config_port_pin);
+	
 	config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(LED_PIN, &config_port_pin);
 }
@@ -156,9 +162,10 @@ int main(void)
 	uint32_t color = 0;
 	memset(pixels, 0, sizeof(pixels));
 	ws2812b ledStrip(&pixels[0], 4, NEO_PIN);
+	ledStrip.setLEDColor(0, colorRGB(0xEEA255));
+	ledStrip.setLEDColor(2, colorRGB(0x0011FF));
 	ledStrip.write();
-	//ledStrip.setLEDColor(0, colorRGB(0xEEA255));
-	//ledStrip.setLEDColor(2, colorRGB(0x0011FF));
+	
 	
 	
 	while (1)
@@ -175,46 +182,54 @@ int main(void)
 		if(!current_button_level.button_1 && last_button_level.button_1){
 			buffer.write(0x01 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
-			ledStrip.setLEDColor(0, colorRGB(0xFF8000));
+			ledStrip.setLEDColor(1, colorRGB(0xFF8000));
+			ledStrip.write();
 			
 		}
 		if(!current_button_level.button_2 && last_button_level.button_2){
 			buffer.write(0x02 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
-			ledStrip.setLEDColor(1, colorRGB(0xFF8000));
+			ledStrip.setLEDColor(0, colorRGB(0xFF8000));
+			ledStrip.write();
 		}
 		if(!current_button_level.button_3 && last_button_level.button_3){
 			buffer.write(0x03 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
 			ledStrip.setLEDColor(2, colorRGB(0xFF8000));
+			ledStrip.write();
 		}
 		if(!current_button_level.button_4 && last_button_level.button_4){
 			buffer.write(0x04 | BUTTON_PRESSED);
 			port_pin_set_output_level(LED_PIN, true);
 			ledStrip.setLEDColor(3, colorRGB(0xFF8000));
+			ledStrip.write();
 		}
 		if(current_button_level.button_1 && !last_button_level.button_1){
 			buffer.write(0x01 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
-			ledStrip.setLEDColor(0, colorRGB(0x000000));
+			ledStrip.setLEDColor(1, colorRGB(0x000000));
+			ledStrip.write();
 		}
 		if(current_button_level.button_2 && !last_button_level.button_2){
 			buffer.write(0x02 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
-			ledStrip.setLEDColor(1, colorRGB(0x000000));
+			ledStrip.setLEDColor(0, colorRGB(0x000000));
+			ledStrip.write();
 		}
 		if(current_button_level.button_3 && !last_button_level.button_3){
 			buffer.write(0x03 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
 			ledStrip.setLEDColor(2, colorRGB(0x000000));
+			ledStrip.write();
 		}
 		if(current_button_level.button_4 && !last_button_level.button_4){
 			buffer.write(0x04 | BUTTON_RELEASED);
 			port_pin_set_output_level(LED_PIN, false);
 			ledStrip.setLEDColor(3, colorRGB(0x000000));
+			ledStrip.write();
 		}
-		delay_cycles_ms(10);
-		ledStrip.write();
+		delay_cycles_ms(1);
+		
 		
 		
 	}

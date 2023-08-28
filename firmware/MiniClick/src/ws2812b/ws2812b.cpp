@@ -55,6 +55,7 @@ void ws2812b::setLEDColor(uint8_t led_num, colorRGB color){
 }
 
 void ws2812b::write(){
+	
 	ws2812_write();
 }
 
